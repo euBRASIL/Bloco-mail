@@ -1,4 +1,4 @@
-# Dmail
+# Dmail AI Front Project
 
 
 ## Deploy online
@@ -60,6 +60,6 @@ Building frontend...
 install
 ```
 sudo dfx canister install --all -m=reinstall
-```SM   
+```   
 
 
