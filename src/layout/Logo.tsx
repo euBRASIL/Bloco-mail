@@ -3,44 +3,35 @@ import { SVGProps } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { FC, Fragment, useCallback, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { useSelector } from 'react-redux';
 import {
-    TextField,  
+    TextField,
     FieldProps,
 } from 'react-admin';
+import src from '*.bmp';
+import LOGO from '../asset/red/logo.png'
+import { AppState } from '../types';
+import clsx from 'clsx';
 
+const useStyles = makeStyles({
+    logo: {
+        display: 'block',
+        width: '126px',
+        height: '56px',
+        marginLeft: '6px',
+        backgroundSize: 'cover',
+    },
+});
 
-const useDatagridStyles = makeStyles(
-    theme => ({
-        root: {
-            display: 'flex',
-            flexWrap: 'nowrap',
-            alignItems: 'center',
-        },
-        total: { fontWeight: 'bold' },
-        logo: { 
-            fontWeight: 'bold',
-            fontSize:30,
-        },
-        asset_avatar: {
-           
-            marginRight: theme.spacing(1),
-            marginTop: -theme.spacing(0.5),
-            marginBottom: -theme.spacing(0.5),
-        },
-        total_amm: { fontWeight: 'bold',marginRight:5 },
-    
-    }));
-
-
-
-const Logo = (props: SVGProps<SVGSVGElement>) => {
-    const theme = useTheme();
-    const classes = useDatagridStyles();
-    const CustomerLogoField: FC<FieldProps> = props => (
-    
-            <div className={classes.logo}>
-                DMail
-            </div>
+interface logoProps {
+    classes?: any;
+}
+const Logo = (props: logoProps) => {
+    // const theme = useTheme();
+    // const theme = useSelector((state: AppState) => state.theme);
+    const classes = useStyles();
+    const CustomerLogoField: FC<FieldProps> = p => (
+        <div className={clsx(classes.logo, props.classes || '', 'logo')}></div>
     );
     return (
         <CustomerLogoField />

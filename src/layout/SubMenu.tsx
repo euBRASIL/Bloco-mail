@@ -12,18 +12,30 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { useTranslate, ReduxState } from 'react-admin';
+import clsx from 'clsx';
+import up from '../asset/red/up.png';
 
 const useStyles = makeStyles(theme => ({
-    icon: { minWidth: theme.spacing(5) },
+    icon: {
+        width: '20px',
+        height: '10px',
+        backgroundImage: `url(${up})`,
+        backgroundSize: '100%',
+        marginRight: '12px',
+        transition: 'transform 0.5s ease-in-out 0s',
+        transformOrigin: 'center center',
+    },
+    menuItemDown: {
+        transform: 'rotate(180deg)',
+    },
     sidebarIsOpen: {
         '& a': {
-            paddingLeft: theme.spacing(4),
+            paddingLeft: '47px',
             transition: 'padding-left 195ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
         },
     },
     sidebarIsClosed: {
         '& a': {
-            paddingLeft: theme.spacing(2),
             transition: 'padding-left 195ms cubic-bezier(0.4, 0, 0.6, 1) 0ms',
         },
     },
@@ -35,6 +47,7 @@ interface Props {
     icon: ReactElement;
     isOpen: boolean;
     name: string;
+    className: string;
 }
 
 const SubMenu: FC<Props> = ({
@@ -44,6 +57,7 @@ const SubMenu: FC<Props> = ({
     icon,
     children,
     dense,
+    className,
 }) => {
     const translate = useTranslate();
     const classes = useStyles();
@@ -52,11 +66,9 @@ const SubMenu: FC<Props> = ({
     );
 
     const header = (
-        <MenuItem dense={dense} button onClick={handleToggle}>
-            <ListItemIcon className={classes.icon}>
-                {isOpen ? <ExpandMore /> : icon}
-            </ListItemIcon>
-            <Typography variant="inherit" color="textSecondary">
+        <MenuItem dense={dense} button onClick={handleToggle} className={className}>
+            <ListItemIcon className={clsx(classes.icon, isOpen ? classes.menuItemDown : '')} />
+            <Typography variant="inherit" color="inherit">
                 {translate(name)}
             </Typography>
         </MenuItem>

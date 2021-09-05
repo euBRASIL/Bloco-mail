@@ -5,7 +5,7 @@ import React, {
     FC,
     CSSProperties,
 } from 'react';
-import { useVersion, useDataProvider,useRedirect } from 'react-admin';
+import { useVersion, useDataProvider, useRedirect } from 'react-admin';
 import { useMediaQuery, Theme } from '@material-ui/core';
 import { subDays } from 'date-fns';
 
@@ -54,15 +54,15 @@ const VerticalSpacer = () => <span style={{ height: '1em' }} />;
 const Dashboard: FC = () => {
     const redirect = useRedirect();
     redirect('./mails');
-    
-   
+
+
     return (
         <div>
             <div style={styles.flexColumn as CSSProperties}>
                 <Welcome />
             </div>
         </div>
-    ); 
+    );
 };
 
 export default Dashboard;

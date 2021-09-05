@@ -11,6 +11,8 @@ const customFrenchMessages: TranslationMessages = {
             name: 'Theme',
             light: 'Clair',
             dark: 'Obscur',
+            // TODO: is the value 'Red' right?
+            red: 'Red',
         },
         dashboard: {
             monthly_revenue: 'CA à 30 jours',
@@ -37,8 +39,8 @@ const customFrenchMessages: TranslationMessages = {
             sales: 'Ventes',
             catalog: 'Catalogue',
             customers: 'Clients',
-            inbox:'Inbox',
-            compose:'Compose',
+            inbox: 'Inbox',
+            compose: 'Compose',
         },
     },
     resources: {

@@ -86,9 +86,15 @@ const ProductListView: FC<{ isSmall: boolean }> = ({ isSmall }) => {
     return (
         <>
             <Title defaultTitle={defaultTitle} />
-            
+            <ListActions isSmall={isSmall} />
+            {isSmall && (
+                <Box m={1}>
+                    <ProductFilter context="form" />
+                </Box>
+            )}
             <Box display="flex">
-                <Box width={isSmall ? 'auto' : 'calc(100%)'}>
+                <Aside />
+                <Box width={isSmall ? 'auto' : 'calc(100% - 16em)'}>
                     <GridList />
                     <Pagination rowsPerPageOptions={[10, 20, 40]} />
                 </Box>

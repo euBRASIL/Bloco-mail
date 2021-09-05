@@ -3,61 +3,93 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Field, withTypes } from 'react-final-form';
 import { useLocation } from 'react-router-dom';
+import clsx from 'clsx';
+import Logo from './Logo';
 
 import {
-    Avatar,
+    Container,
     Button,
     Card,
     CardActions,
     CircularProgress,
     TextField,
 } from '@material-ui/core';
-import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import { createTheme, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import LockIcon from '@material-ui/icons/Lock';
 import { Notification, useTranslate, useLogin, useNotify } from 'react-admin';
 
-import { lightTheme } from './themes';
+import { redTheme } from './redTheme';
 
 const useStyles = makeStyles(theme => ({
-    main: {
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        background: 'url(https://source.unsplash.com/h5iazR-wljU/1600x900)',
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
+    logo: {
+        width: '178px',
+        height: '65px',
+        position: 'fixed',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        top: '13%',
+        backgroundSize: '100%',
     },
     card: {
-        minWidth: 400,
-        minHeight:150,
-        marginTop: '6em',
+        width: '484px',
+        height: '280px',
+        padding: '66px 52px',
+        position: 'fixed',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        top: '28.7%',
+        backgroundColor: '#fff',
+        borderRadius: '2px',
+        boxSizing: 'border-box',
+        textAlign: 'center',
+
+        '& .login-btn': {
+            height: '52px',
+            marginTop: '46px',
+            borderRadius: '5px',
+            transition: 'transform .3s ease',
+
+            '&:hover': {
+                transform: 'scale(1.05)',
+            }
+        },
+
+        '& .login-text': {
+            fontSize: '30px',
+            color: '#4B3A3A',
+            fontWeight: 500,
+        },
+
+        "@media screen and (max-height: 800px)": {
+            top: '38%',
+        },
+
+        "@media screen and (max-width: 1600px)": {
+            width: '400px',
+            height: '210px',
+            padding: '42px 48px 48px',
+
+            '& .login-btn': {
+                height: '42px',
+                marginTop: '42px',
+            },
+
+            '& .login-text': {
+                fontSize: '24px',
+            },
+        },
     },
-    avatar: {
-        margin: '1em',
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    icon: {
-        width:110,
-        height:110,
-    },
-    hint: {
-        marginTop: '1em',
-        display: 'flex',
-        justifyContent: 'center',
-        color: theme.palette.grey[500],
-    },
-    form: {
-        padding: '0 1em 1em 1em',
-    },
-    input: {
-        marginTop: '1em',
-    },
-    actions: {
-        padding: '0 1em 1em 1em',
+    description: {
+        position: 'fixed',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        top: '22.6%',
+        backgroundSize: '100%',
+
+        "@media screen and (max-height: 800px)": {
+            top: '28%',
+        }
     },
 }));
 
@@ -99,16 +131,16 @@ const Login = () => {
                     typeof error === 'string'
                         ? error
                         : typeof error === 'undefined' || !error.message
-                        ? 'ra.auth.sign_in_error'
-                        : error.message,
+                            ? 'ra.auth.sign_in_error'
+                            : error.message,
                     'warning',
                     {
                         _:
                             typeof error === 'string'
                                 ? error
                                 : error && error.message
-                                ? error.message
-                                : undefined,
+                                    ? error.message
+                                    : undefined,
                     }
                 );
             }
@@ -126,52 +158,38 @@ const Login = () => {
         return errors;
     };
 
-   
-
     return (
-        <Form
-            onSubmit={handleSubmit}
-            render={({ handleSubmit }) => (
-                <form onSubmit={handleSubmit} noValidate>
-                    <div className={classes.main}>
-                        <Card className={classes.card}>
-                            <div className={classes.avatar}>
-                                <img src='/logomark.png' className={classes.icon} ></img>
-                            </div>
-                            <div className={classes.hint}>
-                                
-                            </div>
-                            <div className={classes.form}>
-                                <div className={classes.input}>
-                                   
-                                </div>
-                                <div className={classes.input}>
-                                    
-                                </div>
-                            </div>
-                            <CardActions className={classes.actions}>
-                                <Button
-                                    variant="contained"
-                                    type="submit"
-                                    color="primary"
-                                    disabled={loading}
-                                    fullWidth
-                                >
-                                    {loading && (
-                                        <CircularProgress
-                                            size={25}
-                                            thickness={2}
-                                        />
-                                    )}
-                                    {translate('pos.login')}
-                                </Button>
-                            </CardActions>
+        <Container maxWidth={false} className="login-wrapper">
+            <Form
+                onSubmit={handleSubmit}
+                render={({ handleSubmit }) => (
+                    <form onSubmit={handleSubmit} noValidate>
+                        <div className={clsx(classes.logo, "login-logo")} />
+                        <div className={clsx(classes.description, "login-description")} />
+                        <Card className={clsx(classes.card, "login-card")}>
+                            <span className="login-text">立即登录</span>
+                            <Button
+                                variant="contained"
+                                type="submit"
+                                color="primary"
+                                disabled={loading}
+                                className="login-btn"
+                                fullWidth
+                            >
+                                {loading && (
+                                    <CircularProgress
+                                        size={25}
+                                        thickness={2}
+                                    />
+                                )}
+                                {translate('pos.login')}
+                            </Button>
                         </Card>
                         <Notification />
-                    </div>
-                </form>
-            )}
-        />
+                    </form>
+                )}
+            />
+        </Container>
     );
 };
 
@@ -183,10 +201,11 @@ Login.propTypes = {
 // We need to put the ThemeProvider decoration in another component
 // Because otherwise the useStyles() hook used in Login won't get
 // the right theme
+
 const LoginWithTheme = (props: any) => (
-    <ThemeProvider theme={createMuiTheme(lightTheme)}>
+    < ThemeProvider theme={createTheme(redTheme)} >
         <Login {...props} />
-    </ThemeProvider>
+    </ThemeProvider >
 );
 
 export default LoginWithTheme;

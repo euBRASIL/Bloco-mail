@@ -20,6 +20,7 @@ import {
     SearchInput,
     TextField,
     TextInput,
+    Pagination,
     useGetList,
     useListContext,
 } from 'react-admin';
@@ -32,11 +33,12 @@ import CustomerReferenceField from '../visitors/CustomerReferenceField';
 import AddressField from '../visitors/AddressField';
 import MobileGrid from './MobileGrid';
 import { Customer } from '../types';
+import Empty from '../components/empty'
 
 const SentFilter: FC<Omit<FilterProps, 'children'>> = props => (
     <Filter {...props}>
         <SearchInput source="q" alwaysOn />
-        
+
     </Filter>
 );
 
@@ -48,7 +50,7 @@ const tabs = [
     { id: 'sent', name: 'Sent' },
 ];
 
-interface TabbedDatagridProps extends DatagridProps {}
+interface TabbedDatagridProps extends DatagridProps { }
 
 const useGetTotals = (filterValues: any) => {
     const { total: totalSent } = useGetList(
@@ -57,7 +59,7 @@ const useGetTotals = (filterValues: any) => {
         { field: 'id', order: 'ASC' },
         { ...filterValues, status: 'sent' }
     );
-    
+
     return {
         sent: totalSent
     };
@@ -71,7 +73,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
         theme.breakpoints.down('xs')
     );
     const [sent, setSent] = useState<Identifier[]>([] as Identifier[]);
-    
+
     const totals = useGetTotals(filterValues) as any;
 
     useEffect(() => {
@@ -96,11 +98,10 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     );
 
     const selectedIds = sent;
-            
+
     return (
         <Fragment>
-            
-            <Divider />
+            {/* <Divider /> */}
             {isXSmall ? (
                 <ListContextProvider
                     value={{ ...listContext, ids: selectedIds }}
@@ -113,9 +114,9 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                         <ListContextProvider
                             value={{ ...listContext, ids: sent }}
                         >
-                            <Datagrid {...props} optimized rowClick="show">
-                                <TextField source="sender" label='Recipient' headerClassName={classes.total}/>   
-                                <TextField source="subject" headerClassName={classes.total}/>
+                            <Datagrid {...props} empty={<Empty />} optimized rowClick="show">
+                                <TextField source="sender" label='Recipient' headerClassName={classes.total} />
+                                <TextField source="subject" headerClassName={classes.total} />
                                 <DateField source="date" headerClassName={classes.total} />
                             </Datagrid>
                         </ListContextProvider>
@@ -126,6 +127,13 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     );
 };
 
+// https://material-ui.com/zh/components/data-grid/pagination/
+const PostPagination = props => {
+    return (
+        <Pagination rowsPerPageOptions={[10]} labelRowsPerPage={''} {...props} limit={null} />
+    )
+}
+
 const SentList: FC<ListProps> = props => (
     <List
         {...props}
@@ -133,7 +141,10 @@ const SentList: FC<ListProps> = props => (
         sort={{ field: 'date', order: 'DESC' }}
         perPage={25}
         exporter={false}
-        filters={<SentFilter />}
+        // filters={<SentFilter />}
+        // delete MuiToolbar
+        actions={false}
+        pagination={<PostPagination />}
     >
         <TabbedDatagrid />
     </List>

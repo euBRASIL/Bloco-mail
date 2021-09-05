@@ -21,10 +21,6 @@ import sent from './sent';
 import trash from './trash';
 import projects from './projects';
 import asset from './asset';
-
-
-
-
 import dataProviderFactory from './dataProvider';
 
 const i18nProvider = polyglotI18nProvider(locale => {
@@ -86,7 +82,7 @@ const App = () => {
                 options={{ label: 'Trash' }}
             />
 
-           <Resource
+            <Resource
                 name="assets"
                 {...asset}
                 options={{ label: 'Assets' }}

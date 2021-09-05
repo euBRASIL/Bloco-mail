@@ -30,6 +30,14 @@ const Configuration = () => {
                 <Button
                     variant="contained"
                     className={classes.button}
+                    color={theme === 'red' ? 'primary' : 'default'}
+                    onClick={() => dispatch(changeTheme('red'))}
+                >
+                    {translate('pos.theme.red')}
+                </Button>
+                {/* <Button
+                    variant="contained"
+                    className={classes.button}
                     color={theme === 'light' ? 'primary' : 'default'}
                     onClick={() => dispatch(changeTheme('light'))}
                 >
@@ -42,7 +50,7 @@ const Configuration = () => {
                     onClick={() => dispatch(changeTheme('dark'))}
                 >
                     {translate('pos.theme.dark')}
-                </Button>
+                </Button> */}
             </CardContent>
             <CardContent>
                 <div className={classes.label}>{translate('pos.language')}</div>

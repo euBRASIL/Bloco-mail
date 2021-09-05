@@ -1,7 +1,6 @@
 import { random, lorem } from 'faker/locale/en';
 
 import { randomFloat, weightedBoolean } from './utils';
-import coinlist from './coinlist.json';
 
 const productReferences = {
     animals: [
@@ -163,8 +162,6 @@ const productReferences = {
     ],
 };
 
-
-
 export default db => {
     let id = 0;
 
@@ -174,28 +171,23 @@ export default db => {
             ...Array.from(Array(10).keys()).map(index => {
                 const width = randomFloat(10, 40);
                 const height = randomFloat(10, 40);
-                var Rand = Math.random();
-                var RangePrice = 500 - 1;
-                const coinl = random.arrayElement<any>(coinlist);
-                const projecttemp = {
-                            name: coinl.cryptoCurrency.slug,
-                            projectName: coinl.projectName,
-                            content: 'base64xxxxxxxxxxxxcode',
-                            icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/'+coinl.cryptoCurrency.cryptoId+'.png',
-                            coinname:coinl.cryptoCurrency.symbol,
-                            url: 'https://source.unsplash.com/random/720x480',
-                            price:((0 + Math.round(Rand * RangePrice))/1000)
-                };
 
                 return {
                     id: id++,
                     category_id: category.id,
-                    reference: projecttemp.name,
+                    reference: productReferences[category.name][index],
                     width: width,
                     height: height,
-                    price: projecttemp.price,
+                    price: randomFloat(
+                        (width * height) / 20,
+                        (width * height) / 15
+                    ),
                     thumbnail:
-                    projecttemp.icon,
+                        'https://marmelab.com/posters/' +
+                        category.name +
+                        '-' +
+                        (index + 1) +
+                        '.jpeg',
                     image:
                         'https://marmelab.com/posters/' +
                         category.name +

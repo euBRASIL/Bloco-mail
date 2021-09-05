@@ -8,7 +8,7 @@ type Action =
     | { type: 'OTHER_ACTION'; payload?: any };
 
 const themeReducer: Reducer<State, Action> = (
-    previousState = 'light',
+    previousState = 'red',
     action
 ) => {
     if (action.type === CHANGE_THEME) {

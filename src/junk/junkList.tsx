@@ -20,10 +20,13 @@ import {
     SearchInput,
     TextField,
     TextInput,
+    Pagination,
     useGetList,
     useListContext,
 } from 'react-admin';
 import { useMediaQuery, Divider, Tabs, Tab, Theme } from '@material-ui/core';
+import Empty from '../components/empty'
+
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -36,7 +39,7 @@ import { Customer } from '../types';
 const JunkFilter: FC<Omit<FilterProps, 'children'>> = props => (
     <Filter {...props}>
         <SearchInput source="q" alwaysOn />
-        
+
     </Filter>
 );
 
@@ -48,7 +51,7 @@ const tabs = [
     { id: 'junk', name: 'Junk' },
 ];
 
-interface TabbedDatagridProps extends DatagridProps {}
+interface TabbedDatagridProps extends DatagridProps { }
 
 const useGetTotals = (filterValues: any) => {
     const { total: totalJunk } = useGetList(
@@ -57,7 +60,7 @@ const useGetTotals = (filterValues: any) => {
         { field: 'id', order: 'ASC' },
         { ...filterValues, status: 'junk' }
     );
-    
+
     return {
         junk: totalJunk
     };
@@ -65,13 +68,15 @@ const useGetTotals = (filterValues: any) => {
 
 const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     const listContext = useListContext();
+    // console.log(listContext)
+
     const { ids, filterValues, setFilters, displayedFilters } = listContext;
     const classes = useDatagridStyles();
     const isXSmall = useMediaQuery<Theme>(theme =>
         theme.breakpoints.down('xs')
     );
     const [junk, setJunk] = useState<Identifier[]>([] as Identifier[]);
-    
+
     const totals = useGetTotals(filterValues) as any;
 
     useEffect(() => {
@@ -96,11 +101,10 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     );
 
     const selectedIds = junk;
-            
+
     return (
         <Fragment>
-            
-            <Divider />
+            {/* <Divider /> */}
             {isXSmall ? (
                 <ListContextProvider
                     value={{ ...listContext, ids: selectedIds }}
@@ -113,10 +117,10 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                         <ListContextProvider
                             value={{ ...listContext, ids: junk }}
                         >
-                            <Datagrid {...props} optimized rowClick="show">
-                                <TextField source="sender" headerClassName={classes.total}/>  
-                                <TextField source="subject" headerClassName={classes.total}/>
-                                <DateField source="date" showTime headerClassName={classes.total}/>
+                            <Datagrid {...props} empty={<Empty />} optimized rowClick="show">
+                                <TextField source="sender" headerClassName={classes.total} />
+                                <TextField source="subject" headerClassName={classes.total} />
+                                <DateField source="date" showTime headerClassName={classes.total} />
                             </Datagrid>
                         </ListContextProvider>
                     )}
@@ -126,6 +130,13 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     );
 };
 
+// https://material-ui.com/zh/components/data-grid/pagination/
+const PostPagination = props => {
+    return (
+        <Pagination rowsPerPageOptions={[10]} labelRowsPerPage={''} {...props} limit={null} />
+    )
+}
+
 const JunkList: FC<ListProps> = props => (
     <List
         {...props}
@@ -133,7 +144,11 @@ const JunkList: FC<ListProps> = props => (
         sort={{ field: 'date', order: 'DESC' }}
         perPage={25}
         exporter={false}
-        filters={<JunkFilter />}
+        empty={<Empty />}
+        // filters={<JunkFilter />}
+        // delete MuiToolbar
+        actions={false}
+        pagination={<PostPagination />}
     >
         <TabbedDatagrid />
     </List>

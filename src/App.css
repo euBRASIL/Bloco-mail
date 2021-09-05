@@ -1,3 +1,7 @@
+input {
+  outline: none;
+}
+
 .App {
   text-align: center;
 }
