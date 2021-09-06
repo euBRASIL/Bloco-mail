@@ -39,7 +39,10 @@ import Totals from './Totals';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        paddingTop: 15,
+        '& form': {
+            paddingTop: 15,
+            margin: '10px 15px',
+        },
 
         '&>div': {
             marginTop: 0,
@@ -69,10 +72,11 @@ const useStyles = makeStyles(theme => ({
                 display: 'inline-block',
             },
             '& button': {
-                height: '28px',
-                lineHeight: '28px',
-                padding: '0 10px',
-                borderRadius: '5px',
+                height: '38px',
+                lineHeight: '38px',
+                padding: '0 15px',
+                borderRadius: '10px',
+                fontSize: '16px',
                 color: '#fff',
                 transition: 'transform 0.3s ease',
 
@@ -165,7 +169,7 @@ const InboxCreate: FC<CreateProps> = props => {
             <SimpleForm variant="outlined">
                 <TextInput source="Account" className="custom-input" validate={required()} label='Account' />
                 <TextInput source="Subject" className="custom-input" validate={required()} label='Subject' />
-                <RichTextInput className="custom-input" source="description" label="Content" options={richTextOptions} />
+                <RichTextInput source="description" label="Content" options={richTextOptions} />
                 <Typography variant="h6" gutterBottom className={classes.subtitle}>
                     Select Asset
                 </Typography>

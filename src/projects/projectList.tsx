@@ -56,15 +56,20 @@ const ProjectFilter: FC<Omit<FilterProps, 'children'>> = props => (
 const useDatagridStyles = makeStyles(
     theme => ({
         root: {
+            '& .MuiTableCell-root': {
+                height: 65,
+            },
+        },
+        customer: {
             display: 'flex',
             flexWrap: 'nowrap',
             alignItems: 'center',
         },
         total: { fontWeight: 'bold' },
         project_avatar: {
-            width: 64,
-            height: 64,
-
+            width: 55,
+            height: 55,
+            borderRadius: 18,
         },
         total_amm: { fontWeight: 'bold', marginRight: 5 },
 
@@ -125,7 +130,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
 
     const CustomerTotalField: FC<FieldProps<Project>> = props => (
         props.record ? (
-            <div className={classes.root}>
+            <div className={classes.customer}>
                 <TextField source="total" />
                 <div className={classes.total}>&nbsp;&nbsp;{props.record.assets.coinname}</div>
             </div>
@@ -133,7 +138,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     );
 
     const CustomerAvatarField: FC<FieldProps<Project>> = ({ record }) =>
-        record ? (<div className={classes.root}>
+        record ? (<div className={classes.customer}>
             <Typography >
                 <Avatar className={classes.project_avatar} src={`${record.assets.icon}`} />
             </Typography>
@@ -152,13 +157,13 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                     <MobileGrid {...props} ids={selectedIds} />
                 </ListContextProvider>
             ) : (
-                <div>
+                <div className={classes.root}>
                     {filterValues.status === 'ongoing' && (
                         <ListContextProvider
                             value={{ ...listContext, ids: project }}
                         >
                             <Datagrid {...props} empty={<Empty />} optimized rowClick="show">
-                                <CustomerAvatarField source='assets.icon' className={classes.root} label='' />
+                                <CustomerAvatarField source='assets.icon' className={classes.customer} label='' />
                                 <TextField source="projectname" label='Project' className={classes.total} headerClassName={classes.total} />
                                 <TextField source="tags" label='Stage' headerClassName={classes.total} />
                                 <TextField source="participated" headerClassName={classes.total} />

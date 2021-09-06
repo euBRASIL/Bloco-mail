@@ -611,11 +611,15 @@ export const redTheme = {
           position: 'relative',
           boxSizing: 'border-box',
 
+          '& .ql-toolbar.ql-snow': {
+            margin: '10px 0 15px',
+          },
+
           '& .MuiFormLabel-root': {
             width: '90px',
             marginRight: '10px',
             position: 'absolute',
-            top: '40px',
+            top: '52px',
             transform: 'none!important',
             fontWeight: 600,
             fontSize: '18px',
@@ -638,11 +642,43 @@ export const redTheme = {
               top: 5,
               right: 0,
               backgroundColor: '#ccc',
-            }
+            },
+
+            '&:last-child:after': {
+              display: 'none',
+            },
           },
 
           '& .ql-icon-picker': {
             paddingLeft: '4px',
+          },
+
+          '& .ql-toolbar.ql-snow .ql-picker-label': {
+            color: '#6E6E6E',
+
+            '&:hover': {
+              color: '#FA6554',
+            },
+          },
+
+          '& .ql-toolbar.ql-snow .ql-picker-label.ql-active, & .ql-toolbar.ql-snow .ql-picker-item:hover, & .ql-toolbar.ql-snow .ql-picker-item.ql-selected, & .ql-snow.ql-toolbar button:hover': {
+            color: '#FA6554',
+          },
+
+          '& .ql-toolbar.ql-snow button.ql-active .ql-fill, & .ql-toolbar.ql-snow button:hover .ql-fill': {
+            fill: '#FA6554',
+          },
+
+          '& .ql-toolbar.ql-snow .ql-stroke, ': {
+            stroke: '#6E6E6E',
+          },
+
+          '& .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke, & .ql-toolbar.ql-snow .ql-picker-label:hover .ql-stroke, & .ql-toolbar.ql-snow button.ql-active .ql-stroke, & .ql-toolbar.ql-snow button:hover .ql-stroke, & .ql-snow .ql-picker.ql-expanded .ql-picker-label .ql-stroke, & .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke, & .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke, & .ql-snow.ql-toolbar button:hover .ql-fill, & .ql-snow.ql-toolbar button.ql-active .ql-fill': {
+            stroke: '#FA6554',
+          },
+
+          '& .ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-label': {
+            border: 'none',
           },
 
           '& .ql-editor': {

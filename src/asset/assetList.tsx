@@ -55,11 +55,14 @@ const AssetFilter: FC<Omit<FilterProps, 'children'>> = props => (
     </Filter>
 );
 
-
-
 const useDatagridStyles = makeStyles(
     theme => ({
         root: {
+            '& .MuiTableCell-root': {
+                height: 65,
+            },
+        },
+        customer: {
             display: 'flex',
             flexWrap: 'nowrap',
             alignItems: 'center',
@@ -67,11 +70,11 @@ const useDatagridStyles = makeStyles(
         },
         total: { fontWeight: 'bold' },
         asset_avatar: {
-            width: 64,
-            height: 64,
+            width: 55,
+            height: 55,
+            borderRadius: 18,
         },
         total_amm: { fontWeight: 'bold', marginRight: 5 },
-
     }));
 
 const tabs = [
@@ -107,7 +110,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     const totals = useGetTotals(filterValues) as any;
 
     const CustomerAvatarField: FC<FieldProps<Asset>> = ({ record }) =>
-        record ? (<div className={classes.root}>
+        record ? (<div className={classes.customer}>
             <Typography >
                 <Avatar className={classes.asset_avatar} src={`${record.assets.icon}`} />
             </Typography>
@@ -139,7 +142,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
 
     const CustomerTotalField: FC<FieldProps<Asset>> = props => (
         props.record ? (
-            <div className={classes.root}>
+            <div className={classes.customer}>
                 <TextField source="total" />
                 <div className={classes.total}>&nbsp;&nbsp;{props.record.assets.coinname}</div>
             </div>
@@ -148,7 +151,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
 
     const CustomerPriceField: FC<FieldProps<Asset>> = props => (
         props.record ? (
-            <div className={classes.root}>
+            <div className={classes.customer}>
                 <div className={classes.total}>$</div><TextField source="price" />&nbsp;&nbsp;<IconTrendingUp />
             </div>
         ) : null
@@ -157,10 +160,10 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     const CustomerAssetField: FC<FieldProps<Asset>> = props => (
         props.record ? (
             <div>
-                <div className={classes.root}>
+                <div className={classes.customer}>
                     <TextField source="name" className={classes.total} />
                 </div>
-                <div className={classes.root}>
+                <div className={classes.customer}>
                     <TextField source="canister" />
                 </div>
             </div>
@@ -179,13 +182,13 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                     <MobileGrid {...props} ids={selectedIds} />
                 </ListContextProvider>
             ) : (
-                <div>
+                <div className={classes.root}>
                     {filterValues.status === 'ongoing' && (
                         <ListContextProvider
                             value={{ ...listContext, ids: asset }}
                         >
                             <Datagrid {...props} optimized >
-                                <CustomerAvatarField source='assets.icon' className={classes.root} label='' />
+                                <CustomerAvatarField source='assets.icon' className={classes.customer} label='' />
                                 <CustomerAssetField source="name" label='Asset' headerClassName={classes.total} />
                                 <CustomerPriceField source="price" label='Price (USD)' headerClassName={classes.total} />
                                 <CustomerTotalField source="total" label='Total Amount' headerClassName={classes.total} />
