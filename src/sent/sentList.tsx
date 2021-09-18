@@ -34,6 +34,8 @@ import AddressField from '../visitors/AddressField';
 import MobileGrid from './MobileGrid';
 import { Customer } from '../types';
 import Empty from '../components/empty'
+import PostPagination from '../components/pagination'
+import BulkActionButtons from '../components/BulkActionButtons'
 
 const SentFilter: FC<Omit<FilterProps, 'children'>> = props => (
     <Filter {...props}>
@@ -127,13 +129,6 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     );
 };
 
-// https://material-ui.com/zh/components/data-grid/pagination/
-const PostPagination = props => {
-    return (
-        <Pagination rowsPerPageOptions={[10]} labelRowsPerPage={''} {...props} limit={null} />
-    )
-}
-
 const SentList: FC<ListProps> = props => (
     <List
         {...props}
@@ -145,6 +140,7 @@ const SentList: FC<ListProps> = props => (
         // delete MuiToolbar
         actions={false}
         pagination={<PostPagination />}
+        bulkActionButtons={<BulkActionButtons />}
     >
         <TabbedDatagrid />
     </List>

@@ -45,8 +45,8 @@ import { Asset } from '../types'
 import IconSwap from '@material-ui/icons/SwapHoriz';
 import IconTrendingUp from '@material-ui/icons/TrendingUp';
 import Empty from '../components/empty'
-
-
+import PostPagination from '../components/pagination'
+import { useStyles } from '../components/BulkActionButtons'
 
 const AssetFilter: FC<Omit<FilterProps, 'children'>> = props => (
     <Filter {...props}>
@@ -187,7 +187,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                         <ListContextProvider
                             value={{ ...listContext, ids: asset }}
                         >
-                            <Datagrid {...props} optimized >
+                            <Datagrid {...props} empty={<Empty />} optimized hasBulkActions={false}>
                                 <CustomerAvatarField source='assets.icon' className={classes.customer} label='' />
                                 <CustomerAssetField source="name" label='Asset' headerClassName={classes.total} />
                                 <CustomerPriceField source="price" label='Price (USD)' headerClassName={classes.total} />
@@ -201,77 +201,49 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     );
 };
 
-
-
-const ListActions = (props) => {
-    const {
-        className,
-        exporter,
-        filters,
-        maxResults,
-        ...rest
-    } = props;
-    const {
-        currentSort,
-        resource,
-        displayedFilters,
-        filterValues,
-        hasCreate,
-        basePath,
-        selectedIds,
-        showFilter,
-        total,
-    } = useListContext();
-
-
+const BulkActionButtons = (props) => {
+    const classes = useStyles();
     const redirect = useRedirect();
     const onMoveAsset = () => {
         redirect('create', './assets');
     };
 
-
     return (
-        <TopToolbar className={className} {...sanitizeListRestProps(rest)}>
-            {filters && cloneElement(filters, {
-                resource,
-                showFilter,
-                displayedFilters,
-                filterValues,
-                context: 'button',
-            })}
-            {/* Add your custom actions */}
-            <Button variant="contained"
-                onClick={onMoveAsset}
-                label="Move Asset"
-            >
-                <IconSwap />
-            </Button>
-        </TopToolbar>
-    );
-};
-
-// https://material-ui.com/zh/components/data-grid/pagination/
-const PostPagination = props => {
-    return (
-        <Pagination rowsPerPageOptions={[10]} labelRowsPerPage={''} {...props} limit={null} />
+        <div className={classes.btn}>
+            <span onClick={onMoveAsset}>MOVE ASSET</span>
+        </div>
     )
 }
 
-const AssetList: FC<ListProps> = props => (
-    <List
-        {...props}
-        filterDefaultValues={{ status: 'ongoing' }}
-        sort={{ field: 'total', order: 'DESC' }}
-        perPage={25}
-        exporter={false}
-        // filters={<AssetFilter />}
-        // actions={<ListActions />}
-        actions={false}
-        pagination={<PostPagination />}
-        bulkActionButtons={false}
-    >
-        <TabbedDatagrid />
-    </List>
-);
+const useListStyles = makeStyles(
+    theme => ({
+        root: {
+            '& h6': {
+                display: 'none',
+            },
+        },
+    }));
+
+const AssetList: FC<ListProps> = props => {
+    const classes = useListStyles();
+
+    return (
+        <List
+            {...props}
+            className={classes.root}
+            filterDefaultValues={{ status: 'ongoing' }}
+            sort={{ field: 'total', order: 'DESC' }}
+            perPage={25}
+            exporter={false}
+            // filters={<AssetFilter />}
+            // actions={<ListActions />}
+            actions={false}
+            pagination={<PostPagination />}
+            bulkActionButtons={<BulkActionButtons />}
+        >
+            <TabbedDatagrid />
+        </List>
+    )
+};
 
 export default AssetList;

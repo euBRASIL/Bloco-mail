@@ -62,6 +62,3 @@ sudo dfx canister install --all -m=reinstall
 ```
 
 ## develop
-
-### Spacing
-https://material-ui.com/zh/customization/spacing/#multiple-arity

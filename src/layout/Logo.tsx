@@ -9,7 +9,7 @@ import {
     FieldProps,
 } from 'react-admin';
 import src from '*.bmp';
-import LOGO from '../asset/red/logo.png'
+import LOGO from '../assets/red/logo.png'
 import { AppState } from '../types';
 import clsx from 'clsx';
 

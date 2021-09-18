@@ -1,38 +1,38 @@
 import { format } from 'date-fns';
-import logo from '../asset/red/logo.png';
-import loginBg from '../asset/red/login-bg.jpg';
-import loginLogo from '../asset/red/login-logo.png';
-import subTitle from '../asset/red/sub-title.png';
+import logo from '../assets/red/logo.png';
+import loginBg from '../assets/red/login-bg.jpg';
+import loginLogo from '../assets/red/login-logo.png';
+import subTitle from '../assets/red/sub-title.png';
 
-import compose from '../asset/red/compose.png';
-import composeHover from '../asset/red/compose-hover.png';
+import compose from '../assets/red/compose.png';
+import composeHover from '../assets/red/compose-hover.png';
 
-import inbox from '../asset/red/inbox.png';
-import inboxHover from '../asset/red/inbox-hover.png';
+import inbox from '../assets/red/inbox.png';
+import inboxHover from '../assets/red/inbox-hover.png';
 
-import junk from '../asset/red/junk.png';
-import junkHover from '../asset/red/junk-hover.png';
+import junk from '../assets/red/junk.png';
+import junkHover from '../assets/red/junk-hover.png';
 
-import sent from '../asset/red/sent.png';
-import sentHover from '../asset/red/sent-hover.png';
+import sent from '../assets/red/sent.png';
+import sentHover from '../assets/red/sent-hover.png';
 
-import subscription from '../asset/red/subscription.png';
-import subscriptionHover from '../asset/red/subscription-hover.png';
+import subscription from '../assets/red/subscription.png';
+import subscriptionHover from '../assets/red/subscription-hover.png';
 
-import assets from '../asset/red/assets.png';
-import assetsHover from '../asset/red/assets-hover.png';
+import assets from '../assets/red/assets.png';
+import assetsHover from '../assets/red/assets-hover.png';
 
-import trash from '../asset/red/trash.png';
-import trashHover from '../asset/red/trash-hover.png';
+import trash from '../assets/red/trash.png';
+import trashHover from '../assets/red/trash-hover.png';
 
-import settings from '../asset/red/settings.png';
-import settingsHover from '../asset/red/settings-hover.png';
+import settings from '../assets/red/settings.png';
+import settingsHover from '../assets/red/settings-hover.png';
 
-import search from '../asset/red/search.png';
-import prev from '../asset/red/prev.png';
-import prevHover from '../asset/red/prev-hover.png';
-import circles from '../asset/red/circles.png';
-import down2 from '../asset/red/down2.png';
+import search from '../assets/red/search.png';
+import prev from '../assets/red/prev.png';
+import prevHover from '../assets/red/prev-hover.png';
+import circles from '../assets/red/circles.png';
+import down2 from '../assets/red/down2.png';
 
 const RaPaginationBottonHover = {
   borderColor: '#FF7669',
@@ -292,13 +292,17 @@ export const redTheme = {
 
     RaBulkActionsToolbar: {
       toolbar: {
-        position: 'absolute',
-        right: 0,
+        position: 'relative',
+        top: '10px',
         backgroundColor: 'transparent',
-        height: 'auto',
+        height: 'auto!important',
         minHeight: 'auto!important',
+        overflow: 'visible!important',
         color: '#FF7669',
         transition: 'none',
+        justifyContent: 'end',
+        padding: 0,
+        marginBottom: '30px',
       },
       title: {
         color: '#FF7669',
@@ -317,26 +321,26 @@ export const redTheme = {
         padding: '0!important',
         minHeight: 'auto',
 
-        '& button': {
-          height: '28px',
-          lineHeight: '28px',
-          padding: '0 10px',
-          borderRadius: '5px',
-          backgroundColor: '#FA6755',
-          color: '#fff',
-          transition: 'transform 0.3s ease',
+        // '& button': {
+        //   height: '28px',
+        //   lineHeight: '28px',
+        //   padding: '0 10px',
+        //   borderRadius: '5px',
+        //   backgroundColor: '#FA6755',
+        //   color: '#fff',
+        //   transition: 'transform 0.3s ease',
 
-          '&:hover': {
-            transform: 'scale(1.1)',
-            backgroundColor: '#FA6755',
-          },
-        },
-        '& svg': {
-          display: 'none',
-        },
-        '& span': {
-          padding: 0,
-        },
+        //   '&:hover': {
+        //     transform: 'scale(1.1)',
+        //     backgroundColor: '#FA6755',
+        //   },
+        // },
+        // '& svg': {
+        //   display: 'none',
+        // },
+        // '& span': {
+        //   padding: 0,
+        // },
       },
     },
 
@@ -370,6 +374,16 @@ export const redTheme = {
     },
 
     RaDatagrid: {
+      table: {
+        '& td:first-child': {
+          borderRadius: '10px 0 0 10px',
+        },
+
+        '& td:last-child': {
+          borderRadius: '0 10px 10px 0',
+        }
+      },
+
       rowEven: {
         backgroundColor: '#FFF6F6',
       },

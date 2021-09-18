@@ -26,6 +26,7 @@ import {
 } from 'react-admin';
 import { useMediaQuery, Divider, Tabs, Tab, Theme } from '@material-ui/core';
 import Empty from '../components/empty'
+import BulkActionButtons from '../components/BulkActionButtons'
 
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -149,6 +150,7 @@ const JunkList: FC<ListProps> = props => (
         // delete MuiToolbar
         actions={false}
         pagination={<PostPagination />}
+        bulkActionButtons={<BulkActionButtons />}
     >
         <TabbedDatagrid />
     </List>

@@ -168,7 +168,7 @@ const CustomAppBar = (props: any) => {
         }
     });
 
-    const needSearch = ['/mails', '/junks', '/sents', '/projects', '/assets'].includes(pathname);
+    const needSearch = ['/mails', '/junks', '/sents', '/projects', '/assets', '/trashs'].includes(pathname);
 
     return (
         // <AppBar {...props} elevation={1} userMenu={<CustomUserMenu />}>

@@ -32,11 +32,14 @@ import CustomerReferenceField from '../visitors/CustomerReferenceField';
 import AddressField from '../visitors/AddressField';
 import MobileGrid from './MobileGrid';
 import { Customer } from '../types';
+import Empty from '../components/empty'
+import PostPagination from '../components/pagination'
+import BulkActionButtons from '../components/BulkActionButtons'
 
 const TrashFilter: FC<Omit<FilterProps, 'children'>> = props => (
     <Filter {...props}>
         <SearchInput source="q" alwaysOn />
-        
+
     </Filter>
 );
 
@@ -48,7 +51,7 @@ const tabs = [
     { id: 'trash', name: 'Trash' },
 ];
 
-interface TabbedDatagridProps extends DatagridProps {}
+interface TabbedDatagridProps extends DatagridProps { }
 
 const useGetTotals = (filterValues: any) => {
     const { total: totalTrash } = useGetList(
@@ -57,7 +60,7 @@ const useGetTotals = (filterValues: any) => {
         { field: 'id', order: 'ASC' },
         { ...filterValues, status: 'trash' }
     );
-    
+
     return {
         trash: totalTrash
     };
@@ -71,7 +74,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
         theme.breakpoints.down('xs')
     );
     const [trash, setTrash] = useState<Identifier[]>([] as Identifier[]);
-    
+
     const totals = useGetTotals(filterValues) as any;
 
     useEffect(() => {
@@ -96,11 +99,10 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     );
 
     const selectedIds = trash;
-            
+
     return (
         <Fragment>
-            
-            <Divider />
+            {/* <Divider /> */}
             {isXSmall ? (
                 <ListContextProvider
                     value={{ ...listContext, ids: selectedIds }}
@@ -113,10 +115,10 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                         <ListContextProvider
                             value={{ ...listContext, ids: trash }}
                         >
-                            <Datagrid {...props} optimized rowClick="show">
-                                <TextField source="sender" headerClassName={classes.total}/>   
-                                <TextField source="subject" headerClassName={classes.total}/>
-                                <DateField source="date" showTime headerClassName={classes.total}/>
+                            <Datagrid {...props} empty={<Empty />} optimized rowClick="show">
+                                <TextField source="sender" headerClassName={classes.total} />
+                                <TextField source="subject" headerClassName={classes.total} />
+                                <DateField source="date" showTime headerClassName={classes.total} />
                             </Datagrid>
                         </ListContextProvider>
                     )}
@@ -133,7 +135,11 @@ const TrashList: FC<ListProps> = props => (
         sort={{ field: 'date', order: 'DESC' }}
         perPage={25}
         exporter={false}
-        filters={<TrashFilter />}
+        // filters={<TrashFilter />}
+        // delete MuiToolbar
+        actions={false}
+        pagination={<PostPagination />}
+        bulkActionButtons={<BulkActionButtons />}
     >
         <TabbedDatagrid />
     </List>

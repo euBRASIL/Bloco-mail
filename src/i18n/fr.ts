@@ -209,6 +209,7 @@ const customFrenchMessages: TranslationMessages = {
                 reject: 'Rejeter',
             },
             notification: {
+                moved_success: 'Moved success',
                 approved_success: 'Commentaire approuvé',
                 approved_error: 'Erreur: Commentaire non approuvé',
                 rejected_success: 'Commentaire rejeté',

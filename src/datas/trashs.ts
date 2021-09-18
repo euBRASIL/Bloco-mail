@@ -1,4 +1,4 @@
-import { random,internet,name,system } from 'faker/locale/en';
+import { random, internet, name, system } from 'faker/locale/en';
 import isAfter from 'date-fns/is_after';
 import subDays from 'date-fns/sub_days';
 
@@ -49,7 +49,7 @@ export default (db, { serializeDate }) => {
             thumbnail: 'https://source.unsplash.com/random/180x120',
             url: 'https://source.unsplash.com/random/720x480',
         };
-        const attachs = [attach1,attach2,attach3];
+        const attachs = [attach1, attach2, attach3];
 
         const total_ex_taxes = basket.reduce(
             (total, product) =>
@@ -71,39 +71,39 @@ export default (db, { serializeDate }) => {
                 ? 'trash'
                 : weightedArrayElement(['trash'], [10, 1]);
 
-        var titles:string[]; 
+        var titles: string[];
         titles = ["WelcomeToCarInsurance",
-                "50lbs in 61 Days",
-                "2 Days Left! Enjoy up to 30x Boost Coins!!",
-                "Welcome to Apple Reward Panel",
-                "Calling All Homeowners..."]
-        const subject = titles[Math.floor(Math.random()*titles.length)];
+            "50lbs in 61 Days",
+            "2 Days Left! Enjoy up to 30x Boost Coins!!",
+            "Welcome to Apple Reward Panel",
+            "Calling All Homeowners..."]
+        const subject = titles[Math.floor(Math.random() * titles.length)];
 
-        var contents:string[]; 
-        contents = ["WelcomeToCarInsurance","....","000000000"]
-        const content = contents[Math.floor(Math.random()*contents.length)];
+        var contents: string[];
+        contents = ["WelcomeToCarInsurance", "....", "000000000"]
+        const content = contents[Math.floor(Math.random() * contents.length)];
 
         const first_name = name.firstName();
         const last_name = name.lastName();
         const sender = internet.email(first_name, last_name);
-        const fullname = first_name+' '+last_name;
+        const fullname = first_name + ' ' + last_name;
         var canister = random.uuid();
         var re = /,/gi;
-        canister = canister.split("-", 4).toString().replace(re, "-")+'-cai'; 
+        canister = canister.split("-", 4).toString().replace(re, "-") + '-cai';
 
         const mailedby = 'dfinity.dmail.ai'
         const signedby = 'dmail.ai'
-     
+
         return {
             id,
             subject: subject,
-            sender:fullname,
-            sendermail:sender,
-            canister:canister,
-            mailedby:mailedby,
-            signedby:signedby,
+            sender: fullname,
+            sendermail: sender,
+            canister: canister,
+            mailedby: mailedby,
+            signedby: signedby,
             content: content,
-            attachs:attachs,
+            attachs: attachs,
             reference: random.alphaNumeric(6).toUpperCase(),
             date: serializeDate ? date.toISOString() : date,
             customer_id: customer.id,

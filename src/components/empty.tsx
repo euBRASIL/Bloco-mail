@@ -1,5 +1,5 @@
 import * as React from 'react';
-import empty from '../asset/red/empty.png';
+import empty from '../assets/red/empty.png';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({

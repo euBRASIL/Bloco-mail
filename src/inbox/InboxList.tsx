@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { FC, Fragment, useCallback, useEffect, useState, cloneElement, useMemo } from 'react';
 import SubIcon from '@material-ui/icons/TurnedInNotRounded';
-import Empty from '../components/empty'
 
 import {
     AutocompleteInput,
@@ -44,6 +43,11 @@ import MobileGrid from './MobileGrid';
 import { Mail } from '../types';
 import IconSwap from '@material-ui/icons/SwapHoriz';
 
+import Empty from '../components/empty'
+import PostPagination from '../components/pagination'
+import BulkActionButtons from '../components/BulkActionButtons'
+import { styles } from '../visitors/VisitorCreate';
+
 
 // const InboxFilter: FC<Omit<FilterProps, 'children'>> = props => (
 //     <Filter {...props}>
@@ -54,7 +58,15 @@ import IconSwap from '@material-ui/icons/SwapHoriz';
 
 const useDatagridStyles = makeStyles(
     theme => ({
-        root: {
+        list: {
+            '& .MuiToolbar-root[data-test="bulk-actions-toolbar"]': {
+                position: 'absolute',
+                right: '34px',
+                top: '30px',
+                flexWrap: 'nowrap',
+            }
+        },
+        chunk: {
             display: 'flex',
             flexWrap: 'nowrap',
             alignItems: 'center',
@@ -185,7 +197,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     );
 
     const CustomerAvatarField: FC<FieldProps<Mail>> = ({ record }) =>
-        record ? (<div className={classes.root}>
+        record ? (<div className={classes.chunk}>
             <Typography >
                 <Avatar className={classes.project_avatar} src={`${record.project.icon}`} />
             </Typography>
@@ -256,7 +268,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                             value={{ ...listContext, ids: subscription }}
                         >
                             <Datagrid {...props} empty={<Empty />} rowClick="show" size="medium" className={classes.table}>
-                                <CustomerAvatarField source='project.icon' className={classes.root} label='' />
+                                <CustomerAvatarField source='project.icon' className={classes.chunk} label='' />
                                 <TextField source="project.name" label='Project' headerClassName={classes.total} />
                                 <TextField source="subject" headerClassName={classes.total} />
                                 <DateField source="date" headerClassName={classes.total} />
@@ -302,27 +314,25 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
 //     );
 // };
 
-// https://material-ui.com/zh/components/data-grid/pagination/
-const PostPagination = props => {
+const InboxList: FC<ListProps> = props => {
+    const classes = useDatagridStyles();
     return (
-        <Pagination rowsPerPageOptions={[10]} labelRowsPerPage={''} {...props} limit={null} />
+        <List
+            {...props}
+            className={classes.list}
+            filterDefaultValues={{ status: 'primary' }}
+            sort={{ field: 'date', order: 'DESC' }}
+            perPage={25}
+            exporter={false}
+            // filters={<InboxFilter />}
+            // delete MuiToolbar
+            actions={false}
+            pagination={<PostPagination />}
+            bulkActionButtons={<BulkActionButtons />}
+        >
+            <TabbedDatagrid />
+        </List>
     )
-}
-
-const InboxList: FC<ListProps> = props => (
-    <List
-        {...props}
-        filterDefaultValues={{ status: 'primary' }}
-        sort={{ field: 'date', order: 'DESC' }}
-        perPage={25}
-        exporter={false}
-        // filters={<InboxFilter />}
-        // delete MuiToolbar
-        actions={false}
-        pagination={<PostPagination />}
-    >
-        <TabbedDatagrid />
-    </List>
-);
+};
 
 export default InboxList;

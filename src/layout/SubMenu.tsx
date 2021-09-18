@@ -13,7 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { useTranslate, ReduxState } from 'react-admin';
 import clsx from 'clsx';
-import up from '../asset/red/up.png';
+import up from '../assets/red/up.png';
 
 const useStyles = makeStyles(theme => ({
     icon: {

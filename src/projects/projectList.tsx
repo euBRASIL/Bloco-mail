@@ -42,6 +42,7 @@ import { Project } from '../types'
 
 import IconSubscriptions from '@material-ui/icons/Subscriptions';
 import Empty from '../components/empty'
+import PostPagination from '../components/pagination'
 
 
 const ProjectFilter: FC<Omit<FilterProps, 'children'>> = props => (
@@ -162,7 +163,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                         <ListContextProvider
                             value={{ ...listContext, ids: project }}
                         >
-                            <Datagrid {...props} empty={<Empty />} optimized rowClick="show">
+                            <Datagrid {...props} empty={<Empty />} optimized rowClick="show" hasBulkActions={false}>
                                 <CustomerAvatarField source='assets.icon' className={classes.customer} label='' />
                                 <TextField source="projectname" label='Project' className={classes.total} headerClassName={classes.total} />
                                 <TextField source="tags" label='Stage' headerClassName={classes.total} />
@@ -214,23 +215,16 @@ const ListActions = (props) => {
     );
 };
 
-const PostBulkActionButtons = props => (
-    <Fragment>
-        <Button variant="contained"
-            onClick={() => { alert('Subscription Projects Success!'); }}
-            label="Subscription"
-        >
-            <IconSubscriptions />
-        </Button>
-    </Fragment>
-);
-
-// https://material-ui.com/zh/components/data-grid/pagination/
-const PostPagination = props => {
-    return (
-        <Pagination rowsPerPageOptions={[10]} labelRowsPerPage={''} {...props} limit={false} />
-    )
-}
+// const PostBulkActionButtons = props => (
+//     <Fragment>
+//         <Button variant="contained"
+//             onClick={() => { alert('Subscription Projects Success!'); }}
+//             label="Subscription"
+//         >
+//             <IconSubscriptions />
+//         </Button>
+//     </Fragment>
+// );
 
 const ProjectList: FC<ListProps> = props => (
     <List
@@ -244,7 +238,7 @@ const ProjectList: FC<ListProps> = props => (
         // delete MuiToolbar
         actions={false}
         pagination={<PostPagination />}
-        bulkActionButtons={<PostBulkActionButtons />}
+        bulkActionButtons={false}
     >
         <TabbedDatagrid />
     </List>

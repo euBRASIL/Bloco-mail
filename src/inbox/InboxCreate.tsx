@@ -10,7 +10,6 @@ import {
     ReferenceField,
     SelectInput,
     TextField,
-    Toolbar,
     useTranslate,
     useRedirect,
     SimpleForm,
@@ -35,6 +34,7 @@ import clsx from 'clsx';
 import { Mail, Customer } from '../types';
 import Basket from './Basket';
 import Totals from './Totals';
+import Toolbar from './Toolbar'
 
 
 const useStyles = makeStyles(theme => ({
@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
         '& .MuiCardContent-root': {
             padding: 0,
         },
-        '& .ra-input-Assets, & .ra-input-price': {
+        '& .ra-input-Assets, & .ra-input-Amount, & .ra-input-Price': {
             display: 'inline-block',
 
             '& .MuiOutlinedInput-root': {
@@ -72,25 +72,23 @@ const useStyles = makeStyles(theme => ({
                 display: 'inline-block',
             },
             '& button': {
-                height: '38px',
-                lineHeight: '38px',
-                padding: '0 15px',
-                borderRadius: '10px',
-                fontSize: '16px',
-                color: '#fff',
-                transition: 'transform 0.3s ease',
+                // height: '38px',
+                // lineHeight: '38px',
+                // padding: '0 15px',
+                // borderRadius: '10px',
+                // fontSize: '16px',
+                // color: '#fff',
+                // transition: 'transform 0.3s ease',
+                // textTransform: 'none',
 
-                '&:not(.Mui-disabled)': {
-                    backgroundColor: '#FA6755',
+                // '&:not(.Mui-disabled)': {
+                //     backgroundColor: '#FA6755',
 
-                    '&:hover': {
-                        transform: 'scale(1.1)',
-                        backgroundColor: '#FA6755',
-                    },
-                }
-            },
-            '& svg': {
-                display: 'none',
+                //     '&:hover': {
+                //         transform: 'scale(1.1)',
+                //         backgroundColor: '#FA6755',
+                //     },
+                // }
             },
             '& span': {
                 padding: 0,
@@ -166,7 +164,7 @@ const InboxCreate: FC<CreateProps> = props => {
 
     return (
         <Create {...props} title="Compose" className={classes.root}>
-            <SimpleForm variant="outlined">
+            <SimpleForm variant="outlined" toolbar={<Toolbar />}>
                 <TextInput source="Account" className="custom-input" validate={required()} label='Account' />
                 <TextInput source="Subject" className="custom-input" validate={required()} label='Subject' />
                 <RichTextInput source="description" label="Content" options={richTextOptions} />
@@ -179,11 +177,18 @@ const InboxCreate: FC<CreateProps> = props => {
                     { id: 'doge', name: 'Doge' },
                 ]} />
                 <NumberInput
-                    source="price"
+                    source="Amount"
                     className={clsx(classes.nolabel, "custom-input")}
                     validate={required()}
                     label="Amount"
                     placeholder="Amount"
+                />
+                <TextInput
+                    source="Price"
+                    className={clsx(classes.nolabel, "custom-input")}
+                    validate={required()}
+                    label="Price"
+                    placeholder="Price"
                 />
             </SimpleForm>
         </Create>

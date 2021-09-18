@@ -201,6 +201,10 @@ const customEnglishMessages: TranslationMessages = {
                 reject: 'Reject',
             },
             notification: {
+                deleted_success: 'Deleted sucess',
+                moved_success: 'Moved success',
+                copyed_success: 'Copyed success',
+                forwarded_success: 'Forward success',
                 approved_success: 'Review approved',
                 approved_error: 'Error: Review not approved',
                 rejected_success: 'Review rejected',
