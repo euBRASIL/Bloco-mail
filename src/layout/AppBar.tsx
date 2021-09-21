@@ -10,6 +10,7 @@ import { AppState } from '../types';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import { sidebarWidth } from './utils';
+import back from '../assets/red/back.png';
 
 const useStyles = makeStyles({
     root: {
@@ -39,6 +40,18 @@ const useStyles = makeStyles({
         overflow: 'hidden',
         fontSize: '30px',
         color: '#083353',
+        display: 'flex',
+        alignItems: 'center',
+
+        '& i': {
+            // display: 'block',
+            marginRight: '15px',
+            width: '21px',
+            height: '37px',
+            background: `url(${back}) no-repeat`,
+            backgroundSize: '100%',
+            cursor: 'pointer',
+        },
     },
 
     user: {
@@ -147,7 +160,6 @@ const Search = ({ defaultValue, pathname, classes, ...props }: SearchProps) => {
 const CustomAppBar = (props: any) => {
     const classes = useStyles();
     const pathname = useSelector((state: AppState) => {
-        // console.log(state)
         const location = state?.router?.location;
         return location.pathname || ''
     });
@@ -169,6 +181,10 @@ const CustomAppBar = (props: any) => {
     });
 
     const needSearch = ['/mails', '/junks', '/sents', '/projects', '/assets', '/trashs'].includes(pathname);
+    const isFirstLevel = pathname.includes('/mails/create') || !/^\/[^\/]+\/[^\/]+/.test(pathname);
+    const backToPrev = () => {
+        window.history.back();
+    }
 
     return (
         // <AppBar {...props} elevation={1} userMenu={<CustomUserMenu />}>
@@ -178,7 +194,7 @@ const CustomAppBar = (props: any) => {
                 color="inherit"
                 className={classes.title}
                 id="react-admin-title"
-            />
+            >{isFirstLevel ? null : (<i onClick={backToPrev}></i>)}</Typography>
             <div className={classes.right}>
                 {needSearch ? <Search classes={classes.search} defaultValue={searchQValue} pathname={pathname} /> : null}
                 <CustomUserMenu classes={classes} />

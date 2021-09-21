@@ -18,3 +18,16 @@ input:-webkit-autofill {
   transition: background-color 5000s ease-in-out 0s;
 
 }
+
+p, ul, li, h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+}
+
+ul, li {
+  list-style: none;
+}
+
+select, input {
+  outline: none;
+}

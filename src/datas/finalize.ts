@@ -70,6 +70,11 @@ export default function (db) {
         }
     });
 
+    // list page http request
+    db.nft = [
+
+    ];
+
     // add settings
     db.settings = [
         {

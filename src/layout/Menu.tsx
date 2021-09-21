@@ -69,6 +69,12 @@ const Menus: MenuItemProp[] = [
         leftIcon: <ListItemIcon className="menu-item-icon menu-item-assets" />,
     },
     {
+        name: 'pos.menu.nft',
+        to: '/nft',
+        smart_count: 0,
+        leftIcon: <ListItemIcon className="menu-item-icon menu-item-nft" />,
+    },
+    {
         name: 'pos.menu.more',
         leftIcon: <CreateIcon />,
         to: '',

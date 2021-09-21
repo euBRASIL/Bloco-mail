@@ -1,6 +1,7 @@
 import * as React from 'react';
 import empty from '../assets/red/empty.png';
 import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
 
 const useStyles = makeStyles({
   empty: {
@@ -17,10 +18,11 @@ const useStyles = makeStyles({
 });
 
 const Empty = props => {
+  const { propClass, ...rest } = props;
   const classes = useStyles();
 
   return (
-    <div className={classes.empty}>
+    <div className={clsx(classes.empty, propClass || '')}>
       <img src={empty} />
     </div>
   )

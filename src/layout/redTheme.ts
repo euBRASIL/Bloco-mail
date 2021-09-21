@@ -25,6 +25,9 @@ import assetsHover from '../assets/red/assets-hover.png';
 import trash from '../assets/red/trash.png';
 import trashHover from '../assets/red/trash-hover.png';
 
+import nft from '../assets/red/nft.png';
+import nftHover from '../assets/red/nft-hover.png';
+
 import settings from '../assets/red/settings.png';
 import settingsHover from '../assets/red/settings-hover.png';
 
@@ -61,6 +64,9 @@ const menuItemHovers = {
   },
   '& .menu-item-trash': {
     backgroundImage: `url(${trashHover})`,
+  },
+  '& .menu-item-nft': {
+    backgroundImage: `url(${nftHover})`,
   },
   '& .menu-item-settings': {
     backgroundImage: `url(${settingsHover})`,
@@ -250,6 +256,11 @@ export const redTheme = {
           width: '20px',
           height: '21px',
           backgroundImage: `url(${trash})`,
+        },
+        '& .menu-item-nft': {
+          width: '20px',
+          height: '20px',
+          backgroundImage: `url(${nft})`,
         },
         '& .menu-item-settings': {
           width: '20px',

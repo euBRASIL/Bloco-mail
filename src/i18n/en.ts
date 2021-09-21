@@ -48,6 +48,7 @@ const customEnglishMessages: TranslationMessages = {
             more: 'More',
             trash: 'Trash',
             settings: 'Settings',
+            nft: 'NFT Market',
         },
     },
     resources: {
@@ -202,6 +203,7 @@ const customEnglishMessages: TranslationMessages = {
             },
             notification: {
                 deleted_success: 'Deleted sucess',
+                submit_success: 'Submit sucess',
                 moved_success: 'Moved success',
                 copyed_success: 'Copyed success',
                 forwarded_success: 'Forward success',

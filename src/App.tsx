@@ -21,6 +21,8 @@ import sent from './sent';
 import trash from './trash';
 import projects from './projects';
 import asset from './asset';
+import settings from './settings';
+import nft from './nft';
 import dataProviderFactory from './dataProvider';
 
 const i18nProvider = polyglotI18nProvider(locale => {
@@ -86,6 +88,18 @@ const App = () => {
                 name="assets"
                 {...asset}
                 options={{ label: 'Assets' }}
+            />
+
+            <Resource
+                name="settings"
+                {...settings}
+                options={{ label: 'Settings' }}
+            />
+
+            <Resource
+                name="nft"
+                {...nft}
+                options={{ label: 'NFT Market' }}
             />
 
             <Resource name="invoices" {...invoices} />
