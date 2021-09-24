@@ -43,8 +43,12 @@ const useStyles = makeStyles({
         display: 'flex',
         alignItems: 'center',
 
+        '& span': {
+            display: 'flex',
+            alignItems: 'center',
+        },
+
         '& i': {
-            // display: 'block',
             marginRight: '15px',
             width: '21px',
             height: '37px',
@@ -185,6 +189,11 @@ const CustomAppBar = (props: any) => {
     const backToPrev = () => {
         window.history.back();
     }
+    // console.log(pathname, pathname === '/nft/create')
+    let title = isFirstLevel ? null : (<i onClick={backToPrev}></i>);
+    if (pathname === '/nft/create') {
+        title = (<span><i onClick={backToPrev}></i>NFT Market</span>)
+    }
 
     return (
         // <AppBar {...props} elevation={1} userMenu={<CustomUserMenu />}>
@@ -194,7 +203,7 @@ const CustomAppBar = (props: any) => {
                 color="inherit"
                 className={classes.title}
                 id="react-admin-title"
-            >{isFirstLevel ? null : (<i onClick={backToPrev}></i>)}</Typography>
+            >{title}</Typography>
             <div className={classes.right}>
                 {needSearch ? <Search classes={classes.search} defaultValue={searchQValue} pathname={pathname} /> : null}
                 <CustomUserMenu classes={classes} />

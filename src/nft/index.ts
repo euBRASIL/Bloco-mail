@@ -1,7 +1,7 @@
 import NftList from './nftList';
-import NftCreate from './nftCreate'
+import NftShow from './nftShow'
 
 export default {
   list: NftList,
-  create: NftCreate,
+  show: NftShow,
 };

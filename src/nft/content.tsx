@@ -93,7 +93,7 @@ const Content: FC<ContentProps> = props => {
           <ListContextProvider
             value={{ ...listContext }}
           >
-            <Auction />
+            <Auction name="auction" />
           </ListContextProvider>
         )}
 
@@ -102,7 +102,7 @@ const Content: FC<ContentProps> = props => {
             value={{ ...listContext }}
           >
             {/* <Sell /> */}
-            <Auction />
+            <Auction name="sell" />
           </ListContextProvider>
         )}
 
@@ -111,7 +111,7 @@ const Content: FC<ContentProps> = props => {
             value={{ ...listContext }}
           >
             {/* <My /> */}
-            <Auction />
+            <Auction name="my" />
           </ListContextProvider>
         )}
       </div>

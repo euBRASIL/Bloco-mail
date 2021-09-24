@@ -305,7 +305,6 @@ const Email: FC<CreateProps> = props => {
   const [avaError, setAvaError] = useState(false);
   const [emailError, setEmailError] = useState(false);
 
-
   const onSubmit = () => {
     let hasError = false;
     if (!files.length) {

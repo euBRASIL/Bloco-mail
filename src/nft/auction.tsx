@@ -4,12 +4,25 @@ import {
   useNotify,
   useRedirect,
 } from 'react-admin';
-import { tags } from './utils';
+import { tags, priceTypes } from './utils';
 import test from '../assets/test/test1.jpeg';
 import email from '../assets/red/nft-email.png';
 import date from '../assets/red/nft-date.png';
 import dapper from '../assets/red/nft-dapper.png';
 import type from '../assets/red/6.png';
+import dmail from '../assets/red/d.png';
+import dbg from '../assets/red/dbg.png';
+import down from '../assets/red/down3.png';
+// import transparent from '../assets/red/transparent.png';
+
+import t1 from '../assets/test/t1.png';
+import t2 from '../assets/test/t2.png';
+import t3 from '../assets/test/t3.png';
+import t4 from '../assets/test/t4.png';
+import t5 from '../assets/test/t5.png';
+
+
+import Modal from './modal'
 
 const useStyles = makeStyles(
   theme => ({
@@ -24,6 +37,8 @@ const useStyles = makeStyles(
     tags: {
       display: 'flex',
       justifyContent: 'space-between',
+      alignItems: 'center',
+      flexWrap: 'wrap',
       fontSize: '16px',
       marginTop: '30px',
 
@@ -38,6 +53,7 @@ const useStyles = makeStyles(
         border: '1px solid #ccc',
         boxSizing: 'border-box',
         padding: '0 12px',
+        fontSize: '14px',
       },
 
       '& select': {
@@ -47,6 +63,28 @@ const useStyles = makeStyles(
 
       '& input': {
         width: '100px',
+      },
+
+      '& .search': {
+        marginLeft: '20px',
+
+        '& a': {
+          display: 'inline-block',
+          color: '#fff',
+          height: '28px',
+          lineHeight: '28px',
+          padding: '0 15px',
+          fontSize: '14px',
+          transition: 'transform 0.3s ease',
+          borderRadius: '5px',
+          textTransform: 'none',
+          backgroundColor: '#FA6755',
+          cursor: 'pointer',
+
+          '&:hover': {
+            transform: 'scale(1.05)'
+          }
+        }
       },
 
       '& p': {
@@ -68,7 +106,22 @@ const useStyles = makeStyles(
         marginRight: '50px',
         color: 'rgba(8, 51, 83, 0.5)',
         cursor: 'pointer',
+        verticalAlign: 'middle',
       },
+      '& .more': {
+        display: 'inline-block',
+        width: '20px',
+        height: '11px',
+        background: `url(${down}) no-repeat`,
+        backgroundSize: '100%',
+        transition: 'transform 0.3s ease-in-out 0s',
+        transformOrigin: 'center center',
+        cursor: 'pointer',
+      },
+      '& .more.up': {
+        transform: 'rotate(180deg)',
+      },
+
       '& .on': {
         color: 'rgba(8, 51, 83, 1)',
       },
@@ -94,14 +147,34 @@ const useStyles = makeStyles(
         marginBottom: '40px',
         boxShadow: '0px 7px 7px 0px rgba(217, 216, 215, 0.58)',
         borderRadius: '10px',
+        cursor: 'pointer',
 
         '&:nth-child(4n)': {
           marginRight: 0,
         }
       },
 
+      '& .dmail': {
+        borderRadius: '10px 10px 0 0',
+        backgroundColor: '#FFC5BE',
+        position: 'relative',
+
+        '&::after': {
+          content: '""',
+          width: '88px',
+          height: '109px',
+          background: `url(${dmail}) no-repeat`,
+          backgroundSize: '100%',
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: 'translateX(-50%) translateY(-50%)',
+        },
+      },
+
       '& img': {
         width: '100%',
+        display: 'block',
         borderRadius: '10px 10px 0 0',
       },
 
@@ -113,7 +186,7 @@ const useStyles = makeStyles(
         display: 'flex',
         justifyContent: 'space-between',
         color: '#727A82',
-        fontSize: '12px',
+        fontSize: '14px',
       },
 
       '& p': {
@@ -165,10 +238,11 @@ const useStyles = makeStyles(
         '& a': {
           display: 'inline-block',
           color: '#fff',
-          height: '24px',
-          lineHeight: '24px',
-          padding: '0 12px',
-          fontSize: '12px',
+          height: '30px',
+          lineHeight: '30px',
+          padding: '0 25px',
+          fontSize: '14px',
+          fontWeight: 'bold',
           transition: 'transform 0.3s ease',
           borderRadius: '8px',
           textTransform: 'none',
@@ -190,19 +264,38 @@ const test1 = {
   text2: '3 days left !',
   price: '4',
 }
-const list1 = Array(7).fill('').map((v) => ({ ...test1 }));
+const list1 = Array(9).fill('').map((v) => ({ ...test1 }));
 list1[4].isEmail = false;
 list1[5].isEmail = false;
 list1[6].isEmail = false;
+list1[7].isEmail = false;
+list1[8].isEmail = false;
+
+list1[4].thumb = t1;
+list1[5].thumb = t2;
+list1[6].thumb = t3;
+list1[7].thumb = t4;
+list1[8].thumb = t5;
+
 
 interface Props {
-
+  name: string;
 }
-const Page: FC<Props> = props => {
+const Page: FC<Props> = ({ name }) => {
   const classes = useStyles();
   const [tag, setTag] = useState<number | string>(tags.length ? tags[0].value : 0);
   const onSelectTag = (tag: number | string) => () => {
     setTag(tag)
+  }
+  const [filterTags, setFilterTags] = useState([...tags.slice(0, 4)]);
+  const [moreTag, setMoreTag] = useState(true);
+  useEffect(() => {
+    setFilterTags(moreTag ? [...tags.slice(0, 4)] : [...tags])
+  }, [moreTag]);
+
+  const [priceSelect, setPriceSelect] = useState<number | string>(priceTypes[0].value);
+  const onPriceSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPriceSelect(e.currentTarget.value);
   }
   // TODO: Make sure the thumb width and height rate is immutable.
   const [list, setList] = useState(list1);
@@ -215,45 +308,78 @@ const Page: FC<Props> = props => {
 
   // const notify = useNotify();
   const redirect = useRedirect();
+  // @TODO: consider the onSubmit
   const onWant = () => {
-    redirect('create', './nft');
+    redirect('show', './nft', name);
   };
+
+  const btnText = name === 'auction' ? 'Auction' : name === 'sell' ? 'Buy' : 'Cancel'
+
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const setVisible = (visible: boolean) => setModalVisible(visible);
+  const onSubmit = (name: string, item: any) => (e: React.MouseEvent<Element>) => {
+    if (name === 'my' && !item.isEmail) {
+      setModalVisible(true);
+      e.stopPropagation();
+    }
+  }
 
   return (
     <div className={classes.root}>
       <div className={classes.desc}>
         NFT is the abbreviation of non homogenous token. The biggest feature is that it is not interchangeable. Each token is different. One of the origins of NFT can be traced back to the encrypted cat game in 2017, which is used to represent the different colors, genes, generations and other information owned by each cat. At present, NFT is mainly used to encrypt the issuance and circulation of works of art, virtual land, game props, tickets and other fields. NFT market zone is the basic platform to support the auction and secondary sale of NFT assets.
       </div>
-      <div className={classes.tags}>
-        <div>
-          <strong>NFT Type:</strong>
-          {tags.map(({ label, value }: { label: string, value: number | string }) => (
-            <span className={tag === value ? "on" : ""} onClick={onSelectTag(value)}>{label}</span>
-          ))}
-        </div>
-        <a>Put Away</a>
-      </div>
-      <div className={classes.tags}>
-        <div>
-          <strong>Price:</strong>
-          <select>
-            <option value={1}>111</option>
-            <option value={2}>222</option>
-          </select>
-          <div className="minToMax">
-            <input placeholder="min" />
-            <p>to</p>
-            <input placeholder="max" />
+      {name !== 'my' ?
+        <>
+          <div className={classes.tags}>
+            <div>
+              <strong>NFT Type:</strong>
+              {filterTags.map(({ label, value }: { label: string, value: number | string }, index: number) => (
+                <>
+                  <span key={value} className={tag === value ? "on" : ""} onClick={onSelectTag(value)}>
+                    {label}
+                  </span>
+                  {index === filterTags.length - 1 ? <i className={moreTag ? "more down" : 'more up'} onClick={() => setMoreTag(!moreTag)}></i> : null}
+                </>
+              ))}
+            </div>
+            {/* <a>Put Away</a> */}
           </div>
-        </div>
-      </div>
+          <div className={classes.tags}>
+            <div>
+              <strong>Price:</strong>
+              <select value={priceSelect} onChange={onPriceSelectChange}>
+                {priceTypes.map(({ label, value }: { label: string, value: number | string }) => (
+                  <option value={value} key={value}>{label}</option>
+                ))}
+              </select>
+              <div className="minToMax">
+                <input placeholder="min" />
+                <p>to</p>
+                <input placeholder="max" />
+              </div>
+              <div className="search">
+                <a>Search</a>
+              </div >
+            </div>
+          </div>
+        </>
+        :
+        null
+      }
       <div className={classes.list}>
         <ul>
-          {list.map((item) => (
-            <li>
-              <div className="thumb">
-                <img src={item.thumb} />
-              </div>
+          {list.map((item, key) => (
+            <li key={key} onClick={onWant}>
+              {item.isEmail ?
+                <div className="dmail">
+                  <img src={dbg} />
+                </div>
+                :
+                <div className="thumb">
+                  <img src={item.thumb} />
+                </div>
+              }
               <div className="content">
                 <div className="info">
                   <p className="left">
@@ -272,14 +398,15 @@ const Page: FC<Props> = props => {
                   </p>
                 </div>
                 <div className="action">
-                  <a onClick={onWant}>I want it !</a>
+                  <a onClick={onSubmit(name, item)}>{name === 'my' && !item.isEmail ? 'Sale out' : btnText}</a>
                 </div>
               </div>
             </li>
           ))}
-          {placeholderList.map((item) => (<li style={{ visibility: 'hidden' }} />))}
+          {placeholderList.map((item, key) => (<li style={{ visibility: 'hidden' }} key={key} />))}
         </ul>
       </div>
+      <Modal visible={modalVisible} setVisible={setVisible} />
     </div>
   )
 }

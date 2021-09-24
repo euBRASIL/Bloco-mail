@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
         backgroundImage: `url(${up})`,
         backgroundSize: '100%',
         marginRight: '12px',
-        transition: 'transform 0.5s ease-in-out 0s',
+        transition: 'transform 0.3s ease-in-out 0s',
         transformOrigin: 'center center',
     },
     menuItemDown: {
