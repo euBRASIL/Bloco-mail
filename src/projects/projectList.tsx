@@ -20,6 +20,7 @@ import {
     SearchInput,
     TextField,
     TextInput,
+    useRedirect,
     useGetList,
     useListContext,
     useRecordContext,
@@ -43,7 +44,8 @@ import { Project } from '../types'
 import IconSubscriptions from '@material-ui/icons/Subscriptions';
 import Empty from '../components/empty'
 import PostPagination from '../components/pagination'
-
+import DropDown from '../components/dropDown'
+import { useStyles } from '../components/BulkActionButtons'
 
 const ProjectFilter: FC<Omit<FilterProps, 'children'>> = props => (
     <Filter {...props}>
@@ -226,22 +228,99 @@ const ListActions = (props) => {
 //     </Fragment>
 // );
 
-const ProjectList: FC<ListProps> = props => (
-    <List
-        {...props}
-        filterDefaultValues={{ status: 'ongoing' }}
-        sort={{ field: 'enddate', order: 'DESC' }}
-        perPage={25}
-        exporter={false}
-        // filters={<ProjectFilter />}
-        // actions={<ListActions />}
-        // delete MuiToolbar
-        actions={false}
-        pagination={<PostPagination />}
-        bulkActionButtons={false}
-    >
-        <TabbedDatagrid />
-    </List>
-);
+
+const useActionsStyles = makeStyles(
+    theme => ({
+        root: {
+            display: 'flex',
+            alignItems: 'center',
+
+        },
+    }));
+
+const dropOptions = [
+    {
+        label: 'Airdrop',
+        value: '1'
+    },
+    {
+        label: 'Defi',
+        value: '2'
+    },
+    {
+        label: 'NFT',
+        value: '3'
+    },
+    {
+        label: 'GameFi',
+        value: '4'
+    },
+    {
+        label: 'Metaverse',
+        value: '5'
+    },
+    {
+        label: 'Swap',
+        value: '6'
+    },
+    {
+        label: 'DAO',
+        value: '7'
+    },
+    {
+        label: 'BSC',
+        value: '8'
+    },
+    {
+        label: 'Heco',
+        value: '9'
+    },
+    {
+        label: 'Solana',
+        value: '10'
+    },
+]
+
+const BulkActionButtons = (props) => {
+    const actionClasses = useActionsStyles();
+
+    return (
+        <div className={actionClasses.root}>
+            <DropDown options={dropOptions} />
+        </div>
+    )
+};
+
+const useListStyles = makeStyles(
+    theme => ({
+        root: {
+            '& h6': {
+                display: 'none',
+            },
+        },
+    }));
+
+const ProjectList: FC<ListProps> = props => {
+    const classes = useListStyles();
+
+    return (
+        <List
+            {...props}
+            className={classes.root}
+            filterDefaultValues={{ status: 'ongoing' }}
+            sort={{ field: 'enddate', order: 'DESC' }}
+            perPage={25}
+            exporter={false}
+            // filters={<ProjectFilter />}
+            // actions={<ListActions />}
+            // delete MuiToolbar
+            actions={false}
+            pagination={<PostPagination />}
+            bulkActionButtons={<BulkActionButtons />}
+        >
+            <TabbedDatagrid />
+        </List>
+    )
+};
 
 export default ProjectList;

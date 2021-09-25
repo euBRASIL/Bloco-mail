@@ -1,11 +1,7 @@
 import React, { FC, Fragment, useCallback, useEffect, useState, cloneElement, useMemo } from 'react';
-
-import {
-  Identifier,
-  ListContextProvider,
-  useListContext,
-} from 'react-admin';
-import { useMediaQuery, Divider, Tabs, Tab, Theme, Typography, Avatar } from '@material-ui/core';
+import { Tabs, Tab } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import { AppState } from '../types';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Email from './email'
@@ -14,7 +10,11 @@ import Wallet from './wallet'
 const useStyles = makeStyles(
   theme => ({
     root: {
-
+      padding: '20px 34px 34px',
+      overflow: 'hidden',
+      boxShadow: 'none',
+      borderRadius: '24px',
+      backgroundColor: '#fff',
     },
     tabs: {
       display: 'block',
@@ -43,38 +43,33 @@ const tabs = [
   { id: 'wallet', name: 'WALLET ACCOUNT' },
 ];
 
-interface ContentProps { }
+interface Props { }
 
-const Content: FC<ContentProps> = props => {
-  const listContext = useListContext();
-  const { ids, filterValues, setFilters, displayedFilters } = listContext;
+const Show: FC<Props> = props => {
   const classes = useStyles();
 
-  // TODO: delete filters in url
-  useEffect(() => {
-    setFilters(
-      { status: filterValues.status || 'email' },
-      {}
-    );
-  }, [])
+  const path = useSelector((state: AppState) => {
+    const location = state?.router?.location;
+    return location.pathname || ''
+  });
+  const aPath = path.split('/');
+  const [currentTab, setCurrentTab] = useState<string>(aPath.length > 3 ? aPath[3] : 'email');
+  const onChangeTab = (event: React.ChangeEvent<{}>, value: any) => {
+    setCurrentTab(value);
+  }
 
-  const handleChange = useCallback(
-    (event: React.ChangeEvent<{}>, value: any) => {
-      setFilters(
-        { status: value },
-        {}
-      );
-    },
-    [setFilters]
-  );
+  useEffect(() => {
+    console.log('currentTab', currentTab);
+    window.history.replaceState(null, '', `/#/settings/show/${currentTab}`);
+  }, [currentTab])
 
   return (
-    <Fragment>
+    <div className={classes.root}>
       <Tabs
         variant="scrollable"
-        value={filterValues.status}
+        value={currentTab}
         indicatorColor="primary"
-        onChange={handleChange}
+        onChange={onChangeTab}
         className={classes.tabs}
       >
         {tabs.map(choice => (
@@ -87,25 +82,10 @@ const Content: FC<ContentProps> = props => {
         ))}
       </Tabs>
       <div>
-        {filterValues.status === 'email' && (
-          <ListContextProvider
-            value={{ ...listContext }}
-          >
-            <Email />
-          </ListContextProvider>
-        )}
-
-        {filterValues.status === 'wallet' && (
-          <ListContextProvider
-            value={{ ...listContext }}
-          >
-            <Wallet />
-          </ListContextProvider>
-        )}
+        {currentTab === 'wallet' ? <Wallet /> : <Email />}
       </div>
-    </Fragment>
+    </div>
   );
 };
 
-
-export default Content;
+export default Show;

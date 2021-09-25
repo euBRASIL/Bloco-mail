@@ -53,7 +53,7 @@ const useStyles = makeStyles(
         borderRadius: '10px',
         boxSizing: 'border-box',
         boxShadow: '0px 6px 7px 1px rgba(206, 186, 186, 0.39)',
-        fontSize: '14px',
+        fontSize: '16px',
         fontWeight: 'normal',
         border: '1px solid transparent',
         cursor: 'pointer',
@@ -64,8 +64,8 @@ const useStyles = makeStyles(
         },
 
         '& img': {
-          width: '40px',
-          height: '40px',
+          width: '66px',
+          height: '66px',
         }
       }
 

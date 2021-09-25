@@ -20,7 +20,6 @@ import {
 import clsx from 'clsx';
 import { useDropzone } from 'react-dropzone';
 
-import Content from './content'
 import { makeStyles } from '@material-ui/core/styles';
 import ava from '../assets/red/ava.png';
 import photo from '../assets/red/photo.png';

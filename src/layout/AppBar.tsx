@@ -194,6 +194,9 @@ const CustomAppBar = (props: any) => {
     if (pathname === '/nft/create') {
         title = (<span><i onClick={backToPrev}></i>NFT Market</span>)
     }
+    if (pathname.includes('/settings/show')) {
+        title = <span>Settings</span>;
+    }
 
     return (
         // <AppBar {...props} elevation={1} userMenu={<CustomUserMenu />}>

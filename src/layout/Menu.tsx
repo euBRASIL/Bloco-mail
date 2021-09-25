@@ -87,7 +87,7 @@ const Menus: MenuItemProp[] = [
             },
             {
                 name: 'pos.menu.settings',
-                to: '/settings',
+                to: '/settings/show',
                 smart_count: 2,
                 leftIcon: <ListItemIcon className="menu-item-icon menu-item-settings" />,
             },

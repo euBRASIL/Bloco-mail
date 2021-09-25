@@ -36,6 +36,7 @@ import prev from '../assets/red/prev.png';
 import prevHover from '../assets/red/prev-hover.png';
 import circles from '../assets/red/circles.png';
 import down2 from '../assets/red/down2.png';
+import down3 from '../assets/red/down3.png';
 
 const RaPaginationBottonHover = {
   borderColor: '#FF7669',
@@ -469,9 +470,9 @@ export const redTheme = {
       root: {
         '& .MuiTableSortLabel-iconDirectionDesc, & .MuiTableSortLabel-iconDirectionAsc': {
           width: '21px',
-          height: '14px',
+          height: '11px',
           marginLeft: '12px',
-          background: `url(${down2})`,
+          background: `url(${down3})`,
           backgroundSize: '100%',
 
           '& path': {
@@ -610,10 +611,10 @@ export const redTheme = {
 
           '& .MuiSelect-iconOutlined': {
             width: '15px',
-            height: '10px',
+            height: '8px',
             right: 12,
             top: 20,
-            background: `url(${down2})`,
+            background: `url(${down3})`,
             backgroundSize: '100%',
 
             '& path': {

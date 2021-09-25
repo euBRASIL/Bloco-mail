@@ -1,6 +1,4 @@
-import * as React from 'react';
-import { FC, Fragment, useCallback, useEffect, useState, cloneElement, useMemo } from 'react';
-
+import React, { FC, Fragment, useCallback, useEffect, useState, cloneElement, useMemo } from 'react';
 import {
     AutocompleteInput,
     BooleanField,
@@ -22,6 +20,7 @@ import {
     TextField,
     TextInput,
     useGetList,
+    useRefresh,
     useListContext,
     useRecordContext,
     ImageField,
@@ -37,15 +36,12 @@ import {
 import { useMediaQuery, Divider, Tabs, Tab, Theme, Typography, Avatar, Icon } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
-
-import NbItemsField from './NbItemsField';
 import MobileGrid from './MobileGrid';
 import { Asset } from '../types'
-import IconSwap from '@material-ui/icons/SwapHoriz';
 import IconTrendingUp from '@material-ui/icons/TrendingUp';
 import Empty from '../components/empty'
 import PostPagination from '../components/pagination'
+import DropDown from '../components/dropDown'
 import { useStyles } from '../components/BulkActionButtons'
 
 const AssetFilter: FC<Omit<FilterProps, 'children'>> = props => (
@@ -201,19 +197,44 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     );
 };
 
+const useActionsStyles = makeStyles(
+    theme => ({
+        root: {
+            display: 'flex',
+            alignItems: 'center',
+
+        },
+    }));
+
+const dropOptions = [
+    {
+        label: 'NFTs',
+        value: '1'
+    },
+    {
+        label: 'Tokens',
+        value: '2'
+    },
+]
+
 const BulkActionButtons = (props) => {
     const classes = useStyles();
+    const actionClasses = useActionsStyles();
+
     const redirect = useRedirect();
     const onMoveAsset = () => {
         redirect('create', './assets');
     };
 
     return (
-        <div className={classes.btn}>
-            <span onClick={onMoveAsset}>MOVE ASSET</span>
+        <div className={actionClasses.root}>
+            <DropDown options={dropOptions} />
+            <div className={classes.btn}>
+                <span onClick={onMoveAsset}>MOVE ASSET</span>
+            </div>
         </div>
     )
-}
+};
 
 const useListStyles = makeStyles(
     theme => ({

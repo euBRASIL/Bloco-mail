@@ -54,8 +54,8 @@ export const useStyles = makeStyles(theme => ({
     },
 
     '& > span': {
-      height: '28px',
-      lineHeight: '28px',
+      height: '30px',
+      lineHeight: '30px',
       padding: '0 10px',
       borderRadius: '5px',
       backgroundColor: '#FA6755',
@@ -107,6 +107,7 @@ export const useStyles = makeStyles(theme => ({
       cursor: 'pointer',
 
       '&:hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
         color: '#FA6755',
       }
     }

@@ -1,5 +1,5 @@
-import SettingsList from './settingsList';
+import SettingsShow from './settingsShow';
 
 export default {
-  list: SettingsList,
+  list: SettingsShow,
 };

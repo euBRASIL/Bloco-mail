@@ -8,9 +8,7 @@ import {
 import { useMediaQuery, Divider, Tabs, Tab, Theme, Typography, Avatar } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Auction from './auction'
-import Sell from './sell'
-import My from './my'
+import Page from './page';
 
 const useStyles = makeStyles(
   theme => ({
@@ -93,7 +91,7 @@ const Content: FC<ContentProps> = props => {
           <ListContextProvider
             value={{ ...listContext }}
           >
-            <Auction name="auction" />
+            <Page name="auction" />
           </ListContextProvider>
         )}
 
@@ -102,7 +100,7 @@ const Content: FC<ContentProps> = props => {
             value={{ ...listContext }}
           >
             {/* <Sell /> */}
-            <Auction name="sell" />
+            <Page name="sell" />
           </ListContextProvider>
         )}
 
@@ -111,7 +109,7 @@ const Content: FC<ContentProps> = props => {
             value={{ ...listContext }}
           >
             {/* <My /> */}
-            <Auction name="my" />
+            <Page name="my" />
           </ListContextProvider>
         )}
       </div>
