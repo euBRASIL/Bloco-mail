@@ -48,7 +48,7 @@ const customEnglishMessages: TranslationMessages = {
             more: 'More',
             trash: 'Trash',
             settings: 'Settings',
-            nft: 'NFT Market',
+            nfts: 'NFT Market',
         },
     },
     resources: {

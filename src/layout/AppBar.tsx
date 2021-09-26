@@ -191,7 +191,7 @@ const CustomAppBar = (props: any) => {
     }
     // console.log(pathname, pathname === '/nft/create')
     let title = isFirstLevel ? null : (<i onClick={backToPrev}></i>);
-    if (pathname === '/nft/create') {
+    if (pathname === '/nfts/create') {
         title = (<span><i onClick={backToPrev}></i>NFT Market</span>)
     }
     if (pathname.includes('/settings/show')) {

@@ -66,7 +66,7 @@ const menuItemHovers = {
   '& .menu-item-trash': {
     backgroundImage: `url(${trashHover})`,
   },
-  '& .menu-item-nft': {
+  '& .menu-item-nfts': {
     backgroundImage: `url(${nftHover})`,
   },
   '& .menu-item-settings': {
@@ -258,7 +258,7 @@ export const redTheme = {
           height: '21px',
           backgroundImage: `url(${trash})`,
         },
-        '& .menu-item-nft': {
+        '& .menu-item-nfts': {
           width: '20px',
           height: '20px',
           backgroundImage: `url(${nft})`,

@@ -2,7 +2,9 @@ import React, { FC, Fragment, useCallback, useEffect, useState, cloneElement, us
 import { makeStyles } from '@material-ui/core/styles';
 import {
   useNotify,
+  useGetList,
   useRedirect,
+  useListContext,
 } from 'react-admin';
 import { tags, priceTypes } from './utils';
 import test from '../assets/test/test1.jpeg';
@@ -11,16 +13,9 @@ import date from '../assets/red/nft-date.png';
 import dapper from '../assets/red/nft-dapper.png';
 import type from '../assets/red/6.png';
 import dmail from '../assets/red/d.png';
-import dbg from '../assets/red/dbg.png';
+import dbg from '../assets/red/dbg.jpg';
 import down from '../assets/red/down3.png';
 // import transparent from '../assets/red/transparent.png';
-
-import t1 from '../assets/test/t1.png';
-import t2 from '../assets/test/t2.png';
-import t3 from '../assets/test/t3.png';
-import t4 from '../assets/test/t4.png';
-import t5 from '../assets/test/t5.png';
-
 
 import Modal from './modal'
 
@@ -257,27 +252,6 @@ const useStyles = makeStyles(
     },
   }));
 
-const test1 = {
-  thumb: test,
-  isEmail: true,
-  text1: 'Dmail accounts #8765',
-  text2: '3 days left !',
-  price: '4',
-}
-const list1 = Array(9).fill('').map((v) => ({ ...test1 }));
-list1[4].isEmail = false;
-list1[5].isEmail = false;
-list1[6].isEmail = false;
-list1[7].isEmail = false;
-list1[8].isEmail = false;
-
-list1[4].thumb = t1;
-list1[5].thumb = t2;
-list1[6].thumb = t3;
-list1[7].thumb = t4;
-list1[8].thumb = t5;
-
-
 interface Props {
   name: string;
 }
@@ -298,19 +272,19 @@ const Page: FC<Props> = ({ name }) => {
     setPriceSelect(e.currentTarget.value);
   }
   // TODO: Make sure the thumb width and height rate is immutable.
-  const [list, setList] = useState(list1);
+  const { data, ids, filterValues } = useListContext();
 
   // just fix the css layout
   const [placeholderList, setPlaceholderList] = useState<any[]>([])
   useEffect(() => {
-    setPlaceholderList(Array.from(Array(8 - list.length % 8).fill('')));
-  }, [list]);
+    setPlaceholderList(Array.from(Array(4 - ids.length % 4).fill('')));
+  }, [ids]);
 
   // const notify = useNotify();
   const redirect = useRedirect();
   // @TODO: consider the onSubmit
   const onWant = () => {
-    redirect('show', './nft', name);
+    redirect('show', './nfts', name);
   };
 
   const btnText = name === 'auction' ? 'Auction' : name === 'sell' ? 'Buy' : 'Cancel'
@@ -369,7 +343,7 @@ const Page: FC<Props> = ({ name }) => {
       }
       <div className={classes.list}>
         <ul>
-          {list.map((item, key) => (
+          {Object.values(data).map((item, key) => (
             <li key={key} onClick={onWant}>
               {item.isEmail ?
                 <div className="dmail">
@@ -383,7 +357,7 @@ const Page: FC<Props> = ({ name }) => {
               <div className="content">
                 <div className="info">
                   <p className="left">
-                    <i className={item.isEmail ? "email" : "dapper"}></i><span>{item.text1}</span>
+                    <i className={item.isEmail ? "email" : "dapper"}></i><span>{item.subject} #{item.id}</span>
                   </p>
                   <p className="right">
                     Price
@@ -391,7 +365,7 @@ const Page: FC<Props> = ({ name }) => {
                 </div>
                 <div className="info">
                   <p className="left">
-                    <i className="date"></i><span>{item.text2}</span>
+                    <i className="date"></i><span>{item.time}</span>
                   </p>
                   <p className="right">
                     <i className="type"></i><span>{item.price}</span>

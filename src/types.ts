@@ -50,7 +50,7 @@ export interface Customer extends Record {
     total_spent: number;
 }
 
-export type MailStatus = 'primary' | 'other' | 'subscription' | 'junk' | 'del' | 'sent';
+export type MailStatus = 'primary' | 'other' | 'subscription' | 'junk' | 'del' | 'sent'
 
 export interface Mail extends Record {
     status: MailStatus;
@@ -77,6 +77,14 @@ export interface Sent extends Record {
 
 export interface Trash extends Record {
     status: MailStatus;
+    basket: BasketItem[];
+    date: Date;
+    total: number;
+}
+
+export type NftStatus = 'auction' | 'sell' | 'my'
+export interface Nft extends Record {
+    status: NftStatus;
     basket: BasketItem[];
     date: Date;
     total: number;

@@ -29,15 +29,18 @@ const getGqlResource = (resource: string) => {
 
         case 'invoices':
             return 'Invoice';
-            
+
         case 'mails':
-            return 'Mail';  
-            
+            return 'Mail';
+
         case 'junks':
-            return 'Junk';  
-            
+            return 'Junk';
+
         case 'projects':
-            return 'Project';  
+            return 'Project';
+
+        case 'nfts':
+            return 'Nft';
 
         default:
             throw new Error(`Unknown resource ${resource}`);

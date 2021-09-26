@@ -71,9 +71,9 @@ export default function (db) {
     });
 
     // list page http request
-    db.nft = [
+    // db.nfts = [
 
-    ];
+    // ];
 
     // add settings
     db.settings = [

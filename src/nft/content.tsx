@@ -1,7 +1,7 @@
 import React, { FC, Fragment, useCallback, useEffect, useState, cloneElement, useMemo } from 'react';
 
 import {
-  Identifier,
+  useGetList,
   ListContextProvider,
   useListContext,
 } from 'react-admin';
@@ -47,7 +47,7 @@ interface ContentProps { }
 
 const Content: FC<ContentProps> = props => {
   const listContext = useListContext();
-  const { ids, filterValues, setFilters, displayedFilters } = listContext;
+  const { data, ids, filterValues, setFilters, displayedFilters } = listContext;
   const classes = useStyles();
 
   // TODO: delete filters in url

@@ -12,6 +12,7 @@ import generateSents from './sents';
 import generateTrashs from './trashs';
 import generateProjects from './projects';
 import generateAssets from './assets';
+import generateNft from './nfts';
 
 
 import finalize from './finalize';
@@ -29,6 +30,7 @@ export interface Db {
     trashs: Record[];
     projects: Record[];
     assets: Record[];
+    nfts: Record[];
 }
 
 export default (options = { serializeDate: true }): Db => {
@@ -45,6 +47,7 @@ export default (options = { serializeDate: true }): Db => {
     db.trashs = generateTrashs(db, options);
     db.projects = generateProjects(db, options);
     db.assets = generateAssets(db, options);
+    db.nfts = generateNft(db, options);
 
 
     finalize(db);

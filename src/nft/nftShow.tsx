@@ -1,8 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import {
-  Create,
-  CreateProps,
-  useShowController,
+  useGetList,
+  useListContext,
 } from 'react-admin';
 import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,9 +12,6 @@ import { AppState } from '../types';
 import dapper from '../assets/red/nft-dapper.png';
 import test from '../assets/test/test1.jpeg';
 import test2 from '../assets/test/test2.png';
-
-import p1 from '../assets/test/p1.png';
-import p2 from '../assets/test/p2.png';
 
 
 const useStyles = makeStyles(theme => ({
@@ -148,7 +144,7 @@ const useStyles = makeStyles(theme => ({
         border: '1px solid #ccc',
         boxSizing: 'border-box',
         padding: '0 12px',
-        fontSize: '14px',
+        fontSize: '16px',
         marginRight: '15px',
       }
     },
@@ -212,7 +208,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Auction = props => {
+const Auction = ({ data }) => {
   const classes = useStyles();
 
   return (
@@ -220,24 +216,24 @@ const Auction = props => {
       <div>
         <div className="name">
           <i className="dapper"></i>
-          <span>Dapper Dino #562</span>
+          <span>{data.subject} #{data.id}</span>
         </div>
         <div className="creator">
-          <img src={test} />
+          <img src={data.ava} />
           <div>
             <p>Creator</p>
-            <p>F Peter</p>
+            <p>{data.creator}</p>
           </div>
         </div>
         <div className="price">
           <h3>Price</h3>
           <p>
-            <i></i><strong>0.1</strong><span>($351.62)</span>
+            <i></i><strong>{data.price}</strong><span>(${data.dollar})</span>
           </p>
         </div>
         <div className="desc">
           <h3>Product description</h3>
-          <p>One Black and White ArrowLight BlueTwo Triangles and One Arrow of Light Yellow on the Left and Medium Yellow on the RightBlack Triangular Eyes on an Light Yellow Background</p>
+          <p>{data.description}</p>
         </div>
       </div>
       <div className="btns">
@@ -248,10 +244,10 @@ const Auction = props => {
   )
 }
 
-const Sell = props => {
+const Sell = ({ data }) => {
   const classes = useStyles();
 
-  const [eth, setEth] = useState('');
+  const [eth, setEth] = useState('0');
   const onChangeETH = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEth(e.target.value)
   }
@@ -261,17 +257,17 @@ const Sell = props => {
       <div>
         <div className="name">
           <i className="dapper"></i>
-          <span>Dapper Dino #562</span>
+          <span>{data.subject} #{data.id}</span>
         </div>
         <div className="price">
           <h3>Current Price：</h3>
           <p>
-            <i></i><strong>0.1</strong><span>($351.62)</span>
+            <i></i><strong>{data.price}</strong><span>(${data.dollar})</span>
           </p>
         </div>
         <div className="more">
           <h3>Bonds：</h3>
-          <div>1  ETH</div>
+          <div>{data.price}  ETH</div>
         </div>
         <div className="more">
           <h3>Add Price：</h3>
@@ -279,7 +275,7 @@ const Sell = props => {
         </div>
         <div className="more">
           <h3>Total：</h3>
-          <div>7  ETH</div>
+          <div>{+eth + data.price}  ETH</div>
         </div>
       </div>
       <div className="btns">
@@ -302,15 +298,27 @@ const NftShow: FC<Props> = props => {
   const aPath = path.split('/');
   const name = aPath.length > 2 ? aPath[2] : '';
 
+  const { filterValues } = useListContext();
+  // @TODO: need fix to use real data by id
+  const list = useGetList(
+    'nfts',
+    { perPage: 1, page: 1 },
+    { field: 'id', order: 'ASC' },
+    { ...filterValues, status: name },
+  );
+  const values = Object.values(list.data);
+  const data = values.length ? values[0] : {} as any;
+  console.log(data, filterValues)
+
   return (
     <div className={classes.root}>
       <div className={classes.works}>
-        <div className="pic"><img src={Math.random() > 0.5 ? p1 : p2} /></div>
-        {name === 'auction' ? <Auction /> : <Sell />}
+        <div className="pic"><img src={data.pic} /></div>
+        {name === 'auction' ? <Auction data={data} /> : <Sell data={data} />}
       </div>
       <div className={classes.introduction}>
         <p>The NFT introduction:</p><br />
-        <p>At present, NFT is mainly used to encrypt the issuance and circulation of works of art, virtual land, game props, tickets and other fields. NFT market zone is the basic platform to support the auction and secondary sale of NFT assets.</p>
+        <p>{data.introduction}</p>
       </div>
     </div>
   );

@@ -97,7 +97,7 @@ const App = () => {
             />
 
             <Resource
-                name="nft"
+                name="nfts"
                 {...nft}
                 options={{ label: 'NFT Market' }}
             />
