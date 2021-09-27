@@ -77,12 +77,12 @@ const menuItemHovers = {
 //   // @media screen
 // declare module "@material-ui/core/styles/createBreakpoints" {
 //   interface BreakpointOverrides {
-//     // xs: false; // 移除 `xs` 断点
+//     // xs: false; 
 //     // sm: false;
 //     // md: false;
 //     // lg: false;
 //     // xl: false;
-//     loginHMax: true; // 添加 `loginHMax` 断点
+//     loginHMax: true; 
 //   }
 // }
 

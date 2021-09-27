@@ -208,7 +208,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Auction = ({ data }) => {
+const Sell = ({ data }) => {
   const classes = useStyles();
 
   return (
@@ -244,7 +244,7 @@ const Auction = ({ data }) => {
   )
 }
 
-const Sell = ({ data }) => {
+const Auction = ({ data }) => {
   const classes = useStyles();
 
   const [eth, setEth] = useState('0');
@@ -308,7 +308,7 @@ const NftShow: FC<Props> = props => {
   );
   const values = Object.values(list.data);
   const data = values.length ? values[0] : {} as any;
-  console.log(data, filterValues)
+  // console.log(data, filterValues)
 
   return (
     <div className={classes.root}>

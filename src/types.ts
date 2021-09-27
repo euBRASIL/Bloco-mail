@@ -99,7 +99,7 @@ export interface Order extends Record {
     total: number;
 }
 
-export type ProjectStatus = 'ongoing' | 'upcoming' | 'ended' | 'participated';
+export type ProjectStatus = 'information' | 'attetion';
 
 export interface Project extends Record {
     status: ProjectStatus;

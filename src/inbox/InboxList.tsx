@@ -71,10 +71,24 @@ const useDatagridStyles = makeStyles(
             flexWrap: 'nowrap',
             alignItems: 'center',
         },
-        total: { fontWeight: 'bold' },
+        total: { fontWeight: 'bold', whiteSpace: 'nowrap' },
+        ava: {
+            marginRight: '35px',
+        },
         project_avatar: {
-            width: 64,
-            height: 64,
+            width: 54,
+            height: 54,
+            borderRadius: '26px',
+        },
+        project_name: {
+            fontSize: '20px!important',
+            fontWeight: 'bold',
+        },
+        project_amount: {
+            '& strong': {
+                paddingLeft: '12px',
+                color: '#FFAE63',
+            }
         },
         total_amm: { fontWeight: 'bold', marginRight: 5 },
         tabs: {
@@ -100,6 +114,10 @@ const useDatagridStyles = makeStyles(
         table: {
             // let td ellipsis，it forbid to write in the redTheme.tsx
             tableLayout: 'fixed',
+
+            '& .MuiTableCell-root': {
+                height: '72px',
+            },
 
             '& td': {
                 overflow: 'hidden',
@@ -196,10 +214,30 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
         [displayedFilters, filterValues, setFilters]
     );
 
-    const CustomerAvatarField: FC<FieldProps<Mail>> = ({ record }) =>
+    const CustomerProjectField: FC<FieldProps<Mail>> = ({ record }) =>
         record ? (<div className={classes.chunk}>
-            <Typography >
+            <Typography className={classes.ava}>
                 <Avatar className={classes.project_avatar} src={`${record.project.icon}`} />
+            </Typography>
+            <Typography
+                component="span"
+                variant="body2"
+                className={classes.project_name}
+            >
+                {record.project.name}
+            </Typography>
+        </div>
+        ) : null;
+
+    const CustomerAmountField: FC<FieldProps<Mail>> = ({ record }) =>
+        record ? (<div className={classes.chunk}>
+
+            <Typography
+                component="span"
+                variant="body2"
+                className={classes.project_amount}
+            >
+                {record.amount}<strong>{record.unit}</strong>
             </Typography>
         </div>
         ) : null;
@@ -268,10 +306,12 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                             value={{ ...listContext, ids: subscription }}
                         >
                             <Datagrid {...props} empty={<Empty />} rowClick="show" size="medium" className={classes.table}>
-                                <CustomerAvatarField source='project.icon' className={classes.chunk} label='' />
-                                <TextField source="project.name" label='Project' headerClassName={classes.total} />
-                                <TextField source="subject" headerClassName={classes.total} />
-                                <DateField source="date" headerClassName={classes.total} />
+                                <CustomerProjectField className={classes.chunk} headerClassName={classes.total} label='Project' />
+                                <TextField source="stage" label="Stage" headerClassName={classes.total} />
+                                <TextField source="participated" label="Participated" headerClassName={classes.total} />
+                                <TextField source="winners" label="Winners" headerClassName={classes.total} />
+                                <CustomerAmountField className={classes.chunk} headerClassName={classes.total} label='Total Amount' />
+                                <DateField source="date" label="End Date" headerClassName={classes.total} />
                             </Datagrid>
                         </ListContextProvider>
                     )}

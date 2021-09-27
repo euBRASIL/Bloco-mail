@@ -118,7 +118,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                             <Datagrid {...props} empty={<Empty />} optimized rowClick="show">
                                 <TextField source="sender" headerClassName={classes.total} />
                                 <TextField source="subject" headerClassName={classes.total} />
-                                <DateField source="date" showTime headerClassName={classes.total} />
+                                <DateField source="date" locales="en-US" showTime headerClassName={classes.total} />
                             </Datagrid>
                         </ListContextProvider>
                     )}

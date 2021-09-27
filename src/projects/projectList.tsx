@@ -54,8 +54,6 @@ const ProjectFilter: FC<Omit<FilterProps, 'children'>> = props => (
     </Filter>
 );
 
-
-
 const useDatagridStyles = makeStyles(
     theme => ({
         root: {
@@ -63,24 +61,57 @@ const useDatagridStyles = makeStyles(
                 height: 65,
             },
         },
+        tabs: {
+            display: 'block',
+            marginBottom: '25px',
+        },
+        tab: {
+            marginRight: '50px',
+            lineHeight: '17px',
+            padding: '12px 0',
+            fontSize: '17px',
+            fontFamily: 'PingFang SC',
+            color: '#56677B',
+            fontWeight: 600,
+            minWidth: 'auto',
+
+            '&.Mui-selected': {
+                color: '#153F5D',
+                fontWeight: 'bold',
+                fontSize: '20px',
+            }
+        },
+        chunk: {
+            display: 'flex',
+            flexWrap: 'nowrap',
+            alignItems: 'center',
+        },
         customer: {
             display: 'flex',
             flexWrap: 'nowrap',
             alignItems: 'center',
         },
         total: { fontWeight: 'bold' },
-        project_avatar: {
-            width: 55,
-            height: 55,
-            borderRadius: 18,
+        ava: {
+            marginRight: '35px',
         },
+        project_avatar: {
+            width: 54,
+            height: 54,
+            borderRadius: '26px',
+        },
+        project_name: {
+            fontSize: '20px!important',
+            fontWeight: 'bold',
+        },
+        // project_avatar: {
+        //     width: 55,
+        //     height: 55,
+        //     borderRadius: 18,
+        // },
         total_amm: { fontWeight: 'bold', marginRight: 5 },
 
     }));
-
-const tabs = [
-    { id: 'project', name: 'Project' },
-];
 
 interface TabbedDatagridProps extends DatagridProps { }
 
@@ -89,13 +120,18 @@ const useGetTotals = (filterValues: any) => {
         'projects',
         { perPage: 1, page: 1 },
         { field: 'id', order: 'ASC' },
-        { ...filterValues, status: 'ongoing' }
+        { ...filterValues, status: 'information' }
     );
 
     return {
         project: totalProject
     };
 };
+
+const tabs = [
+    { id: 'information', name: 'Information' },
+    { id: 'attetion', name: 'Attetion' },
+];
 
 
 const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
@@ -113,7 +149,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     useEffect(() => {
         if (ids && ids !== filterValues.status) {
             switch (filterValues.status) {
-                case 'ongoing':
+                case 'information':
                     setProject(ids);
                     break;
             }
@@ -141,10 +177,17 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
         ) : null
     );
 
-    const CustomerAvatarField: FC<FieldProps<Project>> = ({ record }) =>
-        record ? (<div className={classes.customer}>
-            <Typography >
+    const CustomerProjectField: FC<FieldProps<Project>> = ({ record }) =>
+        record ? (<div className={classes.chunk}>
+            <Typography className={classes.ava}>
                 <Avatar className={classes.project_avatar} src={`${record.assets.icon}`} />
+            </Typography>
+            <Typography
+                component="span"
+                variant="body2"
+                className={classes.project_name}
+            >
+                {record.projectname}
             </Typography>
         </div>
         ) : null;
@@ -153,6 +196,22 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
 
     return (
         <Fragment>
+            <Tabs
+                variant="scrollable"
+                value={filterValues.status}
+                indicatorColor="primary"
+                onChange={handleChange}
+                className={classes.tabs}
+            >
+                {tabs.map(choice => (
+                    <Tab
+                        key={choice.id}
+                        label={choice.name}
+                        value={choice.id}
+                        className={classes.tab}
+                    />
+                ))}
+            </Tabs>
             {/* <Divider /> */}
             {isXSmall ? (
                 <ListContextProvider
@@ -162,61 +221,61 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                 </ListContextProvider>
             ) : (
                 <div className={classes.root}>
-                    {filterValues.status === 'ongoing' && (
-                        <ListContextProvider
-                            value={{ ...listContext, ids: project }}
-                        >
-                            <Datagrid {...props} empty={<Empty />} optimized rowClick="show" hasBulkActions={false}>
-                                <CustomerAvatarField source='assets.icon' className={classes.customer} label='' />
-                                <TextField source="projectname" label='Project' className={classes.total} headerClassName={classes.total} />
-                                <TextField source="tags" label='Stage' headerClassName={classes.total} />
-                                <TextField source="participated" headerClassName={classes.total} />
-                                <TextField source="winners" headerClassName={classes.total} />
-                                <CustomerTotalField source="total" label='Total Amount' headerClassName={classes.total} />
-                                <DateField source="enddate" label='End Date' headerClassName={classes.total} />
-                                <BooleanField source="sub" label='Sub' headerClassName={classes.total} />
-                            </Datagrid>
-                        </ListContextProvider>
-                    )}
+                    {/* {filterValues.status === 'information' && ( */}
+                    <ListContextProvider
+                        value={{ ...listContext, ids: project }}
+                    >
+                        <Datagrid {...props} empty={<Empty />} optimized rowClick="show" hasBulkActions={false}>
+                            <CustomerProjectField className={classes.chunk} headerClassName={classes.total} label='Project' />
+                            {/* <TextField source="projectname" label='Project' className={classes.total} headerClassName={classes.total} /> */}
+                            <TextField source="tags" label='Stage' headerClassName={classes.total} />
+                            <TextField source="participated" headerClassName={classes.total} />
+                            <TextField source="winners" headerClassName={classes.total} />
+                            <CustomerTotalField source="total" label='Total Amount' headerClassName={classes.total} />
+                            <DateField source="enddate" label='End Date' headerClassName={classes.total} />
+                            <BooleanField source="sub" label='Sub' headerClassName={classes.total} />
+                        </Datagrid>
+                    </ListContextProvider>
+                    {/* )} */}
                 </div>
             )}
         </Fragment>
     );
 };
 
-const ListActions = (props) => {
-    const {
-        className,
-        exporter,
-        filters,
-        maxResults,
-        ...rest
-    } = props;
-    const {
-        currentSort,
-        resource,
-        displayedFilters,
-        filterValues,
-        hasCreate,
-        basePath,
-        selectedIds,
-        showFilter,
-        total,
-    } = useListContext();
-    return (
-        <TopToolbar className={className} {...sanitizeListRestProps(rest)}>
-            {filters && cloneElement(filters, {
-                resource,
-                showFilter,
-                displayedFilters,
-                filterValues,
-                context: 'button',
-            })}
-            <DeleteButton variant="contained" {...props} />
+// const ListActions = (props) => {
+//     const {
+//         className,
+//         exporter,
+//         filters,
+//         maxResults,
+//         ...rest
+//     } = props;
+//     const {
+//         currentSort,
+//         resource,
+//         displayedFilters,
+//         filterValues,
+//         hasCreate,
+//         basePath,
+//         selectedIds,
+//         showFilter,
+//         total,
+//     } = useListContext();
+//     return (
+//         <TopToolbar className={className} {...sanitizeListRestProps(rest)}>
+//             {filters && cloneElement(filters, {
+//                 resource,
+//                 showFilter,
+//                 displayedFilters,
+//                 filterValues,
+//                 context: 'button',
+//             })}
+//             <DeleteButton variant="contained" {...props} />
 
-        </TopToolbar>
-    );
-};
+//         </TopToolbar>
+//     );
+// };
 
 // const PostBulkActionButtons = props => (
 //     <Fragment>
@@ -235,7 +294,6 @@ const useActionsStyles = makeStyles(
         root: {
             display: 'flex',
             alignItems: 'center',
-
         },
     }));
 
@@ -298,6 +356,13 @@ const useListStyles = makeStyles(
             '& h6': {
                 display: 'none',
             },
+
+            '& .MuiToolbar-root[data-test="bulk-actions-toolbar"]': {
+                position: 'absolute',
+                right: '34px',
+                top: '30px',
+                flexWrap: 'nowrap',
+            },
         },
     }));
 
@@ -308,7 +373,7 @@ const ProjectList: FC<ListProps> = props => {
         <List
             {...props}
             className={classes.root}
-            filterDefaultValues={{ status: 'ongoing' }}
+            filterDefaultValues={{ status: 'information' }}
             sort={{ field: 'enddate', order: 'DESC' }}
             perPage={25}
             exporter={false}
