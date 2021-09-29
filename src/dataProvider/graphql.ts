@@ -88,6 +88,7 @@ export default async () => {
     const dataProvider = await buildApolloClient({
         clientOptions: {
             uri: 'http://localhost:4000/graphql',
+            // uri: 'http://ic.dmail.ai',
         },
         introspection: {
             operationNames: {

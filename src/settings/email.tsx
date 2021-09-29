@@ -27,6 +27,8 @@ import image from '../assets/red/image.png';
 import ok from '../assets/red/ok.png';
 import error from '../assets/red/error.png';
 
+import { Storage, Email_Name } from '../utils/storage'
+
 const useStyles = makeStyles(
   theme => ({
     root: {
@@ -259,6 +261,9 @@ const useStyles = makeStyles(
 //   </Toolbar>
 // );
 
+// control the ava is necessarily or not
+const avaMustHave = false;
+
 interface Props { }
 // TODO: progress bar
 const Email: FC<CreateProps> = props => {
@@ -279,7 +284,7 @@ const Email: FC<CreateProps> = props => {
   //   ...props,
   // });
 
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<any[]>([]);
   // https://react-dropzone.js.org/#section-previews
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
@@ -293,7 +298,7 @@ const Email: FC<CreateProps> = props => {
     uploadRef?.current?.click();
   }
 
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState<string>('');
   const onEmailChange = (e) => {
     setEmail(e.target.value);
     if (!e.target.value.length) {
@@ -306,7 +311,7 @@ const Email: FC<CreateProps> = props => {
 
   const onSubmit = () => {
     let hasError = false;
-    if (!files.length) {
+    if (avaMustHave && !files.length) {
       setAvaError(true);
       hasError = true;
     }
@@ -317,11 +322,15 @@ const Email: FC<CreateProps> = props => {
     if (hasError) {
       return;
     }
+    Storage.set(Email_Name, email);
     notify(`resources.reviews.notification.submit_success`, 'success');
+    setTimeout(() => {
+      window.location.reload()
+    }, 300);
   }
 
   useEffect(() => {
-    if (files.length) {
+    if (avaMustHave && files.length) {
       setAvaError(false);
     }
   }, [files])
@@ -331,6 +340,13 @@ const Email: FC<CreateProps> = props => {
       setEmailError(false);
     }
   }, [email])
+
+  useEffect(() => {
+    const email = Storage.get(Email_Name);
+    if (email) {
+      setEmail(email);
+    }
+  }, [])
 
   return (
     <div className={classes.root}>
@@ -377,7 +393,7 @@ const Email: FC<CreateProps> = props => {
           <div className={classes.label}></div>
           <div className={classes.form}>
             <div className={classes.submit}>
-              <a className={!files.length || !email.length ? 'disabled' : ''} onClick={onSubmit}>submit</a>
+              <a className={(avaMustHave && !files.length) || !email.length ? 'disabled' : ''} onClick={onSubmit}>submit</a>
             </div>
           </div>
         </div>

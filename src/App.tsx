@@ -35,11 +35,13 @@ const i18nProvider = polyglotI18nProvider(locale => {
 }, 'en');
 
 const App = () => {
+
     return (
         <Admin
             title=""
             dataProvider={dataProviderFactory(
-                process.env.REACT_APP_DATA_PROVIDER || ''
+                // process.env.REACT_APP_DATA_PROVIDER || ''
+                'rest'
             )}
             customReducers={{ theme: themeReducer }}
             customRoutes={customRoutes}

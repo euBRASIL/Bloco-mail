@@ -59,7 +59,7 @@ const Show: FC<Props> = props => {
   }
 
   useEffect(() => {
-    console.log('currentTab', currentTab);
+    // console.log('currentTab', currentTab);
     window.history.replaceState(null, '', `/#/settings/show/${currentTab}`);
   }, [currentTab])
 

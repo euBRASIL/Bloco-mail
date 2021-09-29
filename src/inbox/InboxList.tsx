@@ -354,7 +354,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
 //     );
 // };
 
-const InboxList: FC<ListProps> = props => {
+const TestList: FC<ListProps> = props => {
     const classes = useDatagridStyles();
     return (
         <List
@@ -375,4 +375,4 @@ const InboxList: FC<ListProps> = props => {
     )
 };
 
-export default InboxList;
+export default TestList;

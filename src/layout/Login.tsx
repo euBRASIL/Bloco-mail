@@ -147,16 +147,16 @@ const Login = () => {
         );
     };
 
-    const validate = (values: FormValues) => {
-        const errors: FormValues = {};
-        if (!values.username) {
-            errors.username = translate('ra.validation.required');
-        }
-        if (!values.password) {
-            errors.password = translate('ra.validation.required');
-        }
-        return errors;
-    };
+    // const validate = (values: FormValues) => {
+    //     const errors: FormValues = {};
+    //     if (!values.username) {
+    //         errors.username = translate('ra.validation.required');
+    //     }
+    //     if (!values.password) {
+    //         errors.password = translate('ra.validation.required');
+    //     }
+    //     return errors;
+    // };
 
     return (
         <Container maxWidth={false} className="login-wrapper">
