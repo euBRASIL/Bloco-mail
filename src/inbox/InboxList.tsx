@@ -360,7 +360,11 @@ const TestList: FC<ListProps> = props => {
         <List
             {...props}
             className={classes.list}
-            filterDefaultValues={{ status: 'primary' }}
+            filterDefaultValues={{
+                status: 'primary',
+                // @TODO: the real http request need the emailname
+                emailname: 'webmaster@ic.dmail.ai'
+            }}
             sort={{ field: 'date', order: 'DESC' }}
             perPage={25}
             exporter={false}

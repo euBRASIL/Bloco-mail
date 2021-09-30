@@ -24,12 +24,12 @@ import { redTheme } from './redTheme';
 const useStyles = makeStyles(theme => ({
     logo: {
         width: '178px',
-        height: '65px',
+        height: '69px',
         position: 'fixed',
         left: '50%',
         transform: 'translateX(-50%)',
         top: '13%',
-        backgroundSize: '100%',
+        backgroundSize: 'contain',
     },
     card: {
         width: '484px',

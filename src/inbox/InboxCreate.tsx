@@ -172,9 +172,13 @@ const InboxCreate: FC<CreateProps> = props => {
     return (
         <Create {...props} title="Compose" className={classes.root}>
             <SimpleForm variant="outlined" toolbar={<Toolbar />}>
-                <TextInput source="Account" className="custom-input" validate={required()} label='Account' />
-                <TextInput source="Subject" className="custom-input" validate={required()} label='Subject' />
-                <RichTextInput source="description" label="Content" options={richTextOptions} />
+                <TextInput source="emailname" value="webmaster@ic.dmail.ai" label='Email' />
+                <TextInput source="from" value="webmaster <webmaster@ic.dmail.ai>" label='Email' />
+                <TextInput source="to" className="custom-input" validate={required()} label='Account' />
+                <TextInput source="subject" className="custom-input" validate={required()} label='Subject' />
+                {/* <RichTextInput source="text" label="Content" options={richTextOptions} /> */}
+                <TextInput source="text" className="custom-input" validate={required()} label='Content' />
+                <TextInput source="html" className="custom-input" validate={required()} label='Content' />
                 <Typography variant="h6" gutterBottom className={classes.subtitle}>
                     Select Asset
                 </Typography>
@@ -186,14 +190,14 @@ const InboxCreate: FC<CreateProps> = props => {
                 <NumberInput
                     source="Amount"
                     className={clsx(classes.nolabel, "custom-input")}
-                    validate={required()}
+                    // validate={required()}
                     label="Amount"
                     placeholder="Amount"
                 />
                 <TextInput
                     source="Price"
                     className={clsx(classes.nolabel, "custom-input")}
-                    validate={required()}
+                    // validate={required()}
                     label="Price"
                     placeholder="Price"
                 />

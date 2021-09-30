@@ -20,7 +20,7 @@ export default (type: string) => {
     const dataProviderWithGeneratedData = new Proxy(defaultDataProvider, {
         get(_, name) {
             return (resource: string, params: any) => {
-                console.log(999, name, resource, params)
+                console.log(name, resource, params)
                 return dataProviderPromise.then(dataProvider => {
                     // We have to convert the dataProvider here otherwise the proxy would try to intercept the promise resolution
                     if (typeof dataProvider === 'function') {
@@ -28,7 +28,7 @@ export default (type: string) => {
                             name.toString()
                         ](resource, params);
                     }
-                    const data = dataProvider[name.toString()](resource, params);
+                    const data = dataProvider[name.toString()](`${resource}/${name.toString()}`, params);
                     return data
                 });
             };
@@ -41,6 +41,7 @@ export default (type: string) => {
 const getDataProvider = async (
     type: string
 ): Promise<DataProvider | LegacyDataProvider> => {
+    // @TODO: must notes this line when use real http request
     // await fakeServerFactory(process.env.REACT_APP_DATA_PROVIDER || '');
     /**
      * This demo can work with either a fake REST server, or a fake GraphQL server.

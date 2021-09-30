@@ -17,8 +17,8 @@ const useStyles = makeStyles({
     logo: {
         display: 'block',
         width: '126px',
-        height: '56px',
-        marginLeft: '6px',
+        height: '48px',
+        marginLeft: '10px',
         backgroundSize: 'cover',
     },
 });
