@@ -178,7 +178,7 @@ const Login = () => {
                         <div className={clsx(classes.logo, "login-logo")} />
                         <div className={clsx(classes.description, "login-description")} />
                         <Card className={clsx(classes.card, "login-card")}>
-                            <span className="login-text"></span>
+                            <span className="login-text">WELCOME!</span>
                             <Button
 								onClick={() => { handleConnect() }}
                                 color="primary"
