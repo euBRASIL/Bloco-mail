@@ -4,7 +4,7 @@ import jsonServerProvider from 'ra-data-json-server';
 // import simpleRestProvider from 'ra-data-simple-rest';
 
 // const restProvider = simpleRestProvider('http://localhost:4000');
-const restProvider = jsonServerProvider('http://ic.dmail.ai/api');
+const restProvider = jsonServerProvider('https://ic.dmail.ai/api');
 
 const delayedDataProvider: any = new Proxy(restProvider, {
     get: (target, name, self) =>

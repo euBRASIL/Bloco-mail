@@ -178,7 +178,7 @@ export default (db, { serializeDate }) => {
             unit: 'XCV',
 
             subject: subject,
-            sender: fullname,
+            from: fullname,
             alias: alias,
             sendermail: sender,
             canister: canister,

@@ -19,6 +19,7 @@
     "@types/recharts": "^1.8.10",
     "clsx": "^1.1.1",
     "data-generator-retail": "^3.9.0",
+    "dompurify": "^2.3.3",
     "fakerest": "^2.2.0",
     "fetch-mock": "~6.3.0",
     "json-graphql-server": "~2.1.3",

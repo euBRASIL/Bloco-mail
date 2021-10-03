@@ -7,7 +7,7 @@ import {
   FC,
   ReactNode,
 } from 'react';
-import { ToolbarProps, SaveButton, Button, DeleteButton } from 'react-admin';
+import { ToolbarProps, SaveButton, useNotify } from 'react-admin';
 import PropTypes from 'prop-types';
 import MuiToolbar, {
   ToolbarProps as MuiToolbarProps,
@@ -155,6 +155,13 @@ const Toolbar: FC<ToolbarProps> = props => {
     !pristine && !validating
   );
 
+  const notify = useNotify();
+  const onSave = () => {
+    notify(`resources.reviews.notification.saved_success`, 'success');
+
+    return Promise.resolve();
+  }
+
   return (
     <Fragment>
       <MuiToolbar
@@ -175,37 +182,28 @@ const Toolbar: FC<ToolbarProps> = props => {
               label="Save"
               icon={<></>}
               handleSubmitWithRedirect={
-                handleSubmitWithRedirect || handleSubmit
+                onSave
               }
               className={classes.button}
               disabled={disabled}
               invalid={invalid}
-              redirect={redirect}
-              saving={saving || validating}
+              // redirect={redirect}
+              saving={validating}
               submitOnEnter={false}
             />
             <SaveButton
               label="Send"
               icon={<></>}
               handleSubmitWithRedirect={
-                handleSubmitWithRedirect || handleSubmit
+                handleSubmit
               }
               className={classes.button}
               disabled={disabled}
               invalid={invalid}
               redirect={redirect}
               saving={saving || validating}
-              submitOnEnter={false}
+              submitOnEnter={true}
             />
-            {/* {record && typeof record.id !== 'undefined' && (
-              <DeleteButton
-                basePath={basePath}
-                record={record}
-                resource={resource}
-                undoable={undoable}
-                mutationMode={mutationMode}
-              />
-            )} */}
           </div>
         ) : (
           Children.map(children as any, (button: ReactElement) =>
