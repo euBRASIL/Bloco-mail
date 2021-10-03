@@ -202,6 +202,8 @@ const customEnglishMessages: TranslationMessages = {
                 reject: 'Reject',
             },
             notification: {
+                saved_success: 'Saved sucess',
+                created_success: 'Created sucess',
                 deleted_success: 'Deleted sucess',
                 submit_success: 'Submit sucess',
                 moved_success: 'Moved success',

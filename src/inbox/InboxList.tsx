@@ -284,7 +284,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                             value={{ ...listContext, ids: primary }}
                         >
                             <Datagrid {...props} empty={<Empty />} optimized rowClick="show" size="medium" className={classes.table}>
-                                <TextField source="sender" headerClassName={classes.total} />
+                                <TextField source="from" label="Sender" headerClassName={classes.total} />
                                 <TextField source="subject" headerClassName={classes.total} />
                                 <DateField source="date" headerClassName={classes.total} />
                             </Datagrid>
@@ -295,7 +295,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                             value={{ ...listContext, ids: other }}
                         >
                             <Datagrid {...props} empty={<Empty />} rowClick="show" size="medium" className={classes.table}>
-                                <TextField source="sender" headerClassName={classes.total} />
+                                <TextField source="from" label="Sender" headerClassName={classes.total} />
                                 <TextField source="subject" headerClassName={classes.total} />
                                 <DateField source="date" headerClassName={classes.total} />
                             </Datagrid>

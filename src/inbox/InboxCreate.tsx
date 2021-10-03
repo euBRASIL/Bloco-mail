@@ -17,12 +17,14 @@ import {
     ReferenceField,
     SelectInput,
     TextField,
-    useTranslate,
+    useRefresh,
+    useNotify,
     useRedirect,
     SimpleForm,
     TextInput,
     required,
     NumberInput,
+    useCreateContext,
 } from 'react-admin';
 import { Link as RouterLink } from 'react-router-dom';
 import {
@@ -37,12 +39,12 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import RichTextInput from 'ra-input-rich-text';
 import clsx from 'clsx';
+import DOMPurify from 'dompurify';
 
 import { Mail, Customer } from '../types';
 import Basket from './Basket';
 import Totals from './Totals';
 import Toolbar from './Toolbar'
-
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -169,16 +171,35 @@ const richTextOptions = {
 const InboxCreate: FC<CreateProps> = props => {
     const classes = useStyles();
 
+    // const createContext = useCreateContext();
+
+    const transform = data => ({
+        ...data,
+        emailname: `webmaster@ic.dmail.ai`,
+        from: `webmaster <webmaster@ic.dmail.ai>`,
+        // @TODO: will use the html after soon
+        text: DOMPurify.sanitize(data.text, { ALLOWED_TAGS: [] }),
+        html: '',
+    });
+
+    const notify = useNotify();
+    // const redirect = useRedirect();
+    // const refresh = useRefresh();
+
+    const onSuccess = () => {
+        notify(`resources.reviews.notification.created_success`, 'success');
+        // Go to the list page, shouldn't have two actions together: redirect and refresh. So use the location.href
+        // redirect('/mails');
+        // refresh();
+        window.location.href = window.location.href.replace('/create', '')
+    };
+
     return (
-        <Create {...props} title="Compose" className={classes.root}>
+        <Create {...props} title="Compose" className={classes.root} transform={transform} onSuccess={onSuccess}>
             <SimpleForm variant="outlined" toolbar={<Toolbar />}>
-                <TextInput source="emailname" value="webmaster@ic.dmail.ai" label='Email' />
-                <TextInput source="from" value="webmaster <webmaster@ic.dmail.ai>" label='Email' />
                 <TextInput source="to" className="custom-input" validate={required()} label='Account' />
                 <TextInput source="subject" className="custom-input" validate={required()} label='Subject' />
-                {/* <RichTextInput source="text" label="Content" options={richTextOptions} /> */}
-                <TextInput source="text" className="custom-input" validate={required()} label='Content' />
-                <TextInput source="html" className="custom-input" validate={required()} label='Content' />
+                <RichTextInput source="text" label="Content" validate={required()} options={richTextOptions} />
                 <Typography variant="h6" gutterBottom className={classes.subtitle}>
                     Select Asset
                 </Typography>
