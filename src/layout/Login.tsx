@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState,useCallback,useEffect,useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Field, withTypes } from 'react-final-form';
 import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import Logo from './Logo';
+
 
 import {
     Container,
@@ -20,16 +21,19 @@ import LockIcon from '@material-ui/icons/Lock';
 import { Notification, useTranslate, useLogin, useNotify } from 'react-admin';
 
 import { redTheme } from './redTheme';
+import { authClient } from '../service';
+import { Identity } from "@dfinity/agent";
+
 
 const useStyles = makeStyles(theme => ({
     logo: {
         width: '178px',
-        height: '69px',
+        height: '65px',
         position: 'fixed',
         left: '50%',
         transform: 'translateX(-50%)',
         top: '13%',
-        backgroundSize: 'contain',
+        backgroundSize: '100%',
     },
     card: {
         width: '484px',
@@ -114,63 +118,69 @@ interface FormValues {
 
 const { Form } = withTypes<FormValues>();
 
+type AuthorizeProps = {
+    setIsAuthenticated: (x: boolean) => void;
+};
+
+
 const Login = () => {
     const [loading, setLoading] = useState(false);
     const translate = useTranslate();
     const classes = useStyles();
     const notify = useNotify();
-    const login = useLogin();
+    // const login = useLogin();
     const location = useLocation<{ nextPathname: string } | null>();
+    const [_identity, _setIdentity] = useState<Identity | undefined>();
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
+
+    
+    
     const handleSubmit = (auth: FormValues) => {
         setLoading(true);
-        login(auth, location.state ? location.state.nextPathname : '/').catch(
-            (error: Error) => {
-                setLoading(false);
-                notify(
-                    typeof error === 'string'
-                        ? error
-                        : typeof error === 'undefined' || !error.message
-                            ? 'ra.auth.sign_in_error'
-                            : error.message,
-                    'warning',
-                    {
-                        _:
-                            typeof error === 'string'
-                                ? error
-                                : error && error.message
-                                    ? error.message
-                                    : undefined,
-                    }
-                );
-            }
-        );
     };
 
-    // const validate = (values: FormValues) => {
-    //     const errors: FormValues = {};
-    //     if (!values.username) {
-    //         errors.username = translate('ra.validation.required');
-    //     }
-    //     if (!values.password) {
-    //         errors.password = translate('ra.validation.required');
-    //     }
-    //     return errors;
-    // };
+    const handleConnect = async () => {
+            //setLoading(true);
+			await authClient.create();
+            await authClient.login();
+            const identity = await authClient.getIdentity();
+            if (identity) {
+                console.log('Authenticated');
+                setIsAuthenticated(true);
+                _setIdentity(identity);
+                console.log(identity.getPrincipal());
+                localStorage.setItem("identity", identity.getPrincipal.toString());
+				localStorage.setItem("LoginState", '1');
+				//setLoading(false)
+            } else {
+                console.error("could not get identity");
+            }
+	}
+
+    const validate = (values: FormValues) => {
+        const errors: FormValues = {};
+        if (!values.username) {
+            errors.username = translate('ra.validation.required');
+        }
+        if (!values.password) {
+            errors.password = translate('ra.validation.required');
+        }
+        return errors;
+    };
 
     return (
         <Container maxWidth={false} className="login-wrapper">
             <Form
                 onSubmit={handleSubmit}
                 render={({ handleSubmit }) => (
-                    <form onSubmit={handleSubmit} noValidate>
+                    <form onSubmit={handleSubmit} >
                         <div className={clsx(classes.logo, "login-logo")} />
                         <div className={clsx(classes.description, "login-description")} />
                         <Card className={clsx(classes.card, "login-card")}>
-                            <span className="login-text">WELCOME!</span>
+                            <span className="login-text"></span>
                             <Button
-                                variant="contained"
-                                type="submit"
+								onClick={() => { handleConnect() }}
                                 color="primary"
                                 disabled={loading}
                                 className="login-btn"
