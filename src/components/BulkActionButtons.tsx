@@ -122,7 +122,7 @@ export const BulkDeleteButton: FC<BulkDeleteButtonProps> = ({ undoable, ...props
   const notify = useNotify();
   const refresh = useRefresh();
   const resource = useResourceContext(props);
-  console.log(resource)
+  // console.log(resource)
   const unselectAll = useUnselectAll();
   const { selectedIds } = useListContext(props);
   const onFailure = error => {

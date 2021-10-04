@@ -62,3 +62,4 @@ sudo dfx canister install --all -m=reinstall
 ```
 
 ## develop
+* nodejs version: 16.6.1+
