@@ -9,12 +9,6 @@ import { Dashboard } from './dashboard';
 import customRoutes from './routes';
 import englishMessages from './i18n/en';
 
-import visitors from './visitors';
-import orders from './orders';
-import products from './products';
-import invoices from './invoices';
-import categories from './categories';
-import reviews from './reviews';
 import inbox from './inbox';
 import junk from './junk';
 import sent from './sent';
@@ -34,6 +28,57 @@ const i18nProvider = polyglotI18nProvider(locale => {
     return englishMessages;
 }, 'en');
 
+export const resources = [
+    {
+        name: 'mails',
+        compontents: inbox,
+        label: 'Inbox',
+        useMock: false,
+    },
+    {
+        name: 'junks',
+        compontents: junk,
+        label: 'Junk Mail',
+        useMock: true,
+    },
+    {
+        name: 'projects',
+        compontents: projects,
+        label: 'Subscription',
+        useMock: true,
+    },
+    {
+        name: 'sents',
+        compontents: sent,
+        label: 'Sent',
+        useMock: true,
+    },
+    {
+        name: 'trashs',
+        compontents: trash,
+        label: 'Trash',
+        useMock: true,
+    },
+    {
+        name: 'assets',
+        compontents: asset,
+        label: 'Assets',
+        useMock: true,
+    },
+    {
+        name: 'settings',
+        compontents: settings,
+        label: 'Settings',
+        useMock: true,
+    },
+    {
+        name: 'nfts',
+        compontents: nft,
+        label: 'NFT Market',
+        useMock: true,
+    },
+]
+
 const App = () => {
 
     return (
@@ -52,62 +97,13 @@ const App = () => {
             i18nProvider={i18nProvider}
             disableTelemetry
         >
-            <Resource name="customers" {...visitors} />
-            <Resource
-                name="commands"
-                {...orders}
-                options={{ label: 'Orders' }}
-            />
-            <Resource
-                name="mails"
-                {...inbox}
-                options={{ label: 'Inbox' }}
-            />
-            <Resource
-                name="junks"
-                {...junk}
-                options={{ label: 'Junk Mail' }}
-            />
-
-            <Resource
-                name="projects"
-                {...projects}
-                options={{ label: 'Subscription' }}
-            />
-
-            <Resource
-                name="sents"
-                {...sent}
-                options={{ label: 'Sent' }}
-            />
-            <Resource
-                name="trashs"
-                {...trash}
-                options={{ label: 'Trash' }}
-            />
-
-            <Resource
-                name="assets"
-                {...asset}
-                options={{ label: 'Assets' }}
-            />
-
-            <Resource
-                name="settings"
-                {...settings}
-                options={{ label: 'Settings' }}
-            />
-
-            <Resource
-                name="nfts"
-                {...nft}
-                options={{ label: 'NFT Market' }}
-            />
-
-            <Resource name="invoices" {...invoices} />
-            <Resource name="products" {...products} />
-            <Resource name="categories" {...categories} />
-            <Resource name="reviews" {...reviews} />
+            {resources.map(({ name, compontents, label }) => (
+                <Resource
+                    name={name}
+                    options={{ label }}
+                    {...compontents}
+                />
+            ))}
         </Admin>
     );
 };

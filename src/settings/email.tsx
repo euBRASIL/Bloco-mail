@@ -377,7 +377,7 @@ const Email: FC<CreateProps> = props => {
           <div className={clsx(classes.form, emailError ? 'error' : '')}>
             <div className="email">
               <input value={email} onInput={onEmailChange} placeholder="enter here..." />
-              <span>@dmail.com</span>
+              <span>@ic.dmail.ai</span>
               <div className="valid">
                 <i></i>
                 {emailError ? (

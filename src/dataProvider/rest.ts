@@ -1,27 +1,48 @@
 //  https://github.com/marmelab/react-admin/tree/master/packages/ra-data-json-server
 import jsonServerProvider from 'ra-data-json-server';
-// the simple rest can not use
-// import simpleRestProvider from 'ra-data-simple-rest';
+import { resources } from '../App';
 
-// const restProvider = simpleRestProvider('http://localhost:4000');
-const restProvider = jsonServerProvider('https://ic.dmail.ai/api');
+// const restProvider = jsonServerProvider('http://localhost:4000');
+// const delayedDataProvider: any = new Proxy(restProvider, {
+//     get: (target, name, self) =>
+//         name === 'then' // as we await for the dataProvider, JS calls then on it. We must trap that call or else the dataProvider will be called with the then method
+//             ? self
+//             : (resource: string, params: any) =>
+//                 new Promise(resolve =>
+//                     setTimeout(
+//                         () => {
+//                             resolve(
+//                                 restProvider[name as string](resource, params)
+//                             )
+//                         },
+//                         500
+//                     )
+//                 ),
+// });
 
-const delayedDataProvider: any = new Proxy(restProvider, {
-    get: (target, name, self) =>
-        name === 'then' // as we await for the dataProvider, JS calls then on it. We must trap that call or else the dataProvider will be called with the then method
-            ? self
+const restProvider = {
+    product: jsonServerProvider('https://ic.dmail.ai/api'),
+    mock: jsonServerProvider('http://localhost:4000'),
+};
+const jsonServerActions = jsonServerProvider('')
+const delayedDataProvider: any = new Proxy(jsonServerActions, {
+    get: (target, name, self) => {
+        return name === 'then' // as we await for the dataProvider, JS calls then on it. We must trap that call or else the dataProvider will be called with the then method
+            ? restProvider.mock[name as string] // use deault
             : (resource: string, params: any) =>
                 new Promise(resolve =>
                     setTimeout(
                         () => {
-                            // console.log('111', name, resource, params, restProvider[name as string](resource, params).then(res => console.log(res)))
+                            const isProduct = resources.filter(({ name, useMock }) => !resource.indexOf(`${name}/`) && !useMock).length;
+                            // console.log('111', name, resource, params, restProvider[isProduct ? 'product' : 'mock'][name as string](resource, params).then(res => console.log(res)))
                             resolve(
-                                restProvider[name as string](resource, params)
+                                restProvider[isProduct ? 'product' : 'mock'][name as string](resource, params)
                             )
                         },
                         500
                     )
-                ),
+                )
+    },
 });
 
 export default delayedDataProvider;

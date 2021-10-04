@@ -4,12 +4,12 @@ import {
     LegacyDataProvider,
 } from 'react-admin';
 import fakeServerFactory from '../fakeServer';
+import { resources } from '../App';
 
 export default (type: string) => {
     // The fake servers require to generate data, which can take some time.
     // Here we start the server initialization but we don't wait for it to finish
     let dataProviderPromise = getDataProvider(type);
-
 
     // Instead we return this proxy which may be called immediately by react-admin if the
     // user is already signed-in. In this case, we simply wait for the dataProvider promise
@@ -20,7 +20,6 @@ export default (type: string) => {
     const dataProviderWithGeneratedData = new Proxy(defaultDataProvider, {
         get(_, name) {
             return (resource: string, params: any) => {
-                console.log(name, resource, params)
                 return dataProviderPromise.then(dataProvider => {
                     // We have to convert the dataProvider here otherwise the proxy would try to intercept the promise resolution
                     if (typeof dataProvider === 'function') {
@@ -28,7 +27,9 @@ export default (type: string) => {
                             name.toString()
                         ](resource, params);
                     }
-                    const data = dataProvider[name.toString()](`${resource}/${name.toString()}`, params);
+                    const path = resources.filter(({ name, useMock }) => name === resource && !useMock).length ? `${resource}/${name.toString()}` : resource;
+                    const data = dataProvider[name.toString()](path, params);
+                    console.log('dataProviderWithGeneratedData', data.then((res) => console.log(res)));
                     return data
                 });
             };
@@ -42,7 +43,7 @@ const getDataProvider = async (
     type: string
 ): Promise<DataProvider | LegacyDataProvider> => {
     // @TODO: must notes this line when use real http request
-    // await fakeServerFactory(process.env.REACT_APP_DATA_PROVIDER || '');
+    await fakeServerFactory(process.env.REACT_APP_DATA_PROVIDER || '');
     /**
      * This demo can work with either a fake REST server, or a fake GraphQL server.
      *

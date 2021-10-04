@@ -188,6 +188,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     const totals = useGetTotals(filterValues) as any;
 
     useEffect(() => {
+        // console.log('filterValues.status', ids, filterValues.status)
         if (ids && ids !== filterValues.status) {
             switch (filterValues.status) {
                 case 'primary':

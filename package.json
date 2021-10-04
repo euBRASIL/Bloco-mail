@@ -19,7 +19,7 @@
     "@types/recharts": "^1.8.10",
     "clsx": "^1.1.1",
     "dompurify": "^2.3.3",
-    "faker": "^5.5.3",
+    "faker": "4.1.0",
     "fakerest": "^2.2.0",
     "fetch-mock": "~6.3.0",
     "json-graphql-server": "~2.1.3",
