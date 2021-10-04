@@ -18,7 +18,7 @@ import {
 import { createTheme, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import LockIcon from '@material-ui/icons/Lock';
-import { Notification, useTranslate, useLogin, useNotify } from 'react-admin';
+import { Notification, useTranslate, useLogin, useNotify,useRedirect } from 'react-admin';
 
 import { redTheme } from './redTheme';
 import { authClient } from '../service';
@@ -140,6 +140,8 @@ const Login = () => {
         setLoading(true);
     };
 
+    const redirect = useRedirect();
+
     const handleConnect = async () => {
             //setLoading(true);
 			await authClient.create();
@@ -149,10 +151,12 @@ const Login = () => {
                 console.log('Authenticated');
                 setIsAuthenticated(true);
                 _setIdentity(identity);
-                console.log(identity.getPrincipal());
-                localStorage.setItem("identity", identity.getPrincipal.toString());
+                console.log(identity.getPrincipal().toString());
+                localStorage.setItem("identity", identity.getPrincipal().toString());
 				localStorage.setItem("LoginState", '1');
+                localStorage.setItem("username", identity.getPrincipal().toString());
 				//setLoading(false)
+                redirect('./mails');
             } else {
                 console.error("could not get identity");
             }

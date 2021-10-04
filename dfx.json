@@ -1,11 +1,6 @@
 {
   "canisters": {
-    "test": {
-      "main": "src/test/main.mo",
-      "type": "motoko"
-    },
     "frontend" : {
-      "dependencies": ["test"],
       "frontend": {
         "entrypoint": "build/index.html"
       },
