@@ -43,6 +43,7 @@ import MobileGrid from './MobileGrid';
 import { Mail } from '../types';
 import IconSwap from '@material-ui/icons/SwapHoriz';
 
+import { Storage, Create_Mail_Cached, Email_Name } from '../utils/storage'
 import Empty from '../components/empty'
 import PostPagination from '../components/pagination'
 import BulkActionButtons from '../components/BulkActionButtons'
@@ -357,6 +358,8 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
 
 const TestList: FC<ListProps> = props => {
     const classes = useDatagridStyles();
+    const email = Storage.get(Email_Name);
+
     return (
         <List
             {...props}
@@ -364,6 +367,7 @@ const TestList: FC<ListProps> = props => {
             filterDefaultValues={{
                 status: 'primary',
                 // @TODO: the real http request need the emailname
+                // emailname: `${email}@ic.dmail.ai`
                 emailname: 'webmaster@ic.dmail.ai'
             }}
             sort={{ field: 'date', order: 'DESC' }}

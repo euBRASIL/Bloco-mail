@@ -20,6 +20,7 @@ import { FormRenderProps } from 'react-final-form';
 
 // import { SaveButton, DeleteButton } from '../button';
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
+import { Storage, Create_Mail_Cached } from '../utils/storage'
 
 const useStyles = makeStyles(
   theme => ({
@@ -124,6 +125,7 @@ const valueOrDefault = (value, defaultValue) =>
  *
  */
 // copy from react-admin/Toolbar: /node_modules/ra-ui-materialui/src/form/Toolbar.tsx
+
 const Toolbar: FC<ToolbarProps> = props => {
   const {
     alwaysEnableSaveButton,
@@ -162,6 +164,14 @@ const Toolbar: FC<ToolbarProps> = props => {
     return Promise.resolve();
   }
 
+  const onSubmit = async (...args) => {
+    if (handleSubmit) {
+      await handleSubmit(...args);
+      // @TODO: if created success then remove
+      Storage.remove(Create_Mail_Cached);
+    }
+  }
+
   return (
     <Fragment>
       <MuiToolbar
@@ -178,7 +188,7 @@ const Toolbar: FC<ToolbarProps> = props => {
       >
         {Children.count(children) === 0 ? (
           <div className={classes.defaultToolbar}>
-            <SaveButton
+            {/* <SaveButton 
               label="Save"
               icon={<></>}
               handleSubmitWithRedirect={
@@ -191,11 +201,12 @@ const Toolbar: FC<ToolbarProps> = props => {
               saving={validating}
               submitOnEnter={false}
             />
+            */}
             <SaveButton
               label="Send"
               icon={<></>}
               handleSubmitWithRedirect={
-                handleSubmit
+                onSubmit
               }
               className={classes.button}
               disabled={disabled}

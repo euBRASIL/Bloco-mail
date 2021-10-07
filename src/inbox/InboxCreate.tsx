@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState, useRef } from 'react';
 import {
     CreateContextProvider,
     useRecordContext,
@@ -45,6 +45,7 @@ import { Mail, Customer } from '../types';
 import Basket from './Basket';
 import Totals from './Totals';
 import Toolbar from './Toolbar'
+import { Storage, Create_Mail_Cached, Email_Name } from '../utils/storage'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -169,18 +170,20 @@ const richTextOptions = {
 }
 
 const InboxCreate: FC<CreateProps> = props => {
-    const classes = useStyles();
-
     // const createContext = useCreateContext();
+    const classes = useStyles();
+    const [initedValues, setInitedValues] = useState(() => ({}))
+    const richText = useRef(null);
 
+    const email = Storage.get(Email_Name);
     const transform = data => ({
         ...data,
-        emailname: `webmaster@ic.dmail.ai`,
-        from: `webmaster <webmaster@ic.dmail.ai>`,
+        // @TODO: the email should get from the use request
+        dm_email_path: `${email}@ic.dmail.ai`,
+        dm_from: `${email.replace('@ic.dmail.ai', '')}  <${email}@ic.dmail.ai>`,
         // @TODO: will use the html after soon
-        text: DOMPurify.sanitize(data.text, { ALLOWED_TAGS: [] }),
-        html: '',
-    });
+        dm_content: data?.dm_content ? DOMPurify.sanitize(data.dm_content, { ALLOWED_TAGS: [] }) : '',
+    })
 
     const notify = useNotify();
     // const redirect = useRedirect();
@@ -194,12 +197,30 @@ const InboxCreate: FC<CreateProps> = props => {
         window.location.href = window.location.href.replace('/create', '')
     };
 
+    const onSaveInputValue = (name: string) => (ev: any) => {
+        let cached = Storage.get(Create_Mail_Cached);
+        if (!cached) {
+            cached = {}
+        }
+        cached[name] = ev.currentTarget.value
+        Storage.set(Create_Mail_Cached, cached);
+    }
+
+    useEffect(() => {
+        const cached = Storage.get(Create_Mail_Cached);
+        if (cached) {
+            setInitedValues(() => cached)
+        }
+
+
+    }, [])
+
     return (
         <Create {...props} title="Compose" className={classes.root} transform={transform} onSuccess={onSuccess}>
-            <SimpleForm variant="outlined" toolbar={<Toolbar />}>
-                <TextInput source="to" className="custom-input" validate={required()} label='Account' />
-                <TextInput source="subject" className="custom-input" validate={required()} label='Subject' />
-                <RichTextInput source="text" label="Content" validate={required()} options={richTextOptions} />
+            <SimpleForm variant="outlined" toolbar={<Toolbar />} initialValues={initedValues}>
+                <TextInput source="dm_to" className="custom-input" validate={required()} label='Account' onChange={onSaveInputValue('dm_to')} />
+                <TextInput source="dm_subject" className="custom-input" validate={required()} label='Subject' onChange={onSaveInputValue('dm_subject')} />
+                <RichTextInput source="dm_content" label="Content" validate={required()} options={richTextOptions} ref={richText} />
                 <Typography variant="h6" gutterBottom className={classes.subtitle}>
                     Select Asset
                 </Typography>

@@ -1,5 +1,6 @@
 
 export const Email_Name = 'email_name';
+export const Create_Mail_Cached = 'create_mail_cached';
 
 export const Storage = {
   getAll() {
@@ -18,6 +19,9 @@ export const Storage = {
     localStorage.setItem(name, JSON.stringify({
       value
     }))
+  },
+  remove(name: string) {
+    localStorage.removeItem(name);
   },
   setWidthTime(name: string, value: any) {
     const time = new Date().getTime()
