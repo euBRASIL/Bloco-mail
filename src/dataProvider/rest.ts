@@ -21,7 +21,7 @@ import { resources } from '../App';
 // });
 
 const restProvider = {
-    product: jsonServerProvider('https://ic.dmail.ai/api'),
+    product: jsonServerProvider('https://ic.dmail.ai/api/v2'),
     mock: jsonServerProvider('http://localhost:4000'),
 };
 const jsonServerActions = jsonServerProvider('')
