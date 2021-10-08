@@ -9,6 +9,7 @@ import {
     IntrospectionSchema,
     IntrospectionType,
 } from 'graphql';
+import { baseUrl, devBaseUrl } from '../utils'
 
 const getGqlResource = (resource: string) => {
     switch (resource) {
@@ -87,7 +88,7 @@ const customBuildQuery = (
 export default async () => {
     const dataProvider = await buildApolloClient({
         clientOptions: {
-            uri: 'http://localhost:4000/graphql',
+            uri: `${devBaseUrl}/graphql`,
         },
         introspection: {
             operationNames: {

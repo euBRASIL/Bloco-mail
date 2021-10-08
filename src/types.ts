@@ -4,6 +4,7 @@ export type ThemeName = 'red' | 'light' | 'dark';
 
 export interface AppState extends ReduxState {
     theme: ThemeName;
+    email: string;
 }
 
 export interface Category extends Record {

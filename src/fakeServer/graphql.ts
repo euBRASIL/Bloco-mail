@@ -1,6 +1,7 @@
 import JsonGraphqlServer from 'json-graphql-server';
 import generateData from '../datas';
 import fetchMock from 'fetch-mock';
+import { baseUrl, devBaseUrl } from '../utils'
 
 export default () => {
     const data = generateData({ serializeDate: false });
@@ -24,6 +25,6 @@ export default () => {
             return res;
         });
 
-    fetchMock.mock('begin:http://localhost:4000', handlerWithLogs);
+    fetchMock.mock(`begin:${devBaseUrl}`, handlerWithLogs);
     return () => fetchMock.restore();
 };

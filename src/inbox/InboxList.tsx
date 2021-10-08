@@ -367,8 +367,8 @@ const TestList: FC<ListProps> = props => {
             filterDefaultValues={{
                 status: 'primary',
                 // @TODO: the real http request need the emailname
-                // emailname: `${email}@ic.dmail.ai`
-                emailname: 'webmaster@ic.dmail.ai'
+                emailname: `${email}@ic.dmail.ai`
+                // emailname: 'webmaster@ic.dmail.ai'
             }}
             sort={{ field: 'date', order: 'DESC' }}
             perPage={25}

@@ -1,9 +1,11 @@
-import * as React from 'react';
-import { Admin, Resource, fetchUtils } from 'react-admin';
+import React, { useContext, useState } from 'react';
+import { Admin, Resource, useDataProvider } from 'react-admin';
 import polyglotI18nProvider from 'ra-i18n-polyglot';
+import { Provider, ReactReduxContext, useStore } from 'react-redux';
 
 import authProvider from './authProvider';
 import themeReducer from './themeReducer';
+import emailReducer from './emailReducer';
 import { Login, Layout } from './layout';
 import { Dashboard } from './dashboard';
 import customRoutes from './routes';
@@ -18,6 +20,7 @@ import asset from './asset';
 import settings from './settings';
 import nft from './nft';
 import dataProviderFactory from './dataProvider';
+import GetEmail from './components/GetEmail'
 
 const i18nProvider = polyglotI18nProvider(locale => {
     if (locale === 'fr') {
@@ -39,7 +42,7 @@ export const resources = [
         name: 'junks',
         compontents: junk,
         label: 'Junk Mail',
-        useMock: true,
+        useMock: false,
     },
     {
         name: 'projects',
@@ -51,13 +54,13 @@ export const resources = [
         name: 'sents',
         compontents: sent,
         label: 'Sent',
-        useMock: true,
+        useMock: false,
     },
     {
         name: 'trashs',
         compontents: trash,
         label: 'Trash',
-        useMock: true,
+        useMock: false,
     },
     {
         name: 'assets',
@@ -84,11 +87,14 @@ const App = () => {
     return (
         <Admin
             title=""
-            dataProvider={dataProviderFactory(
-                // process.env.REACT_APP_DATA_PROVIDER || ''
-                'rest'
-            )}
-            customReducers={{ theme: themeReducer }}
+            dataProvider={{
+                // expand new request actions
+                ...dataProviderFactory(
+                    // process.env.REACT_APP_DATA_PROVIDER || ''
+                    'rest'
+                ),
+            }}
+            customReducers={{ theme: themeReducer, email: emailReducer }}
             customRoutes={customRoutes}
             authProvider={authProvider}
             dashboard={Dashboard}
@@ -97,6 +103,7 @@ const App = () => {
             i18nProvider={i18nProvider}
             disableTelemetry
         >
+            <GetEmail />
             {resources.map(({ name, compontents, label }) => (
                 <Resource
                     name={name}

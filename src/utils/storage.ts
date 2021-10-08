@@ -1,4 +1,5 @@
 
+// @TODO: need to remove, just use requestEmail
 export const Email_Name = 'email_name';
 export const Create_Mail_Cached = 'create_mail_cached';
 

@@ -35,6 +35,7 @@ import { Customer } from '../types';
 import Empty from '../components/empty'
 import PostPagination from '../components/pagination'
 import BulkActionButtons from '../components/BulkActionButtons'
+import { Storage, Create_Mail_Cached, Email_Name } from '../utils/storage'
 
 const TrashFilter: FC<Omit<FilterProps, 'children'>> = props => (
     <Filter {...props}>
@@ -116,7 +117,8 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                             value={{ ...listContext, ids: trash }}
                         >
                             <Datagrid {...props} empty={<Empty />} optimized rowClick="show">
-                                <TextField source="sender" headerClassName={classes.total} />
+                                {/* the email from sent or inbox should have a distinguish */}
+                                <TextField source="from" label="sender" headerClassName={classes.total} />
                                 <TextField source="subject" headerClassName={classes.total} />
                                 <DateField source="date" locales="en-US" showTime headerClassName={classes.total} />
                             </Datagrid>
@@ -128,21 +130,29 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     );
 };
 
-const TrashList: FC<ListProps> = props => (
-    <List
-        {...props}
-        filterDefaultValues={{ status: 'trash' }}
-        sort={{ field: 'date', order: 'DESC' }}
-        perPage={25}
-        exporter={false}
-        // filters={<TrashFilter />}
-        // delete MuiToolbar
-        actions={false}
-        pagination={<PostPagination />}
-        bulkActionButtons={<BulkActionButtons />}
-    >
-        <TabbedDatagrid />
-    </List>
-);
+const TrashList: FC<ListProps> = props => {
+    const email = Storage.get(Email_Name);
+
+    return (
+        <List
+            {...props}
+            filterDefaultValues={{
+                status: 'trash',
+                // @TODO: the real http request need the emailname
+                emailname: `${email}@ic.dmail.ai`
+            }}
+            sort={{ field: 'date', order: 'DESC' }}
+            perPage={25}
+            exporter={false}
+            // filters={<TrashFilter />}
+            // delete MuiToolbar
+            actions={false}
+            pagination={<PostPagination />}
+            bulkActionButtons={<BulkActionButtons />}
+        >
+            <TabbedDatagrid />
+        </List>
+    )
+};
 
 export default TrashList;
