@@ -1,6 +1,7 @@
 //  https://github.com/marmelab/react-admin/tree/master/packages/ra-data-json-server
 import jsonServerProvider from 'ra-data-json-server';
 import { resources } from '../App';
+import { baseUrl, devBaseUrl } from '../utils'
 
 // const restProvider = jsonServerProvider('http://localhost:4000');
 // const delayedDataProvider: any = new Proxy(restProvider, {
@@ -21,8 +22,8 @@ import { resources } from '../App';
 // });
 
 const restProvider = {
-    product: jsonServerProvider('https://ic.dmail.ai/api/v2'),
-    mock: jsonServerProvider('http://localhost:4000'),
+    product: jsonServerProvider(baseUrl),
+    mock: jsonServerProvider(devBaseUrl),
 };
 const jsonServerActions = jsonServerProvider('')
 const delayedDataProvider: any = new Proxy(jsonServerActions, {

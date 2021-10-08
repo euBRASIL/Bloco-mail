@@ -46,6 +46,7 @@ import Empty from '../components/empty'
 import PostPagination from '../components/pagination'
 import DropDown from '../components/dropDown'
 import { useStyles } from '../components/BulkActionButtons'
+import { Storage, Create_Mail_Cached, Email_Name } from '../utils/storage'
 
 const ProjectFilter: FC<Omit<FilterProps, 'children'>> = props => (
     <Filter {...props}>
@@ -368,12 +369,13 @@ const useListStyles = makeStyles(
 
 const ProjectList: FC<ListProps> = props => {
     const classes = useListStyles();
+    const email = Storage.get(Email_Name);
 
     return (
         <List
             {...props}
             className={classes.root}
-            filterDefaultValues={{ status: 'information' }}
+            filterDefaultValues={{ status: 'information', emailname: `${email}@ic.dmail.ai` }}
             sort={{ field: 'enddate', order: 'DESC' }}
             perPage={25}
             exporter={false}

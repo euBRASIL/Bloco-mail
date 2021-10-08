@@ -194,7 +194,7 @@ const InboxCreate: FC<CreateProps> = props => {
         // Go to the list page, shouldn't have two actions together: redirect and refresh. So use the location.href
         // redirect('/mails');
         // refresh();
-        window.location.href = window.location.href.replace('/create', '')
+        window.location.href = window.location.href.replace('mails/create', 'sents')
     };
 
     const onSaveInputValue = (name: string) => (ev: any) => {
@@ -218,6 +218,7 @@ const InboxCreate: FC<CreateProps> = props => {
     return (
         <Create {...props} title="Compose" className={classes.root} transform={transform} onSuccess={onSuccess}>
             <SimpleForm variant="outlined" toolbar={<Toolbar />} initialValues={initedValues}>
+                {/* @TODO: dm_to must be email */}
                 <TextInput source="dm_to" className="custom-input" validate={required()} label='Account' onChange={onSaveInputValue('dm_to')} />
                 <TextInput source="dm_subject" className="custom-input" validate={required()} label='Subject' onChange={onSaveInputValue('dm_subject')} />
                 <RichTextInput source="dm_content" label="Content" validate={required()} options={richTextOptions} ref={richText} />

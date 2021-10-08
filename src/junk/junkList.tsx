@@ -36,6 +36,7 @@ import CustomerReferenceField from '../visitors/CustomerReferenceField';
 import AddressField from '../visitors/AddressField';
 import MobileGrid from './MobileGrid';
 import { Customer } from '../types';
+import { Storage, Create_Mail_Cached, Email_Name } from '../utils/storage'
 
 const JunkFilter: FC<Omit<FilterProps, 'children'>> = props => (
     <Filter {...props}>
@@ -119,7 +120,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                             value={{ ...listContext, ids: junk }}
                         >
                             <Datagrid {...props} empty={<Empty />} optimized rowClick="show">
-                                <TextField source="sender" headerClassName={classes.total} />
+                                <TextField source="from" headerClassName={classes.total} />
                                 <TextField source="subject" headerClassName={classes.total} />
                                 <DateField source="date" locales="en-US" showTime headerClassName={classes.total} />
                             </Datagrid>
@@ -138,22 +139,30 @@ const PostPagination = props => {
     )
 }
 
-const JunkList: FC<ListProps> = props => (
-    <List
-        {...props}
-        filterDefaultValues={{ status: 'junk' }}
-        sort={{ field: 'date', order: 'DESC' }}
-        perPage={25}
-        exporter={false}
-        empty={<Empty />}
-        // filters={<JunkFilter />}
-        // delete MuiToolbar
-        actions={false}
-        pagination={<PostPagination />}
-        bulkActionButtons={<BulkActionButtons />}
-    >
-        <TabbedDatagrid />
-    </List>
-);
+const JunkList: FC<ListProps> = props => {
+    const email = Storage.get(Email_Name);
+
+    return (
+        <List
+            {...props}
+            filterDefaultValues={{
+                status: 'junk',
+                // @TODO: the real http request need the emailname
+                emailname: `${email}@ic.dmail.ai`
+            }}
+            sort={{ field: 'date', order: 'DESC' }}
+            perPage={25}
+            exporter={false}
+            empty={<Empty />}
+            // filters={<JunkFilter />}
+            // delete MuiToolbar
+            actions={false}
+            pagination={<PostPagination />}
+            bulkActionButtons={<BulkActionButtons />}
+        >
+            <TabbedDatagrid />
+        </List>
+    )
+};
 
 export default JunkList;

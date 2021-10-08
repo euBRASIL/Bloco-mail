@@ -36,6 +36,7 @@ import { Customer } from '../types';
 import Empty from '../components/empty'
 import PostPagination from '../components/pagination'
 import BulkActionButtons from '../components/BulkActionButtons'
+import { Storage, Create_Mail_Cached, Email_Name } from '../utils/storage'
 
 const SentFilter: FC<Omit<FilterProps, 'children'>> = props => (
     <Filter {...props}>
@@ -117,7 +118,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                             value={{ ...listContext, ids: sent }}
                         >
                             <Datagrid {...props} empty={<Empty />} optimized rowClick="show">
-                                <TextField source="sender" label='Recipient' headerClassName={classes.total} />
+                                <TextField source="to" label='Recipient' headerClassName={classes.total} />
                                 <TextField source="subject" headerClassName={classes.total} />
                                 <DateField source="date" headerClassName={classes.total} />
                             </Datagrid>
@@ -129,21 +130,29 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     );
 };
 
-const SentList: FC<ListProps> = props => (
-    <List
-        {...props}
-        filterDefaultValues={{ status: 'sent' }}
-        sort={{ field: 'date', order: 'DESC' }}
-        perPage={25}
-        exporter={false}
-        // filters={<SentFilter />}
-        // delete MuiToolbar
-        actions={false}
-        pagination={<PostPagination />}
-        bulkActionButtons={<BulkActionButtons />}
-    >
-        <TabbedDatagrid />
-    </List>
-);
+const SentList: FC<ListProps> = props => {
+    const email = Storage.get(Email_Name);
+
+    return (
+        <List
+            {...props}
+            filterDefaultValues={{
+                status: 'sent',
+                // @TODO: the real http request need the emailname
+                emailname: `${email}@ic.dmail.ai`
+            }}
+            sort={{ field: 'date', order: 'DESC' }}
+            perPage={25}
+            exporter={false}
+            // filters={<SentFilter />}
+            // delete MuiToolbar
+            actions={false}
+            pagination={<PostPagination />}
+            bulkActionButtons={<BulkActionButtons />}
+        >
+            <TabbedDatagrid />
+        </List>
+    )
+};
 
 export default SentList;

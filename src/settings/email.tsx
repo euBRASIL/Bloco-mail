@@ -1,18 +1,20 @@
 import React, { FC, Fragment, useCallback, useEffect, useState, cloneElement, useRef } from 'react';
-import {
-  CreateContextProvider,
-  useRecordContext,
-  ResourceContextProvider,
-  useCheckMinimumRequiredProps,
-  useCreateController,
-} from 'ra-core';
+import { useSelector, useDispatch } from 'react-redux';
+import { AppState } from '../types';
+// import {
+//   CreateContextProvider,
+//   useRecordContext,
+//   ResourceContextProvider,
+//   useCheckMinimumRequiredProps,
+//   useCreateController,
+// } from 'ra-core';
 import {
   Toolbar,
   useNotify,
   CreateProps,
   SaveButton,
   SimpleForm,
-  ImageInput,
+  useDataProvider,
   ImageField,
   useSaveContext,
   useFormContext,
@@ -28,6 +30,7 @@ import ok from '../assets/red/ok.png';
 import error from '../assets/red/error.png';
 
 import { Storage, Email_Name } from '../utils/storage'
+import { fetch, emailHost } from '../utils'
 
 const useStyles = makeStyles(
   theme => ({
@@ -269,6 +272,10 @@ interface Props { }
 const Email: FC<CreateProps> = props => {
   const classes = useStyles();
   const notify = useNotify();
+  const requestEmail = useSelector((state: AppState) => state.email);
+
+  // const data = useDataProvider();
+  // console.log('useDataProvider', data.aaa());
 
   const uploadRef = useRef<HTMLDivElement | null>(null);
   // const context = useSaveContext({});
@@ -309,7 +316,7 @@ const Email: FC<CreateProps> = props => {
   const [avaError, setAvaError] = useState(false);
   const [emailError, setEmailError] = useState(false);
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     let hasError = false;
     if (avaMustHave && !files.length) {
       setAvaError(true);
@@ -323,10 +330,30 @@ const Email: FC<CreateProps> = props => {
       return;
     }
     Storage.set(Email_Name, email);
-    notify(`resources.reviews.notification.submit_success`, 'success');
-    setTimeout(() => {
-      window.location.reload()
-    }, 300);
+    try {
+      const { code, msg, success } = await fetch('settings', 'create', {
+        emailname: `${email}${emailHost}`,
+        // @TODO: need request from the server
+        identity: 'yhviu-nx5do-xc555-d3rii-ygl6b-200le-h7997-885hh-hnwx4-c6n5d-sae',
+      })
+
+      if (success) {
+        notify(`resources.reviews.notification.submit_success`, 'success', {
+          // not effective 
+          message: msg
+        });
+        setTimeout(() => {
+          window.location.reload()
+        }, 300);
+      } else {
+        notify(`resources.reviews.notification.submit_failed`, 'error', {
+          message: msg
+        });
+      }
+    } catch (error) {
+      notify(`resources.reviews.notification.submit_failed`, 'error');
+      console.log('error', error);
+    }
   }
 
   useEffect(() => {
@@ -342,11 +369,13 @@ const Email: FC<CreateProps> = props => {
   }, [email])
 
   useEffect(() => {
-    const email = Storage.get(Email_Name);
-    if (email) {
-      setEmail(email);
+    // const email = Storage.get(Email_Name);
+    if (requestEmail) {
+      setEmail(requestEmail.replace('@ic.dmail.ai', ''));
+      // @TODO: need to remove, just use requestEmail
+      Storage.set(Email_Name, email);
     }
-  }, [])
+  }, [requestEmail])
 
   return (
     <div className={classes.root}>

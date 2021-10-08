@@ -17,15 +17,16 @@ const useStyles = makeStyles(
     },
     empty: {
       minHeight: 'auto',
+      paddingTop: '50px',
 
       '& img': {
-        width: 100,
+        width: 120,
       },
     },
 
     container: {
       padding: '30px 30px 40px',
-      marginTop: '40px',
+      marginTop: '50px',
       border: '2px dashed #BFBFBF',
       backgroundColor: '#F2F2F2',
       borderRadius: '10px',

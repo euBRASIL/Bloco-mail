@@ -206,6 +206,7 @@ const customEnglishMessages: TranslationMessages = {
                 created_success: 'Created sucess',
                 deleted_success: 'Deleted sucess',
                 submit_success: 'Submit sucess',
+                submit_failed: 'Submit failed',
                 moved_success: 'Moved success',
                 copyed_success: 'Copyed success',
                 forwarded_success: 'Forward success',
