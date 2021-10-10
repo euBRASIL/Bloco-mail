@@ -1,11 +1,14 @@
 import * as React from 'react';
-import { useState,useCallback,useEffect,useContext } from 'react';
+import { useState, useCallback, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Field, withTypes } from 'react-final-form';
 import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
+import { useSelector, useDispatch } from 'react-redux';
+import { changeEmail } from '../configuration/actions';
 import Logo from './Logo';
-
+import { Storage, Email_Name, Identity_Key, Username } from '../utils/storage'
+import { fetch, emailHost } from '../utils'
 
 import {
     Container,
@@ -18,7 +21,7 @@ import {
 import { createTheme, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import LockIcon from '@material-ui/icons/Lock';
-import { Notification, useTranslate, useLogin, useNotify,useRedirect } from 'react-admin';
+import { Notification, useTranslate, useLogin, useNotify, useRedirect } from 'react-admin';
 
 import { redTheme } from './redTheme';
 import { authClient } from '../service';
@@ -28,12 +31,13 @@ import { Identity } from "@dfinity/agent";
 const useStyles = makeStyles(theme => ({
     logo: {
         width: '178px',
-        height: '65px',
+        height: '68px',
         position: 'fixed',
         left: '50%',
         transform: 'translateX(-50%)',
         top: '13%',
         backgroundSize: '100%',
+        backgroundRepeat: 'no-repeat',
     },
     card: {
         width: '484px',
@@ -128,39 +132,46 @@ const Login = () => {
     const translate = useTranslate();
     const classes = useStyles();
     const notify = useNotify();
+    const dispatch = useDispatch();
     // const login = useLogin();
     const location = useLocation<{ nextPathname: string } | null>();
-    const [_identity, _setIdentity] = useState<Identity | undefined>();
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-
-    
-    
     const handleSubmit = (auth: FormValues) => {
         setLoading(true);
     };
 
     const redirect = useRedirect();
 
-    const handleConnect = async () => {
-            //setLoading(true);
-			await authClient.create();
-            await authClient.login();
-            const identity = await authClient.getIdentity();
-            if (identity) {
-                console.log('Authenticated');
-                setIsAuthenticated(true);
-                _setIdentity(identity);
-                console.log(identity.getPrincipal().toString());
-                localStorage.setItem("identity", identity.getPrincipal().toString());
-				localStorage.setItem("LoginState", '1');
-                localStorage.setItem("username", identity.getPrincipal().toString());
-				//setLoading(false)
-                redirect('./mails');
-            } else {
-                console.error("could not get identity");
+    const getEmail = (identity: string) => {
+        fetch('users', 'getOne', identity).then((res) => {
+            const { data: { dm_alias }, success } = res.data
+            if (success && dm_alias) {
+                dispatch(changeEmail(dm_alias))
+                Storage.set(Email_Name, dm_alias);
             }
-	}
+        }).catch((error) => {
+            console.log('error', error);
+        })
+    }
+
+    const handleConnect = async () => {
+        //setLoading(true);
+        await authClient.create();
+        await authClient.login();
+        const identity = await authClient.getIdentity();
+        if (identity) {
+            const sIdentity = identity.getPrincipal().toString()
+            getEmail(sIdentity);
+            setIsAuthenticated(true);
+            // @TODO: need to put the identity in to the cookie soon
+            Storage.set(Identity_Key, sIdentity);
+            //setLoading(false)
+            redirect('./mails');
+        } else {
+            console.error("could not get identity");
+        }
+    }
 
     const validate = (values: FormValues) => {
         const errors: FormValues = {};
@@ -184,7 +195,7 @@ const Login = () => {
                         <Card className={clsx(classes.card, "login-card")}>
                             <span className="login-text">WELCOME!</span>
                             <Button
-								onClick={() => { handleConnect() }}
+                                onClick={() => { handleConnect() }}
                                 color="primary"
                                 disabled={loading}
                                 className="login-btn"

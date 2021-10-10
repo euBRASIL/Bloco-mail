@@ -24,6 +24,8 @@ import {
     useGetList,
     useListContext,
 } from 'react-admin';
+import { useSelector, useDispatch } from 'react-redux';
+import { AppState } from '../types';
 import { useMediaQuery, Divider, Tabs, Tab, Theme } from '@material-ui/core';
 import Empty from '../components/empty'
 import BulkActionButtons from '../components/BulkActionButtons'
@@ -36,7 +38,6 @@ import CustomerReferenceField from '../visitors/CustomerReferenceField';
 import AddressField from '../visitors/AddressField';
 import MobileGrid from './MobileGrid';
 import { Customer } from '../types';
-import { Storage, Create_Mail_Cached, Email_Name } from '../utils/storage'
 
 const JunkFilter: FC<Omit<FilterProps, 'children'>> = props => (
     <Filter {...props}>
@@ -140,15 +141,14 @@ const PostPagination = props => {
 }
 
 const JunkList: FC<ListProps> = props => {
-    const email = Storage.get(Email_Name);
+    const emailname = useSelector((state: AppState) => state.email);
 
     return (
         <List
             {...props}
             filterDefaultValues={{
                 status: 'junk',
-                // @TODO: the real http request need the emailname
-                emailname: `${email}@ic.dmail.ai`
+                emailname
             }}
             sort={{ field: 'date', order: 'DESC' }}
             perPage={25}

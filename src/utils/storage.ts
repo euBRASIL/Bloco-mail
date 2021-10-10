@@ -1,6 +1,8 @@
 
 // @TODO: need to remove, just use requestEmail
+export const Identity_Key = 'identity_key';
 export const Email_Name = 'email_name';
+export const Username = 'username';
 export const Create_Mail_Cached = 'create_mail_cached';
 
 export const Storage = {
@@ -18,7 +20,7 @@ export const Storage = {
   },
   set(name: string, value: any) {
     localStorage.setItem(name, JSON.stringify({
-      value
+      value: value || ""
     }))
   },
   remove(name: string) {

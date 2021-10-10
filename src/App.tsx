@@ -1,7 +1,6 @@
-import React, { useContext, useState } from 'react';
-import { Admin, Resource, useDataProvider } from 'react-admin';
+import React, { useContext, useEffect, useState } from 'react';
+import { Admin, Resource, DataProvider } from 'react-admin';
 import polyglotI18nProvider from 'ra-i18n-polyglot';
-import { Provider, ReactReduxContext, useStore } from 'react-redux';
 
 import authProvider from './authProvider';
 import themeReducer from './themeReducer';
@@ -83,17 +82,12 @@ export const resources = [
 ]
 
 const App = () => {
-
     return (
         <Admin
             title=""
-            dataProvider={{
-                // expand new request actions
-                ...dataProviderFactory(
-                    // process.env.REACT_APP_DATA_PROVIDER || ''
-                    'rest'
-                ),
-            }}
+            dataProvider={dataProviderFactory(
+                'rest'
+            )}
             customReducers={{ theme: themeReducer, email: emailReducer }}
             customRoutes={customRoutes}
             authProvider={authProvider}
@@ -106,6 +100,7 @@ const App = () => {
             <GetEmail />
             {resources.map(({ name, compontents, label }) => (
                 <Resource
+                    key={name}
                     name={name}
                     options={{ label }}
                     {...compontents}
