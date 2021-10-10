@@ -29,7 +29,7 @@ import image from '../assets/red/image.png';
 import ok from '../assets/red/ok.png';
 import error from '../assets/red/error.png';
 
-import { Storage, Email_Name } from '../utils/storage'
+import { Storage, Username, Email_Name } from '../utils/storage'
 import { fetch, emailHost } from '../utils'
 
 const useStyles = makeStyles(
@@ -305,7 +305,7 @@ const Email: FC<CreateProps> = props => {
     uploadRef?.current?.click();
   }
 
-  const [email, setEmail] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
   const onEmailChange = (e) => {
     setEmail(e.target.value);
     if (!e.target.value.length) {
@@ -329,7 +329,7 @@ const Email: FC<CreateProps> = props => {
     if (hasError) {
       return;
     }
-    Storage.set(Email_Name, email);
+
     try {
       const { code, msg, success } = await fetch('settings', 'create', {
         emailname: `${email}${emailHost}`,
@@ -338,6 +338,8 @@ const Email: FC<CreateProps> = props => {
       })
 
       if (success) {
+        Storage.set(Username, email);
+        Storage.set(Email_Name, `${email}${emailHost}`);
         notify(`resources.reviews.notification.submit_success`, 'success', {
           // not effective 
           message: msg
@@ -369,11 +371,8 @@ const Email: FC<CreateProps> = props => {
   }, [email])
 
   useEffect(() => {
-    // const email = Storage.get(Email_Name);
     if (requestEmail) {
       setEmail(requestEmail.replace('@ic.dmail.ai', ''));
-      // @TODO: need to remove, just use requestEmail
-      Storage.set(Email_Name, email);
     }
   }, [requestEmail])
 

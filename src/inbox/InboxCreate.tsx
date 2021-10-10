@@ -45,7 +45,9 @@ import { Mail, Customer } from '../types';
 import Basket from './Basket';
 import Totals from './Totals';
 import Toolbar from './Toolbar'
-import { Storage, Create_Mail_Cached, Email_Name } from '../utils/storage'
+import { useSelector, useDispatch } from 'react-redux';
+import { AppState } from '../types';
+import { Storage, Create_Mail_Cached } from '../utils/storage'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -175,12 +177,13 @@ const InboxCreate: FC<CreateProps> = props => {
     const [initedValues, setInitedValues] = useState(() => ({}))
     const richText = useRef(null);
 
-    const email = Storage.get(Email_Name);
+    const email = useSelector((state: AppState) => state.email);
+
     const transform = data => ({
         ...data,
         // @TODO: the email should get from the use request
-        dm_email_path: `${email}@ic.dmail.ai`,
-        dm_from: `${email.replace('@ic.dmail.ai', '')}  <${email}@ic.dmail.ai>`,
+        dm_email_path: email,
+        dm_from: `${email.replace('@ic.dmail.ai', '')}  <${email}>`,
         // @TODO: will use the html after soon
         dm_content: data?.dm_content ? DOMPurify.sanitize(data.dm_content, { ALLOWED_TAGS: [] }) : '',
     })

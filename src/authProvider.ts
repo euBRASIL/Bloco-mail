@@ -1,22 +1,24 @@
 import { AuthProvider, useRedirect } from 'react-admin';
-import { Storage, Email_Name } from './utils/storage'
+import { Storage, Email_Name, Username, Identity_Key } from './utils/storage'
 
 const authProvider: AuthProvider = {
     login: ({ username }) => {
-        localStorage.setItem('username', username);
+        // localStorage.setItem('username', username);
         // accept all username/password combinations
-        return localStorage.getItem('username') ? Promise.resolve() : Promise.reject();
+        return Storage.get(Username) ? Promise.resolve() : Promise.reject();
     },
     logout: () => {
-        localStorage.removeItem('username');
+        Storage.remove(Username);
         return Promise.resolve();
     },
     checkError: () => Promise.resolve(),
     checkAuth: () =>
-        localStorage.getItem('username') ? Promise.resolve() : Promise.reject(),
+        //  if no Identity in Storage, then to login page
+        Storage.get(Identity_Key) || process.env.NODE_ENV === 'development' ? Promise.resolve() : Promise.reject(),
     getPermissions: () => Promise.reject('Unknown method'),
     getIdentity: () => {
-        const email = Storage.get(Email_Name);
+        const email = Storage.get(Username);
+
         return Promise.resolve({
             id: 'user',
             fullName: email || 'No Name',

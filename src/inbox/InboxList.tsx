@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { FC, Fragment, useCallback, useEffect, useState, cloneElement, useMemo } from 'react';
 import SubIcon from '@material-ui/icons/TurnedInNotRounded';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { AppState } from '../types';
 import {
     AutocompleteInput,
     BooleanField,
@@ -43,7 +44,6 @@ import MobileGrid from './MobileGrid';
 import { Mail } from '../types';
 import IconSwap from '@material-ui/icons/SwapHoriz';
 
-import { Storage, Create_Mail_Cached, Email_Name } from '../utils/storage'
 import Empty from '../components/empty'
 import PostPagination from '../components/pagination'
 import BulkActionButtons from '../components/BulkActionButtons'
@@ -358,7 +358,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
 
 const TestList: FC<ListProps> = props => {
     const classes = useDatagridStyles();
-    const email = Storage.get(Email_Name);
+    const emailname = useSelector((state: AppState) => state.email);
 
     return (
         <List
@@ -366,9 +366,7 @@ const TestList: FC<ListProps> = props => {
             className={classes.list}
             filterDefaultValues={{
                 status: 'primary',
-                // @TODO: the real http request need the emailname
-                emailname: `${email}@ic.dmail.ai`
-                // emailname: 'webmaster@ic.dmail.ai'
+                emailname
             }}
             sort={{ field: 'date', order: 'DESC' }}
             perPage={25}

@@ -1,4 +1,4 @@
-import { Identity} from '@dfinity/agent';
+import { Identity } from '@dfinity/agent';
 import { AuthClient } from '@dfinity/auth-client';
 import { getIdentityUrl } from './config';
 
@@ -22,8 +22,8 @@ class AuthClientWrapper {
   }
 
   async login(): Promise<Identity | undefined> {
-      console.log('login');
-      console.log(getIdentityUrl());
+    console.log('login');
+    console.log(getIdentityUrl());
     return new Promise(async (resolve) => {
       await this.authClient?.login({
         identityProvider: getIdentityUrl(),

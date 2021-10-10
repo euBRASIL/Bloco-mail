@@ -35,7 +35,8 @@ import { Customer } from '../types';
 import Empty from '../components/empty'
 import PostPagination from '../components/pagination'
 import BulkActionButtons from '../components/BulkActionButtons'
-import { Storage, Create_Mail_Cached, Email_Name } from '../utils/storage'
+import { useSelector, useDispatch } from 'react-redux';
+import { AppState } from '../types';
 
 const TrashFilter: FC<Omit<FilterProps, 'children'>> = props => (
     <Filter {...props}>
@@ -131,15 +132,14 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
 };
 
 const TrashList: FC<ListProps> = props => {
-    const email = Storage.get(Email_Name);
+    const emailname = useSelector((state: AppState) => state.email);
 
     return (
         <List
             {...props}
             filterDefaultValues={{
                 status: 'trash',
-                // @TODO: the real http request need the emailname
-                emailname: `${email}@ic.dmail.ai`
+                emailname
             }}
             sort={{ field: 'date', order: 'DESC' }}
             perPage={25}

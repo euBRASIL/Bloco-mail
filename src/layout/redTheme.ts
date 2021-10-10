@@ -112,6 +112,7 @@ export const redTheme = {
         },
         '& .login-btn': {
           backgroundColor: '#FF5D50',
+          color: '#fff',
         },
         '& .login-logo': {
           backgroundImage: `url(${loginLogo})`,
