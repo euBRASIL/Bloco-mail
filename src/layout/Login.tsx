@@ -145,7 +145,7 @@ const Login = () => {
 
     const getEmail = (identity: string) => {
         fetch('users', 'getOne', identity).then((res) => {
-            const { data, success } = res.data
+            const { data, success } = res
             if (success && data) {
                 dispatch(changeEmail(data))
                 Storage.set(Email_Name, data);
