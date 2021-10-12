@@ -4,8 +4,8 @@ import SubIcon from '@material-ui/icons/TurnedInNotRounded';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../types';
 import {
-    AutocompleteInput,
-    BooleanField,
+    useNotify,
+    useRedirect,
     Datagrid,
     DatagridProps,
     DateField,
@@ -173,7 +173,7 @@ const useGetTotals = (filterValues: any) => {
 
 const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     const listContext = useListContext();
-    // console.log(listContext)
+    console.log(listContext)
     const { ids, filterValues, setFilters, displayedFilters } = listContext;
     const classes = useDatagridStyles();
     const isXSmall = useMediaQuery<Theme>(theme =>
@@ -359,6 +359,11 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
 const TestList: FC<ListProps> = props => {
     const classes = useDatagridStyles();
     const emailname = useSelector((state: AppState) => state.email);
+    const redirect = useRedirect();
+    if (!emailname) {
+        window.confirm('Pelease set Mailbox alias first');
+        redirect('./settings/show/email')
+    }
 
     return (
         <List

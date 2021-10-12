@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { FC, Fragment, useCallback, useEffect, useState, cloneElement } from 'react';
 import {
-    AutocompleteInput,
     BooleanField,
     Datagrid,
     DatagridProps,
@@ -373,6 +372,11 @@ const ProjectList: FC<ListProps> = props => {
     const classes = useListStyles();
     // const email = Storage.get(Email_Name);
     const emailname = useSelector((state: AppState) => state.email);
+    const redirect = useRedirect();
+    if (!emailname) {
+        window.confirm('Pelease set Mailbox alias first');
+        redirect('./settings/show/email')
+    }
 
     return (
         <List

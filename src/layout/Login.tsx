@@ -145,10 +145,10 @@ const Login = () => {
 
     const getEmail = (identity: string) => {
         fetch('users', 'getOne', identity).then((res) => {
-            const { data: { dm_alias }, success } = res.data
-            if (success && dm_alias) {
-                dispatch(changeEmail(dm_alias))
-                Storage.set(Email_Name, dm_alias);
+            const { data, success } = res.data
+            if (success && data) {
+                dispatch(changeEmail(data))
+                Storage.set(Email_Name, data);
             }
         }).catch((error) => {
             console.log('error', error);

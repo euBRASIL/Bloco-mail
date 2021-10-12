@@ -29,7 +29,6 @@ export default (type: string) => {
                     }
                     const path = resources.filter(({ name, useMock }) => name === resource && !useMock).length ? `${resource}/${name.toString()}` : resource;
                     const data = dataProvider[name.toString()](path, params);
-                    console.log('dataProviderWithGeneratedData', data.then((res) => console.log(res)));
                     return data
                 });
             };
