@@ -129,8 +129,8 @@ export default (apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
     httpClient(`${apiUrl}/${resource}`, {
       method: 'POST',
       body: JSON.stringify(params.data),
-    }).then(({ json: { data } }) => ({
-      data: { ...params.data, id: data.id },
+    }).then(({ json }) => ({
+      data: { ...params.data, ...json, id: json.id || 0 },
     })),
 
   delete: (resource, params) =>
