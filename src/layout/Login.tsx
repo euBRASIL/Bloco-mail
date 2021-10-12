@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeEmail } from '../configuration/actions';
 import Logo from './Logo';
-import { Storage, Email_Name, Identity_Key, Username } from '../utils/storage'
+import { Storage, Email_Name, Username, Identity_Key } from '../utils/storage'
 import { fetch, emailHost } from '../utils'
 
 import {
@@ -149,6 +149,7 @@ const Login = () => {
             if (success && data) {
                 dispatch(changeEmail(data))
                 Storage.set(Email_Name, data);
+                Storage.set(Username, data.replace(emailHost, ''));
             }
         }).catch((error) => {
             console.log('error', error);

@@ -1,5 +1,6 @@
 //  https://github.com/marmelab/react-admin/tree/master/packages/ra-data-json-server
-import jsonServerProvider from 'ra-data-json-server';
+// import jsonServerProvider from 'ra-d ata-json-server';
+import jsonServerProvider from '../utils/jsonServer';
 import { resources } from '../App';
 import { baseUrl, devBaseUrl } from '../utils'
 

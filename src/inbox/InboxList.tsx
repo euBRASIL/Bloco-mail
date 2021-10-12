@@ -173,7 +173,7 @@ const useGetTotals = (filterValues: any) => {
 
 const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     const listContext = useListContext();
-    console.log(listContext)
+    // console.log(listContext)
     const { ids, filterValues, setFilters, displayedFilters } = listContext;
     const classes = useDatagridStyles();
     const isXSmall = useMediaQuery<Theme>(theme =>

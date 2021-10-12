@@ -1,4 +1,5 @@
-import jsonServerProvider from 'ra-data-json-server';
+// import jsonServerProvider from 'ra-data-json-server';
+import jsonServerProvider from './jsonServer';
 
 export const baseUrl = 'https://ic.dmail.ai/api/v2'
 export const devBaseUrl = 'http://localhost:4000'

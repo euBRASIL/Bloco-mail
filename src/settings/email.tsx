@@ -29,7 +29,7 @@ import image from '../assets/red/image.png';
 import ok from '../assets/red/ok.png';
 import error from '../assets/red/error.png';
 
-import { Storage, Username, Email_Name } from '../utils/storage'
+import { Storage, Username, Email_Name, Identity_Key } from '../utils/storage'
 import { fetch, emailHost } from '../utils'
 
 const useStyles = makeStyles(
@@ -273,6 +273,7 @@ const Email: FC<CreateProps> = props => {
   const classes = useStyles();
   const notify = useNotify();
   const requestEmail = useSelector((state: AppState) => state.email);
+  const identity = Storage.get(Identity_Key);
 
   // const data = useDataProvider();
   // console.log('useDataProvider', data.aaa());
@@ -380,6 +381,10 @@ const Email: FC<CreateProps> = props => {
     <div className={classes.root}>
       {/* <CreateContextProvider value={controllerProps}> */}
       <SimpleForm variant="outlined" toolbar={<></>}>
+        <div className={classes.chunk} style={{ marginBottom: 20 }}>
+          <div className={classes.label}>Ientity :</div>
+          <div>{identity || '--'}</div>
+        </div>
         <div className={classes.chunk}>
           <div className={classes.label}>Modify Avatar :</div>
           <div className={clsx(classes.form, avaError ? 'error' : '')}>
