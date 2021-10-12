@@ -59,7 +59,7 @@ export const resources = [
         name: 'trashs',
         compontents: trash,
         label: 'Trash',
-        useMock: true,
+        useMock: false,
     },
     {
         name: 'assets',
