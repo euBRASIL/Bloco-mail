@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="title" content="Dmail" />
+  <meta name="description" content="Dmail" />
+  <style>
+    html,
+    body {
+      margin: 0;
+      font-family: PingFang SC, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: #F7F6F4;
+      overflow-x: hidden;
+    }
+
+    body {
+      background-color: #090438;
+    }
+
+    p,
+    ul,
+    li,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    dd {
+      margin: 0;
+      padding: 0;
+    }
+
+    ul,
+    li {
+      list-style: none;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    select,
+    input {
+      outline: none;
+    }
+
+    .bg {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 150%;
+      height: 3000px;
+      background: linear-gradient(to right bottom, #581131, #000339 50%, #090438);
+    }
+
+    .header {
+      height: 122px;
+      background-color: rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 75px;
+      position: relative;
+      z-index: 20;
+    }
+
+    .logo,
+    .contact {
+      cursor: pointer;
+    }
+
+    .logo {
+      width: 97px;
+      height: 37px;
+      background: url(./images/logo.png) no-repeat;
+      background-size: 100%;
+    }
+
+    .contact {
+      width: 137px;
+      height: 42px;
+      background: url(./images/contact.png) no-repeat;
+      background-size: 100%;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav a {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 24px;
+      margin-right: 50px;
+      cursor: pointer;
+    }
+
+    .nav .on {
+      color: rgba(255, 255, 255, 1);
+    }
+
+    .nav div {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .nav ul {
+      position: absolute;
+      display: none;
+      top: 100%;
+    }
+
+    .nav li {
+      line-height: 40px;
+    }
+
+    .nav div:hover ul {
+      display: block;
+    }
+
+    .nav .dropdown::after {
+      content: '';
+      width: 19px;
+      height: 11px;
+      background: url(./images/down.png) no-repeat;
+      background-size: 100%;
+      margin-left: 10px;
+      position: relative;
+      top: 2px;
+      transition: 0.3s ease 0;
+      cursor: pointer;
+    }
+
+    .nav .dropdown:hover::after {
+      transform: scale(180deg);
+      transform-origin: center;
+    }
+
+    .banner {
+      width: auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    .banner img {
+      width: 800px;
+      margin: 100px auto;
+      display: block;
+    }
+
+    .banner a {
+      position: absolute;
+      top: 365px;
+      left: 50%;
+      width: 192px;
+      height: 56px;
+      background-size: 100%;
+    }
+
+    .banner .demo {
+      margin-left: -218px;
+      background-image: url(./images/demo.png);
+    }
+
+    .banner .docs {
+      margin-left: 26px;
+      background-image: url(./images/docs.png);
+    }
+
+    .chunk {
+      margin: 20px auto 150px;
+      text-align: center;
+      position: relative;
+      z-index: 5;
+    }
+
+    .chunk1 {
+      width: 1200px;
+    }
+
+    .chunk2 {
+      width: 1400px;
+    }
+
+    .chunk1 img,
+    .chunk2 img {
+      display: block;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .email {
+      width: 1200px;
+      height: 289px;
+      background: #221e4c;
+      border-radius: 20px;
+      padding: 58px 60px;
+      box-sizing: border-box;
+    }
+
+    .email h2 {
+      width: 602px;
+      height: 46px;
+      background: url(./images/sign_up_title.png) no-repeat;
+      background-size: 100%;
+      margin-bottom: 38px;
+    }
+
+    .sign_up {
+      width: 1080px;
+      background: #fff;
+      height: 90px;
+      line-height: 90px;
+      border-radius: 45px;
+      padding: 0 5px 0 60px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    .sign_up input {
+      outline: none;
+      border: none;
+      color: #717171;
+      font-size: 40px;
+      flex: 1;
+    }
+
+    .sign_up a {
+      width: 242px;
+      height: 80px;
+      margin-left: 40px;
+      background-color: #FE6A4C;
+      text-align: center;
+      line-height: 80px;
+      color: #fff;
+      font-size: 30px;
+      font-weight: bold;
+      border-radius: 40px;
+      cursor: pointer;
+    }
+
+    .contact_us {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .contact_us h2 {
+      width: 326px;
+      height: 46px;
+      background: url(./images/contact_title.png) no-repeat;
+      background-size: 100%;
+      margin: 0 auto 100px;
+    }
+
+    .contact_us ul {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .contact_us li {
+      margin-right: 92px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .contact_us p {
+      margin-top: 33px;
+      display: inline-block;
+      padding: 0 10px;
+      background-color: #243967;
+      height: 62px;
+      font-size: 26px;
+      line-height: 62px;
+      border-radius: 30px;
+    }
+
+    .contact_us a {
+      color: #fff;
+    }
+
+    .contact_us li:last-child {
+      margin-right: 0;
+    }
+
+    .contact_us li img {
+      width: 153px;
+    }
+
+    .footer {
+      background-color: #14123f;
+    }
+
+    .footer_wrapper {
+      width: 1300px;
+      margin: 0 auto;
+      padding: 80px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .footer .logo {
+      width: 201px;
+      height: 70px;
+      background-image: url(./images/d_logo.png);
+    }
+
+    .footer .left p {
+      margin-top: 20px;
+      color: #fff;
+      opacity: 0.6;
+      font-size: 24px;
+    }
+
+    .footer .right {
+      display: flex;
+      align-items: top;
+    }
+
+    .footer .right dl {
+      margin-right: 90px;
+    }
+
+    .footer .right dl:last-child {
+      margin-right: 0;
+    }
+
+    .footer .right dt {
+      margin-bottom: 16px;
+      font-size: 30px;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .footer .right .icons {
+      background: url(./images/icons.png) no-repeat 0 8px;
+      background-size: 25px 141px;
+      padding-left: 40px;
+    }
+
+    .footer .right a {
+      color: #fff;
+      opacity: 0.6;
+      font-size: 24px;
+      line-height: 39px;
+      cursor: pointer;
+    }
+  </style>
+  <script>
+    function onCommingSoon() {
+      alert('comming soon...')
+    }
+
+    function onContactClick() {
+      document.querySelector('.footer').scrollIntoView()
+    }
+
+    function onSignClick() {
+      setTimeout(() => {
+        alert('Thanks! Email submitted.')
+      }, 200)
+    }
+  </script>
+</head>
+
+<body>
+  <div class="bg"></div>
+  <div class="header">
+    <div class="logo"></div>
+    <div class="nav">
+      <div><a href="" class="on">Home</a></div>
+      <div><a onclick="onCommingSoon()">Mail</a></div>
+      <div><a onclick="onCommingSoon()">NFTs</a></div>
+      <div class="dropdown">
+        <a style="margin-right: 0;">Resources</a>
+        <ul>
+          <li><a href="https://github.com/dmailofficial">Github</a></li>
+          <li><a href="https://medium.com/@dmail_official">Medium</a></li>
+          <li><a href="http://dmail.zjjdxr.com/#/mails">Demo</a></li>
+          <li><a href="https://dmail.ai/Dmail_litepaper.pdf">Litepaper</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="contact" onclick="onContactClick()"></div>
+  </div>
+  <div class="banner">
+    <img src="./images/banner.png" alt="">
+    <a href="http://dmail.zjjdxr.com/#/mails" class="demo"></a>
+    <a href="https://dmail.ai/Dmail_litepaper.pdf" target="_blank" class="docs"></a>
+  </div>
+  <div class="container">
+    <div class="chunk chunk1">
+      <img src="./images/chunk1.png" alt="">
+    </div>
+    <div class="chunk chunk2">
+      <img src="./images/chunk2.png" alt="">
+    </div>
+    <div class="chunk email">
+      <h2></h2>
+      <div class="sign_up">
+        <input type="text" placeholder="Your email address">
+        <a onclick="onSignClick()">Sign up</a>
+      </div>
+    </div>
+    <div class="chunk contact_us">
+      <h2></h2>
+      <ul>
+        <li>
+          <a href="https://twitter.com/dmailofficial"><img src="./images/p1.png" alt=""></a>
+          <p><a href="https://twitter.com/dmailofficial">witter</a></p>
+        </li>
+        <li>
+          <a href="https://t.me/dmailofficial"><img src="./images/p2.png" alt=""></a>
+          <p><a href="https://t.me/dmailofficial">Telegram</a></p>
+        </li>
+        <li>
+          <a href="https://medium.com/@dmail_official"><img src="./images/p3.png" alt=""></a>
+          <p><a href="https://medium.com/@dmail_official">Medium</a></p>
+        </li>
+        <li>
+          <a href="https://github.com/dmailofficial"><img src="./images/p4.png" alt=""></a>
+          <p><a href="https://github.com/dmailofficial">Github</a></p>
+        </li>
+        <li>
+          <a href="contact@dmail.ai"><img src="./images/p5.png" alt=""></a>
+          <p><a href="contact@dmail.ai">Email</a></p>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer_wrapper">
+      <div class="left">
+        <div class="logo"></div>
+        <p>@Dmail Network Foundation LTD.</p>
+      </div>
+      <div class="right">
+        <dl>
+          <dt>About</dt>
+          <dd>
+            <p><a href="http://dmail.zjjdxr.com/#/mails">Demo</a></p>
+            <p><a href="https://dmail.ai/Dmail_litepaper.pdf">Litepaper</a></p>
+            <p><a>Support</a></p>
+            <p><a>FAQs</a></p>
+          </dd>
+        </dl>
+        <dl>
+          <dt>Procotrol</dt>
+          <dd>
+            <p><a href="">Overview</a></p>
+            <p><a>Mailbox</a></p>
+            <p><a>NFTs</a></p>
+            <p><a>DApps</a></p>
+          </dd>
+        </dl>
+        <dl>
+          <dt>Community</dt>
+          <dd class="icons">
+            <p><a href="contact@dmail.ai">Email</a></p>
+            <p><a href="https://twitter.com/dmailofficial">Twitter</a></p>
+            <p><a href="https://t.me/dmailofficial">Telegram</a></p>
+            <p><a href="https://medium.com/@dmail_official">Medium</a></p>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
