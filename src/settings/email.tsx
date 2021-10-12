@@ -382,7 +382,7 @@ const Email: FC<CreateProps> = props => {
       {/* <CreateContextProvider value={controllerProps}> */}
       <SimpleForm variant="outlined" toolbar={<></>}>
         <div className={classes.chunk} style={{ marginBottom: 20 }}>
-          <div className={classes.label}>Ientity :</div>
+          <div className={classes.label}>Identity :</div>
           <div>{identity || '--'}</div>
         </div>
         <div className={classes.chunk}>
