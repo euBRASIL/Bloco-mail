@@ -334,8 +334,7 @@ const Email: FC<CreateProps> = props => {
     try {
       const { data: { success, msg, code } } = await fetch('settings', 'create', {
         emailname: `${email}${emailHost}`,
-        // @TODO: need request from the server
-        identity: 'yhviu-nx5do-xc555-d3rii-ygl6b-200le-h7997-885hh-hnwx4-c6n5d-sae',
+        identity,
       })
 
       if (success) {
