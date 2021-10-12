@@ -14,6 +14,13 @@ export default () => {
         // console.log('addResponseInterceptor', response)
         response['headers']['X-Total-Count'] = 319;
         response['headers']['Access-Control-Expose-Headers'] = 'X-Total-Count';
+        // @TODO: Simply response true http request
+        response['body'] = {
+            code: 0,
+            msg: "request success",
+            success: true,
+            data: response['body'],
+        }
         return response; // always return the modified input
     });
     restServer.init(data);
