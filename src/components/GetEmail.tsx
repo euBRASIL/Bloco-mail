@@ -8,9 +8,9 @@ const GetEmail = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const username = Storage.get(Username);
-    if (username) {
-      dispatch(changeEmail(username + emailHost))
+    const email = Storage.get(Email_Name);
+    if (email) {
+      dispatch(changeEmail(email))
     }
   }, [])
 
