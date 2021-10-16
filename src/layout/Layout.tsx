@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { Layout, LayoutProps, Sidebar } from 'react-admin';
+import { Layout, Notification, LayoutProps, Sidebar } from 'react-admin';
 import AppBar from './AppBar';
 import Menu from './Menu';
 import { darkTheme, lightTheme } from './themes';
@@ -34,6 +34,7 @@ export default (props: LayoutProps) => {
             {...props}
             appBar={AppBar}
             sidebar={CustomSidebar}
+            // notification={Notification}
             menu={Menu}
             theme={theme}
         />

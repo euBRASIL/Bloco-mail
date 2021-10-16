@@ -36,7 +36,7 @@ const delayedDataProvider: any = new Proxy(jsonServerActions, {
                     setTimeout(
                         () => {
                             const isProduct = resources.filter(({ name, useMock }) => !resource.indexOf(`${name}/`) && !useMock).length;
-                            // console.log('111', name, resource, params, restProvider[isProduct ? 'product' : 'mock'][name as string](resource, params).then(res => console.log(res)))
+                            console.log('111', name, resource, params, restProvider[isProduct ? 'product' : 'mock'][name as string](resource, params).then(res => console.log(res)))
                             resolve(
                                 restProvider[isProduct ? 'product' : 'mock'][name as string](resource, params)
                             )
