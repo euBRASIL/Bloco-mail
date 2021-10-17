@@ -198,6 +198,20 @@
       background-image: url(./images/docs.png);
     }
 
+    .banner .build {
+      margin-top: 15px;
+      color: #fff;
+      text-align: center;
+      position: absolute;
+      bottom: -42px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .banner .build span {
+      color: #FF635C;
+    }
+
     .chunk {
       margin: 20px auto 150px;
       text-align: center;
@@ -218,6 +232,38 @@
       display: block;
       width: 100%;
       margin: 0 auto;
+    }
+
+    .chunk2 ul {
+      width: 1311px;
+      margin: 95px auto 0;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      color: #fff;
+    }
+
+    .chunk2 li {
+      width: 261px;
+      height: 103px;
+      padding: 40px 24px;
+      margin-bottom: 25px;
+      box-sizing: content-box;
+      background: url(./images/chunk2_item.png) no-repeat;
+      background-size: 100%;
+      text-align: left;
+    }
+
+    .chunk2 h3 {
+      font-size: 22px;
+      margin-bottom: 20px;
+      white-space: nowrap;
+    }
+
+    .chunk2 p {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 18px;
     }
 
     .email {
@@ -386,7 +432,7 @@
 
     @media screen and (max-width: 1024px) {
       body {
-        background: linear-gradient(135deg, #4D1730, #080636);
+        background: linear-gradient(135deg, #4D1730, #230A36 18%, #080636);
         color: rgba(255, 255, 255, .9);
       }
 
@@ -590,11 +636,8 @@
       }
 
       .banner .build {
-        margin-top: 15px;
-      }
-
-      .banner .build span {
-        color: #FF635C;
+        position: static;
+        transform: none;
       }
 
       .chunk {
@@ -625,15 +668,30 @@
         color: rgba(255, 255, 255, 0.5);
       }
 
+      .chunk1 .chunk1_img {
+        display: block;
+        width: 70%;
+        margin: 25px auto;
+      }
+
       .chunk2 h2 {
         padding: 0 6.8%;
         margin-bottom: 15px;
       }
 
+      .chunk2 ul {
+        display: block;
+        width: auto;
+        margin: 0;
+      }
+
       .chunk2 li {
+        width: auto;
+        height: auto;
+        box-sizing: border-box;
         padding: 3% 6.8%;
         margin-bottom: 3.55%;
-        background-color: rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.05);
         border-radius: 10px;
         color: rgba(255, 255, 255, 0.5);
         font-size: 14px;
@@ -644,6 +702,11 @@
         font-size: 16px;
         margin-bottom: 10px;
         color: #fff;
+        white-space: inherit;
+      }
+
+      .chunk2 li p {
+        font-size: 14px;
       }
 
       .email {
@@ -691,7 +754,7 @@
 
       .contact_us li {
         margin-right: 0;
-        width: 16%;
+        width: 12%;
       }
 
       .contact_us li img {
@@ -785,6 +848,11 @@
         border-radius: 15px;
         height: 30px;
         line-height: 30px;
+        min-width: 52px;
+        transform: translateX(-50%);
+        position: relative;
+        left: 50%;
+        margin-top: 12px;
       }
     }
   </style>
@@ -842,12 +910,13 @@
     <div class="note hide">Mail Interaction，Transfer Tokens&NFTs, DApp API，Airdrop&IMO，NFTs Market</div>
     <a href="https://pyr3m-ciaaa-aaaai-qasua-cai.ic0.app/" class="demo"></a>
     <a href="https://dmail.ai/Dmail_litepaper.pdf" target="_blank" class="docs"></a>
-    <div class="build hide"><span>built on</span> DFINITY</div>
+    <div class="build"><span>built on</span> DFINITY</div>
   </div>
   <div class="container">
     <div class="chunk chunk1">
       <h2 class="hide">The most convenient API tool you can access to Dfinity</h2>
       <img src="./images/chunk1.png" alt="">
+      <img class="chunk1_img hide" src="./images/m-chunk1.png" alt="">
       <div class="hide">
         Dmail network empowers users，developers, liquidity providers，governors，traders and DApp managers to participate
         in a financial marketplace that is open and accessible to all.
@@ -855,8 +924,8 @@
     </div>
     <div class="chunk chunk2">
       <h2 class="hide">A suite of features powering the evolution of Dfinity ecosystem</h2>
-      <img src="./images/chunk2.png" alt="">
-      <ul class="hide">
+      <img src="./images/chunk2_2.png" alt="">
+      <ul>
         <li>
           <h3>Mailbox Communication</h3>
           <p>Ensure communication is safe and checkable</p>
