@@ -386,7 +386,7 @@
 
     @media screen and (max-width: 1024px) {
       body {
-        background-color: #3C0D34;
+        background: linear-gradient(135deg, #4D1730, #080636);
         color: rgba(255, 255, 255, .9);
       }
 
@@ -480,12 +480,14 @@
         top: 75px;
         left: 0;
         right: 0;
-        background: #552749;
+        background: #381232;
       }
 
-      /* .show {
-        background: #6d335e;
-      } */
+      .show .nav_wrapper {
+        display: block;
+        box-shadow: 0 3px 5px 3px rgba(25, 8, 22, 0.6);
+        padding: 15px 40px;
+      }
 
       .nav .nav_item {
         display: block;
@@ -507,12 +509,6 @@
 
       .nav li::marker {
         color: rgba(255, 255, 255, 0.5);
-      }
-
-      .show .nav_wrapper {
-        display: block;
-        box-shadow: 0 0 3px 3px rgba(68, 32, 59, 0.3);
-        padding: 15px 60px;
       }
 
       .nav a,
