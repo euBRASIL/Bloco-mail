@@ -99,10 +99,6 @@ export const redTheme = {
     //       loginHMax: 800,
     //     },
     //   },
-    // notify
-    MuiSnackbarContent: {
-
-    },
     MuiContainer: {
       root: {
         '&.login-wrapper': {

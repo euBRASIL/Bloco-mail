@@ -29,7 +29,7 @@ export default (db, { serializeDate }) => {
     let numberOfCustomers = 0;
     const maxCustomers = 223;
 
-    return Array.from(Array(10).keys()).map(id => {
+    return Array.from(Array(600).keys()).map(id => {
         const nbProducts = weightedArrayElement(
             [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             [30, 20, 5, 2, 1, 1, 1, 1, 1, 1]
