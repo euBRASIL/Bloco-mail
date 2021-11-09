@@ -1,3 +1,6 @@
+html {
+  height: 100%;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -30,4 +33,9 @@ ul, li {
 
 select, input {
   outline: none;
+}
+
+.oh {
+  height: 100%;
+  overflow: hidden;
 }

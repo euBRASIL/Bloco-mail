@@ -6,30 +6,39 @@ import subTitle from '../assets/red/sub-title.png';
 
 import compose from '../assets/red/compose.png';
 import composeHover from '../assets/red/compose-hover.png';
+// import composeMobile from '../assets/red/compose-m.png';
 
 import inbox from '../assets/red/inbox.png';
 import inboxHover from '../assets/red/inbox-hover.png';
+import inboxMobile from '../assets/red/inbox-m.png';
 
 import junk from '../assets/red/junk.png';
 import junkHover from '../assets/red/junk-hover.png';
+import junkMobile from '../assets/red/junk-m.png';
 
 import sent from '../assets/red/sent.png';
 import sentHover from '../assets/red/sent-hover.png';
+import sentMobile from '../assets/red/sent-m.png';
 
 import subscription from '../assets/red/subscription.png';
 import subscriptionHover from '../assets/red/subscription-hover.png';
+import subscriptionMobile from '../assets/red/subscription-m.png';
 
 import assets from '../assets/red/assets.png';
 import assetsHover from '../assets/red/assets-hover.png';
+import assetsMobile from '../assets/red/assets-m.png';
 
 import trash from '../assets/red/trash.png';
 import trashHover from '../assets/red/trash-hover.png';
+import trashMobile from '../assets/red/trash-m.png';
 
 import nft from '../assets/red/nft.png';
 import nftHover from '../assets/red/nft-hover.png';
+import nftMobile from '../assets/red/nft-m.png';
 
 import settings from '../assets/red/settings.png';
 import settingsHover from '../assets/red/settings-hover.png';
+import settingsMobile from '../assets/red/settings-m.png';
 
 import search from '../assets/red/search.png';
 import prev from '../assets/red/prev.png';
@@ -71,6 +80,36 @@ const menuItemHovers = {
   },
   '& .menu-item-settings': {
     backgroundImage: `url(${settingsHover})`,
+  },
+}
+
+const menuItemMobile = {
+  // '& .menu-item-compose': {
+  //   // backgroundImage: `url(${composeMobile})`,
+  // },
+  '& .menu-item-inbox': {
+    backgroundImage: `url(${inboxMobile})`,
+  },
+  '& .menu-item-junk': {
+    backgroundImage: `url(${junkMobile})`,
+  },
+  '& .menu-item-sent': {
+    backgroundImage: `url(${sentMobile})`,
+  },
+  '& .menu-item-subscription': {
+    backgroundImage: `url(${subscriptionMobile})`,
+  },
+  '& .menu-item-assets': {
+    backgroundImage: `url(${assetsMobile})`,
+  },
+  '& .menu-item-trash': {
+    backgroundImage: `url(${trashMobile})`,
+  },
+  '& .menu-item-nfts': {
+    backgroundImage: `url(${nftMobile})`,
+  },
+  '& .menu-item-settings': {
+    backgroundImage: `url(${settingsMobile})`,
   },
 }
 
@@ -158,6 +197,12 @@ export const redTheme = {
         '& .menu-bg': {
           background: 'linear-gradient(0deg, #FA4B49, #FA7B5E)',
         },
+        '& .menu-small-bg': {
+          background: '#fff',
+          zIndex: '100',
+          width: '86%',
+          padding: 0,
+        },
         '& .logo': {
           backgroundImage: `url(${logo})`,
         },
@@ -174,6 +219,13 @@ export const redTheme = {
           borderRadius: '31px 0px 0px 31px',
           color: '#fff',
           fontSize: '18px',
+
+          '&.small': {
+            color: '#909090',
+            padding: '6px 24px',
+            fontSize: '16px',
+            marginBottom: '0',
+          }
         }
       },
     },
@@ -201,6 +253,16 @@ export const redTheme = {
             top: '-20px',
             right: '0',
           },
+
+          '&.small': {
+            color: '#909090',
+
+            '&:hover': {
+              color: '#FF7D61',
+            },
+
+            ...menuItemMobile,
+          },
         }
       },
       active: {
@@ -208,6 +270,13 @@ export const redTheme = {
           background: '#F7F6F4',
           color: '#FF7D61',
           ...menuItemHovers,
+
+          '&.small': {
+            color: '#FA6E58',
+            background: 'rgba(255, 137, 111, 0.1)',
+            borderRadius: '35px 0px 35px 0px',
+            ...menuItemHovers,
+          },
 
           '&::before': {
             content: '""',

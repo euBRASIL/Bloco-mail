@@ -20,6 +20,7 @@ import settings from './settings';
 import nft from './nft';
 import dataProviderFactory from './dataProvider';
 import GetEmail from './components/GetEmail'
+import HideScrollInMobile from './components/HideScrollInMobile'
 
 const i18nProvider = polyglotI18nProvider(locale => {
     if (locale === 'fr') {
@@ -84,7 +85,7 @@ export const resources = [
 const App = () => {
     return (
         <Admin
-            title=""
+            title="Dmail"
             dataProvider={dataProviderFactory(
                 'rest'
             )}
@@ -98,6 +99,7 @@ const App = () => {
             disableTelemetry
         >
             <GetEmail />
+            <HideScrollInMobile />
             {resources.map(({ name, compontents, label }) => (
                 <Resource
                     key={name}

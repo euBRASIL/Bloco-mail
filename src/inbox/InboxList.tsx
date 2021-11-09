@@ -176,9 +176,10 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     // console.log(listContext)
     const { ids, filterValues, setFilters, displayedFilters } = listContext;
     const classes = useDatagridStyles();
-    const isXSmall = useMediaQuery<Theme>(theme =>
-        theme.breakpoints.down('xs')
-    );
+    // https://material-ui.com/zh/components/use-media-query/
+    // https://material-ui.com/zh/customization/breakpoints/
+    // 宽小于 1280px
+    const isSmall = useMediaQuery('(max-width: 1280px)');
     const [primary, setPrimary] = useState<Identifier[]>([] as Identifier[]);
     const [other, setOther] = useState<Identifier[]>(
         [] as Identifier[]
@@ -273,7 +274,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                     />
                 ))}
             </Tabs>
-            {isXSmall ? (
+            {isSmall ? (
                 <ListContextProvider
                     value={{ ...listContext, ids: selectedIds }}
                 >
@@ -356,7 +357,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
 //     );
 // };
 
-const TestList: FC<ListProps> = props => {
+const InboxList: FC<ListProps> = props => {
     const classes = useDatagridStyles();
     const emailname = useSelector((state: AppState) => state.email);
     const redirect = useRedirect();
@@ -387,4 +388,4 @@ const TestList: FC<ListProps> = props => {
     )
 };
 
-export default TestList;
+export default InboxList;
