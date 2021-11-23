@@ -12,7 +12,7 @@ export default () => {
     // for ra-data-json-server: https://github.com/marmelab/react-admin/tree/master/packages/ra-data-json-server
     restServer.addResponseInterceptor(function (response) {
         // console.log('addResponseInterceptor', response)
-        response['headers']['X-Total-Count'] = 35;
+        response['headers']['X-Total-Count'] = 319;
         response['headers']['Access-Control-Expose-Headers'] = 'X-Total-Count';
         // @TODO: Simply response true http request
         response['body'] = {

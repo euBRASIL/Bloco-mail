@@ -54,7 +54,6 @@ export default (props: LayoutProps) => {
             className={classnames(isSmall ? 'small' : '')}
             appBar={AppBar}
             sidebar={CustomSidebar}
-            // notification={Notification}
             menu={Menu}
             theme={theme}
         />
