@@ -36,16 +36,23 @@ import PostPagination from '../components/pagination'
 import BulkActionButtons from '../components/BulkActionButtons'
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../types';
+import filterIcon from '../assets/red/filter.png';
 
 const TrashFilter: FC<Omit<FilterProps, 'children'>> = props => (
     <Filter {...props}>
         <SearchInput source="q" alwaysOn />
-
     </Filter>
 );
 
-const useDatagridStyles = makeStyles({
+const useStyles = makeStyles({
     total: { fontWeight: 'bold' },
+    filterWrap: {
+        width: '16.5px',
+        height: '17.5px',
+        backgroundSize: '100%',
+        backgroundImage: `url(${filterIcon})`,
+        marginBottom: '20px',
+    },
 });
 
 const tabs = [
@@ -69,11 +76,12 @@ const useGetTotals = (filterValues: any) => {
 
 const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     const listContext = useListContext();
-    const { ids, filterValues, setFilters, displayedFilters } = listContext;
-    const classes = useDatagridStyles();
-    const isXSmall = useMediaQuery<Theme>(theme =>
-        theme.breakpoints.down('xs')
-    );
+    const { ids, data, filterValues, setFilters, displayedFilters } = listContext;
+    const classes = useStyles();
+    // const isXSmall = useMediaQuery<Theme>(theme =>
+    //     theme.breakpoints.down('xs')
+    // );
+    const isSmall = useMediaQuery('(max-width: 1280px)');
     const [trash, setTrash] = useState<Identifier[]>([] as Identifier[]);
 
     const totals = useGetTotals(filterValues) as any;
@@ -104,11 +112,11 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     return (
         <Fragment>
             {/* <Divider /> */}
-            {isXSmall ? (
+            {isSmall ? (
                 <ListContextProvider
                     value={{ ...listContext, ids: selectedIds }}
                 >
-                    <MobileGrid {...props} ids={selectedIds} />
+                    <MobileGrid {...props} ids={selectedIds} data={data} status={filterValues.status} />
                 </ListContextProvider>
             ) : (
                 <div>
@@ -131,6 +139,8 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
 };
 
 const TrashList: FC<ListProps> = props => {
+    const isSmall = useMediaQuery('(max-width: 1280px)');
+    const classes = useStyles();
     const emailname = useSelector((state: AppState) => state.email);
     const redirect = useRedirect();
     if (!emailname) {
@@ -154,7 +164,10 @@ const TrashList: FC<ListProps> = props => {
             pagination={<PostPagination />}
             bulkActionButtons={<BulkActionButtons />}
         >
-            <TabbedDatagrid />
+            <>
+                {isSmall ? <div className={classes.filterWrap} /> : null}
+                <TabbedDatagrid />
+            </>
         </List>
     )
 };

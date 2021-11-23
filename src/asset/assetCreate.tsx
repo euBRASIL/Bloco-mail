@@ -15,6 +15,7 @@ import {
 import { InputAdornment, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import RichTextInput from 'ra-input-rich-text';
+import { AssetOptions } from './utils'
 
 export const styles = {
     root: {
@@ -156,11 +157,7 @@ const AssetCreate: FC<CreateProps> = props => {
     return (
         <Create {...props} title="Move Asset" className={classes.root}>
             <SimpleForm variant="outlined">
-                <SelectInput className="custom-input w315" source="Assets" choices={[
-                    { id: 'cidco', name: 'Didco' },
-                    { id: 'aic', name: 'Aic' },
-                    { id: 'doge', name: 'Doge' },
-                ]} />
+                <SelectInput className="custom-input w315" source="Assets" choices={AssetOptions} />
 
                 <TextInput className="custom-input w315" source="reference" validate={required()} label='Account' />
                 <NumberInput

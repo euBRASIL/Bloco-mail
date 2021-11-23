@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { forwardRef } from 'react';
 import { AppBar, UserMenu, MenuItemLink, useTranslate, setSidebarVisibility } from 'react-admin';
 import Typography from '@material-ui/core/Typography';
@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../types';
 import { useMediaQuery, Theme } from '@material-ui/core';
 import clsx from 'clsx';
+import SearchPop from '../components/search'
 
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
@@ -136,9 +137,6 @@ const useSmallStyles = makeStyles({
         color: '#000000',
     },
     search: {
-        position: 'absolute',
-        right: 0,
-        top: 0,
         width: '23px',
         height: '26px',
         backgroundImage: `url(${searchBtn})`,
@@ -166,6 +164,26 @@ const CustomUserMenu = (props: any) => (
     </UserMenu>
 );
 
+export const getParams = (value) => {
+    const params = {
+        displayedFilters: {},
+        filter: {
+            status: 'primary',
+            q: value,
+        },
+        order: 'DESC',
+        page: '1',
+        start: '0',
+        perPage: '25',
+        sort: 'date',
+    }
+    const sPrams = Object.keys(params).reduce((s: string, key: string) => {
+        const value = typeof params[key] === 'object' ? JSON.stringify(params[key]) : params[key]
+        return `${s}&${key}=${encodeURIComponent(value)}`
+    }, '')
+    return sPrams
+}
+
 interface SearchProps {
     defaultValue: string;
     pathname: string;
@@ -176,22 +194,7 @@ const Search = ({ defaultValue, pathname, classes, ...props }: SearchProps) => {
     const onChange = (e) => {
         setValue(e.target.value)
     }
-
-    const params = {
-        displayedFilters: {},
-        filter: {
-            status: 'primary',
-            q: value,
-        },
-        order: 'DESC',
-        page: '1',
-        perPage: '25',
-        sort: 'date',
-    }
-    const sPrams = Object.keys(params).reduce((s: string, key: string) => {
-        const value = typeof params[key] === 'object' ? JSON.stringify(params[key]) : params[key]
-        return `${s}&${key}=${encodeURIComponent(value)}`
-    }, '')
+    const sPrams = getParams(value)
 
     return (
         <div className={classes}>
@@ -215,6 +218,7 @@ const CustomAppBar = (props: any) => {
     const isSmall = useMediaQuery('(max-width: 1280px)');
     const classes = useStyles();
     const smallClasses = useSmallStyles();
+    const emailname = useSelector((state: AppState) => state.email);
     const pathname = useSelector((state: AppState) => {
         const location = state?.router?.location;
         return location.pathname || ''
@@ -255,6 +259,9 @@ const CustomAppBar = (props: any) => {
         dispatch(setSidebarVisibility(true));
     }
 
+    const [searchPopShow, showSearchPop] = useState(false)
+    const hideSearchPop = () => showSearchPop(false)
+
     useEffect(() => {
         dispatch(setSidebarVisibility(false));
     }, [])
@@ -271,7 +278,10 @@ const CustomAppBar = (props: any) => {
                 id="react-admin-title"
             >{title}</Typography>
             {isSmall ? (
-                <div className={smallClasses.search}></div>
+                <>
+                    <div className={smallClasses.search} onClick={() => showSearchPop(true)}></div>
+                    <SearchPop show={searchPopShow} hideSearch={hideSearchPop} pathname={pathname} />
+                </>
             ) : (
                 <div className={classes.right}>
                     {needSearch ? <Search classes={classes.search} defaultValue={searchQValue} pathname={pathname} /> : null}

@@ -25,7 +25,7 @@ export default (db, { serializeDate }) => {
     const aMonthAgo = subDays(today, 30);
     const realCustomers = db.customers.filter(customer => customer.has_ordered);
 
-    return Array.from(Array(100).keys()).map(id => {
+    return Array.from(Array(4).keys()).map(id => {
 
 
 

@@ -20,7 +20,7 @@ import {
     TextField,
     TextInput,
     useGetList,
-    useRefresh,
+    useNotify,
     useListContext,
     useRecordContext,
     ImageField,
@@ -43,6 +43,7 @@ import Empty from '../components/empty'
 import PostPagination from '../components/pagination'
 import DropDown from '../components/dropDown'
 import { useStyles } from '../components/BulkActionButtons'
+import composeIcon from '../assets/red/edit.png';
 
 const AssetFilter: FC<Omit<FilterProps, 'children'>> = props => (
     <Filter {...props}>
@@ -71,6 +72,15 @@ const useDatagridStyles = makeStyles(
             borderRadius: 18,
         },
         total_amm: { fontWeight: 'bold', marginRight: 5 },
+        compose: {
+            width: '64px',
+            height: '64px',
+            background: `url(${composeIcon})`,
+            backgroundSize: '100%',
+            position: 'fixed',
+            right: '12px',
+            bottom: '40px'
+        }
     }));
 
 const tabs = [
@@ -95,12 +105,14 @@ const useGetTotals = (filterValues: any) => {
 
 
 const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
+    const notify = useNotify();
     const listContext = useListContext();
-    const { ids, filterValues, setFilters, displayedFilters } = listContext;
+    const { ids, data, filterValues, setFilters, displayedFilters } = listContext;
     const classes = useDatagridStyles();
-    const isXSmall = useMediaQuery<Theme>(theme =>
-        theme.breakpoints.down('xs')
-    );
+    // const isXSmall = useMediaQuery<Theme>(theme =>
+    //     theme.breakpoints.down('xs')
+    // );
+    const isSmall = useMediaQuery('(max-width: 1280px)');
     const [asset, setAsset] = useState<Identifier[]>([] as Identifier[]);
 
     const totals = useGetTotals(filterValues) as any;
@@ -171,12 +183,14 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     return (
         <Fragment>
             {/* <Divider /> */}
-            {isXSmall ? (
-                <ListContextProvider
-                    value={{ ...listContext, ids: selectedIds }}
-                >
-                    <MobileGrid {...props} ids={selectedIds} />
-                </ListContextProvider>
+            {isSmall ? (
+                <>
+                    <ListContextProvider
+                        value={{ ...listContext, ids: selectedIds }}
+                    >
+                        <MobileGrid {...props} ids={selectedIds} data={data} status={filterValues.status} />
+                    </ListContextProvider>
+                </>
             ) : (
                 <div className={classes.root}>
                     {filterValues.status === 'ongoing' && (

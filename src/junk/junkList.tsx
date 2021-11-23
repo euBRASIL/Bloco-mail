@@ -72,11 +72,9 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     const listContext = useListContext();
     // console.log(listContext)
 
-    const { ids, filterValues, setFilters, displayedFilters } = listContext;
+    const { ids, data, filterValues, setFilters, displayedFilters } = listContext;
     const classes = useDatagridStyles();
-    const isXSmall = useMediaQuery<Theme>(theme =>
-        theme.breakpoints.down('xs')
-    );
+    const isSmall = useMediaQuery('(max-width: 1280px)');
     const [junk, setJunk] = useState<Identifier[]>([] as Identifier[]);
 
     const totals = useGetTotals(filterValues) as any;
@@ -107,11 +105,12 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     return (
         <Fragment>
             {/* <Divider /> */}
-            {isXSmall ? (
+            {isSmall ? (
                 <ListContextProvider
                     value={{ ...listContext, ids: selectedIds }}
                 >
-                    <MobileGrid {...props} ids={selectedIds} />
+                    <MobileGrid {...props} ids={ids} data={data} status={filterValues.status}>
+                    </ MobileGrid>
                 </ListContextProvider>
             ) : (
                 <div>

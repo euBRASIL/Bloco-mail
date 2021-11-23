@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import mobileStyles from './mobileStyles'
 import logo from '../assets/red/logo.png';
 import loginBg from '../assets/red/login-bg.jpg';
 import loginLogo from '../assets/red/login-logo.png';
@@ -188,6 +188,10 @@ export const redTheme = {
         },
         '&:nth-child(2)': {
           margin: 0,
+        },
+
+        '&.small': {
+          ...mobileStyles
         }
       },
     },
@@ -643,6 +647,33 @@ export const redTheme = {
 
         '& fieldset': {
           border: 'none',
+        },
+
+        '&.custom-input-mobile': {
+          borderBottom: '1px solid #E6E6E6',
+
+          '& .MuiInputLabel-outlined': {
+            // width: '90px',
+            // marginRight: '10px',
+            // position: 'static',
+            // transform: 'none!important',
+            fontWeight: 500,
+            fontSize: '13px',
+            color: '#727272',
+
+            '&.Mui-error': {
+              display: 'none',
+              color: '#f44336',
+            },
+          },
+          '& p.MuiFormHelperText-root': {
+            display: 'none',
+          },
+          '& .MuiOutlinedInput-root': {
+            backgroundColor: 'transparent',
+            height: '30px',
+            lineHeight: '30px',
+          }
         },
 
         '&.custom-input': {

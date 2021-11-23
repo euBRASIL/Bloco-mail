@@ -2,6 +2,7 @@ import * as React from 'react';
 import { FC, Fragment, useCallback, useEffect, useState, cloneElement, useMemo } from 'react';
 import SubIcon from '@material-ui/icons/TurnedInNotRounded';
 import { useSelector, useDispatch } from 'react-redux';
+import clsx from 'clsx';
 import { AppState } from '../types';
 import {
     useNotify,
@@ -37,17 +38,14 @@ import { useMediaQuery, Divider, Tabs, Tab, Theme, Typography, Avatar } from '@m
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import NbItemsField from './NbItemsField';
-import CustomerReferenceField from '../visitors/CustomerReferenceField';
-import AddressField from '../visitors/AddressField';
 import MobileGrid from './MobileGrid';
 import { Mail } from '../types';
-import IconSwap from '@material-ui/icons/SwapHoriz';
 
 import Empty from '../components/empty'
 import PostPagination from '../components/pagination'
 import BulkActionButtons from '../components/BulkActionButtons'
-import { styles } from '../visitors/VisitorCreate';
+import filterIcon from '../assets/red/filter.png';
+import MobileCompose from '../components/MobileCompose'
 
 
 // const InboxFilter: FC<Omit<FilterProps, 'children'>> = props => (
@@ -57,15 +55,22 @@ import { styles } from '../visitors/VisitorCreate';
 //     </Filter>
 // );
 
-const useDatagridStyles = makeStyles(
+const useStyles = makeStyles(
     theme => ({
-        list: {
+        inboxList: {
             '& .MuiToolbar-root[data-test="bulk-actions-toolbar"]': {
                 position: 'absolute',
                 right: '34px',
                 top: '30px',
                 flexWrap: 'nowrap',
             }
+        },
+        filterWrap: {
+            width: '16.5px',
+            height: '17.5px',
+            backgroundSize: '100%',
+            backgroundImage: `url(${filterIcon})`,
+            marginBottom: '20px',
         },
         chunk: {
             display: 'flex',
@@ -134,6 +139,7 @@ const useDatagridStyles = makeStyles(
                 width: '88px',
             },
         },
+
     }));
 
 const tabs = [
@@ -174,8 +180,9 @@ const useGetTotals = (filterValues: any) => {
 const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     const listContext = useListContext();
     // console.log(listContext)
-    const { ids, filterValues, setFilters, displayedFilters } = listContext;
-    const classes = useDatagridStyles();
+    const { ids, data, filterValues, setFilters, displayedFilters } = listContext;
+    console.log(11123, displayedFilters, filterValues)
+    const classes = useStyles();
     // https://material-ui.com/zh/components/use-media-query/
     // https://material-ui.com/zh/customization/breakpoints/
     // 宽小于 1280px
@@ -252,6 +259,10 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                 ? other
                 : subscription;
 
+
+    const redirect = useRedirect();
+
+
     return (
         <Fragment>
             <Tabs
@@ -275,11 +286,14 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                 ))}
             </Tabs>
             {isSmall ? (
-                <ListContextProvider
-                    value={{ ...listContext, ids: selectedIds }}
-                >
-                    <MobileGrid {...props} ids={selectedIds} />
-                </ListContextProvider>
+                <>
+                    <ListContextProvider
+                        value={{ ...listContext, ids: primary }}
+                    >
+                        <MobileGrid {...props} ids={ids} data={data} status={filterValues.status} />
+                    </ListContextProvider>
+                    <MobileCompose />
+                </>
             ) : (
                 <div>
                     {filterValues.status === 'primary' && (
@@ -358,7 +372,8 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
 // };
 
 const InboxList: FC<ListProps> = props => {
-    const classes = useDatagridStyles();
+    const isSmall = useMediaQuery('(max-width: 1280px)');
+    const classes = useStyles();
     const emailname = useSelector((state: AppState) => state.email);
     const redirect = useRedirect();
     if (!emailname) {
@@ -369,7 +384,7 @@ const InboxList: FC<ListProps> = props => {
     return (
         <List
             {...props}
-            className={classes.list}
+            className={clsx(classes.inboxList, isSmall ? 'small' : '')}
             filterDefaultValues={{
                 status: 'primary',
                 emailname
@@ -383,7 +398,10 @@ const InboxList: FC<ListProps> = props => {
             pagination={<PostPagination />}
             bulkActionButtons={<BulkActionButtons />}
         >
-            <TabbedDatagrid />
+            <>
+                {isSmall ? <div className={classes.filterWrap} /> : null}
+                <TabbedDatagrid />
+            </>
         </List>
     )
 };

@@ -1,8 +1,5 @@
-// in src/comments.js
 import * as React from 'react';
 import { FC } from 'react';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import {
     DateField,
     EditButton,
@@ -15,114 +12,97 @@ import {
     Record,
 } from 'react-admin';
 
-import CustomerReferenceField from '../visitors/CustomerReferenceField';
+import { makeStyles } from '@material-ui/core/styles';
+import moment from 'moment';
 
-const useListStyles = makeStyles(theme => ({
-    card: {
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        margin: '0.5rem 0',
+const useStyles = makeStyles({
+    root: {
+        '& li': {
+            marginTop: '22px',
+            display: 'flex',
+            alignItems: 'start',
+            color: '#242424',
+        },
+        '& .ava img': {
+            display: 'block',
+            width: '43px',
+            height: '43px',
+            borderRadius: '50%',
+            marginRight: '18px',
+            background: '#eee',
+        },
+        '& .info': {
+            flex: 1,
+        },
+        '& .from': {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+
+            '& strong': {
+                fontSize: '16px',
+            },
+            '& span': {
+                fontWeight: 500,
+            }
+        },
+        '& .subject, & .content': {
+            marginTop: '12px',
+            'text-overflow': 'ellipsis',
+            display: '-webkit-box',
+            overflow: 'hidden',
+            '-webkit-line-clamp': '1',
+            '-webkit-box-orient': 'vertical',
+            'text-align': 'justify',
+        },
+        '& .subject': {
+            fontSize: '20px',
+            fontWeight: 'bold',
+        },
+        '& .content': {
+            fontSize: '16px',
+            color: '#999',
+        },
     },
-    cardTitleContent: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    cardContent: theme.typography.body1,
-    cardContentRow: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        margin: '0.5rem 0',
-    },
-}));
+})
 
 interface MobileGridProps {
     ids?: Identifier[];
     data?: RecordMap<Record>;
     basePath?: string;
+    status: string;
 }
 
-const MobileGrid: FC<MobileGridProps> = ({ ids, data, basePath }) => {
-    const translate = useTranslate();
-    const classes = useListStyles();
+const MobileGrid: FC<MobileGridProps> = ({ ids, data, status }) => {
+    const classes = useStyles();
 
-    if (!ids || !data || !basePath) {
+    if (!ids || !ids.length) {
         return null;
     }
 
-    return (
-        <div style={{ margin: '1em' }}>
-            {ids.map(id => (
-                <Card key={id} className={classes.card}>
-                    <CardHeader
-                        title={
-                            <div className={classes.cardTitleContent}>
-                                <span>
-                                    {translate('resources.commands.name', 1)}
-                                    :&nbsp;
-                                    <TextField
-                                        record={data[id]}
-                                        source="reference"
-                                    />
-                                </span>
-                                <EditButton
-                                    resource="commands"
-                                    basePath={basePath}
-                                    record={data[id]}
-                                />
-                            </div>
-                        }
-                    />
-                    <CardContent className={classes.cardContent}>
-                        <span className={classes.cardContentRow}>
-                            {translate('resources.customers.name', 1)}:&nbsp;
-                            <CustomerReferenceField
-                                record={data[id]}
-                                basePath={basePath}
-                            />
-                        </span>
-                        <span className={classes.cardContentRow}>
-                            {translate('resources.reviews.fields.date')}:&nbsp;
-                            <DateField
-                                record={data[id]}
-                                source="date"
-                                showTime
-                            />
-                        </span>
-                        <span className={classes.cardContentRow}>
-                            {translate(
-                                'resources.commands.fields.basket.total'
-                            )}
-                            :&nbsp;
-                            <NumberField
-                                record={data[id]}
-                                source="total"
-                                options={{ style: 'currency', currency: 'USD' }}
-                            />
-                        </span>
-                        <span className={classes.cardContentRow}>
-                            {translate('resources.commands.fields.status')}
-                            :&nbsp;
-                            <TextField source="status" record={data[id]} />
-                        </span>
-                        <span className={classes.cardContentRow}>
-                            {translate('resources.commands.fields.returned')}
-                            :&nbsp;
-                            <BooleanField record={data[id]} source="returned" />
-                        </span>
-                    </CardContent>
-                </Card>
-            ))}
-        </div>
-    );
-};
+    const list = data ? Object.values(data) : [];
 
-MobileGrid.defaultProps = {
-    data: {},
-    ids: [],
+    return (
+        <ul className={classes.root}>
+            {list.map(({ from, subject, date, content, project: { icon } }: RecordMap, key: number) => {
+                // const __html = typeof content === 'string' ? content : ''
+                const __html = typeof subject === 'string' ? subject : ''
+                return (
+                    <li key={key}>
+                        <div className="ava"><img src={icon} /></div>
+                        <div className="info">
+                            <div className="from">
+                                <strong>{from}</strong>
+                                <span>{moment(date as moment.MomentInput).format('MM/DD/YYYY ')}</span>
+                            </div>
+                            <div className="subject">{subject}</div>
+                            <div className="content" dangerouslySetInnerHTML={{ __html }}></div>
+                        </div>
+                    </li>
+                )
+            })}
+        </ul>
+    );
 };
 
 export default MobileGrid;

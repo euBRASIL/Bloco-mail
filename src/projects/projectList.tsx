@@ -138,8 +138,8 @@ const tabs = [
 
 const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     const listContext = useListContext();
-    console.log(listContext)
-    const { ids, filterValues, setFilters, displayedFilters } = listContext;
+    const isSmall = useMediaQuery('(max-width: 1280px)');
+    const { ids, data, filterValues, setFilters, displayedFilters } = listContext;
     const classes = useDatagridStyles();
     const isXSmall = useMediaQuery<Theme>(theme =>
         theme.breakpoints.down('xs')
@@ -215,11 +215,11 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                 ))}
             </Tabs>
             {/* <Divider /> */}
-            {isXSmall ? (
+            {isSmall ? (
                 <ListContextProvider
                     value={{ ...listContext, ids: selectedIds }}
                 >
-                    <MobileGrid {...props} ids={selectedIds} />
+                    <MobileGrid {...props} ids={selectedIds} data={data} status={filterValues.status} />
                 </ListContextProvider>
             ) : (
                 <div className={classes.root}>

@@ -34,7 +34,7 @@ import {
     Grid,
     Typography,
     Link,
-    IconButton,
+    useMediaQuery,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import RichTextInput from 'ra-input-rich-text';
@@ -48,12 +48,26 @@ import Toolbar from './Toolbar'
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../types';
 import { Storage, Create_Mail_Cached } from '../utils/storage'
+import { AssetOptions } from './utils'
 
 const useStyles = makeStyles(theme => ({
     root: {
         '& form': {
             paddingTop: 15,
             margin: '10px 15px',
+        },
+
+        '&.small': {
+            '& .MuiFormControl-root.ra-rich-text-input .MuiFormLabel-root': {
+                position: 'static',
+                fontWeight: '500',
+                fontSize: '13px',
+                color: '#727272',
+            },
+
+            '& .MuiFormControl-root.ra-rich-text-input': {
+                paddingLeft: 0
+            }
         },
 
         '&>div': {
@@ -173,6 +187,8 @@ const richTextOptions = {
 
 const InboxCreate: FC<CreateProps> = props => {
     // const createContext = useCreateContext();
+    const isSmall = useMediaQuery('(max-width: 1280px)');
+
     const classes = useStyles();
     const [initedValues, setInitedValues] = useState(() => ({}))
     const richText = useRef(null);
@@ -219,7 +235,7 @@ const InboxCreate: FC<CreateProps> = props => {
     }, [])
 
     return (
-        <Create {...props} title="Compose" className={classes.root} transform={transform} onSuccess={onSuccess}>
+        <Create {...props} title="Compose" className={clsx(classes.root, isSmall ? 'small' : '')} transform={transform} onSuccess={onSuccess}>
             <SimpleForm variant="outlined" toolbar={<Toolbar />} initialValues={initedValues}>
                 {/* @TODO: dm_to must be email */}
                 <TextInput source="dm_to" className="custom-input" validate={required()} label='Account' onChange={onSaveInputValue('dm_to')} />
@@ -228,11 +244,7 @@ const InboxCreate: FC<CreateProps> = props => {
                 <Typography variant="h6" gutterBottom className={classes.subtitle}>
                     Select Asset
                 </Typography>
-                <SelectInput source="Assets" placeholder="Assets" className={clsx(classes.nolabel, "pl-100", "custom-input")} choices={[
-                    { id: 'cidco', name: 'Didco' },
-                    { id: 'aic', name: 'Aic' },
-                    { id: 'doge', name: 'Doge' },
-                ]} />
+                <SelectInput source="Assets" placeholder="Assets" className={clsx(classes.nolabel, "pl-100", "custom-input")} choices={AssetOptions} />
                 <NumberInput
                     source="Amount"
                     className={clsx(classes.nolabel, "custom-input")}

@@ -11,6 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { sidebarWidth } from './utils';
 import { useMediaQuery, Theme } from '@material-ui/core';
 import Sidebar from './Sidebar';
+import classnames from 'classnames';
 
 const useSidebarStyles = makeStyles({
     drawerPaper: {
@@ -50,6 +51,7 @@ export default (props: LayoutProps) => {
     return (
         <Layout
             {...props}
+            className={classnames(isSmall ? 'small' : '')}
             appBar={AppBar}
             sidebar={CustomSidebar}
             // notification={Notification}
