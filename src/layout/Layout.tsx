@@ -48,10 +48,17 @@ export default (props: LayoutProps) => {
         return t
     });
 
+    const pathname = useSelector((state: AppState) => {
+        const location = state?.router?.location;
+        return location.pathname || ''
+    }); 
+
+    const isSetting = pathname.includes('/settings/show')
+
     return (
         <Layout
             {...props}
-            className={classnames(isSmall ? 'small' : '')}
+            className={classnames(isSmall ? 'small' : '', isSetting && isSmall ? 'noPadding' : '')}
             appBar={AppBar}
             sidebar={CustomSidebar}
             menu={Menu}

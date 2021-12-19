@@ -6,7 +6,7 @@ import {
     NumberField,
     TextField,
     BooleanField,
-    useTranslate,
+    useRedirect,
     RecordMap,
     Identifier,
     Record,
@@ -93,6 +93,7 @@ interface MobileGridProps {
 
 const MobileGrid: FC<MobileGridProps> = ({ ids, data, status }) => {
     const classes = useStyles();
+    const redirect = useRedirect();
 
     if (!ids || !ids.length) {
         return null;
@@ -100,9 +101,13 @@ const MobileGrid: FC<MobileGridProps> = ({ ids, data, status }) => {
 
     const list = data ? Object.values(data) : [];
 
+    const toDetail = (id) => () => {
+        redirect('show', './projects', id);
+    }
+
     return (
         <ul className={classes.root}>
-            {list.map(({ projectname, projecttitle, enddate, content, assets: { icon } }: RecordMap, key: number) => {
+            {list.map(({ id, projectname, projecttitle, enddate, content, assets: { icon } }: RecordMap, key: number) => {
                 // const __html = typeof content === 'string' ? content : ''
                 // const __html = typeof content === 'string' ? content : ''
                 return (
@@ -110,11 +115,11 @@ const MobileGrid: FC<MobileGridProps> = ({ ids, data, status }) => {
                         <div className="ava"><img src={icon} /></div>
                         <div className="info">
                             <div className="from">
-                                <strong>{projectname}</strong>
+                                <strong onClick={toDetail(id)}>{projectname}</strong>
                                 <span className="subscribe subscribed~">subscribe</span>
                                 {/* <span>{moment(enddate as moment.MomentInput).format('MM/DD/YYYY ')}</span> */}
                             </div>
-                            <div className="subject">{projecttitle}</div>
+                            <div className="subject" onClick={toDetail(id)}>{projecttitle}</div>
                             {/* <div className="content" dangerouslySetInnerHTML={{ __html }}></div> */}
                         </div>
                     </li>

@@ -7,6 +7,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Email from './email'
 import Wallet from './wallet'
 
+import MobileShow from './mobileShow'
+import { useMediaQuery } from '@material-ui/core';
+
 const useStyles = makeStyles(
   theme => ({
     root: {
@@ -46,7 +49,8 @@ const tabs = [
 interface Props { }
 
 const Show: FC<Props> = props => {
-  const classes = useStyles();
+    const isSmall = useMediaQuery('(max-width: 1280px)');
+    const classes = useStyles();
 
   const path = useSelector((state: AppState) => {
     const location = state?.router?.location;
@@ -64,27 +68,35 @@ const Show: FC<Props> = props => {
   }, [currentTab])
 
   return (
-    <div className={classes.root}>
-      <Tabs
-        variant="scrollable"
-        value={currentTab}
-        indicatorColor="primary"
-        onChange={onChangeTab}
-        className={classes.tabs}
-      >
-        {tabs.map(choice => (
-          <Tab
-            key={choice.id}
-            label={choice.name}
-            value={choice.id}
-            className={classes.tab}
-          />
-        ))}
-      </Tabs>
-      <div>
-        {currentTab === 'wallet' ? <Wallet /> : <Email />}
-      </div>
-    </div>
+    <>
+      {isSmall ? (
+          <MobileShow />
+        ) : 
+        (
+          <div className={classes.root}>
+            <Tabs
+              variant="scrollable"
+              value={currentTab}
+              indicatorColor="primary"
+              onChange={onChangeTab}
+              className={classes.tabs}
+            >
+              {tabs.map(choice => (
+                <Tab
+                  key={choice.id}
+                  label={choice.name}
+                  value={choice.id}
+                  className={classes.tab}
+                />
+              ))}
+            </Tabs>
+            <div>
+              {currentTab === 'wallet' ? <Wallet /> : <Email />}
+            </div>
+          </div>
+        )
+      }
+    </>
   );
 };
 

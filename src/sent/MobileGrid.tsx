@@ -6,7 +6,7 @@ import {
     NumberField,
     TextField,
     BooleanField,
-    useTranslate,
+    useRedirect,
     RecordMap,
     Identifier,
     Record,
@@ -75,6 +75,7 @@ interface MobileGridProps {
 
 const MobileGrid: FC<MobileGridProps> = ({ ids, data, status }) => {
     const classes = useStyles();
+    const redirect = useRedirect();
 
     if (!ids || !ids.length) {
         return null;
@@ -82,20 +83,24 @@ const MobileGrid: FC<MobileGridProps> = ({ ids, data, status }) => {
 
     const list = data ? Object.values(data) : [];
 
+    const toDetail = (id) => () => {
+        redirect('show', './junks', id);
+    }
+
     return (
         <ul className={classes.root}>
-            {list.map(({ to, subject, date, content }: RecordMap, key: number) => {
+            {list.map(({ id, to, subject, date, content }: RecordMap, key: number) => {
                 // const __html = typeof content === 'string' ? content : ''
                 const __html = typeof subject === 'string' ? subject : ''
                 return (
                     <li key={key}>
                         <div className="info">
                             <div className="from">
-                                <strong>{to}</strong>
+                                <strong onClick={toDetail(id)}>{to}</strong>
                                 <span>{moment(date as moment.MomentInput).format('MM/DD/YYYY ')}</span>
                             </div>
-                            <div className="subject">{subject}</div>
-                            <div className="content" dangerouslySetInnerHTML={{ __html }}></div>
+                            <div className="subject" onClick={toDetail(id)}>{subject}</div>
+                            <div className="content" dangerouslySetInnerHTML={{ __html }} onClick={toDetail(id)}></div>
                         </div>
                     </li>
                 )

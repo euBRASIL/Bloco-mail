@@ -5,6 +5,7 @@ import {
 } from 'react-admin';
 import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import { useMediaQuery } from '@material-ui/core';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import { AppState } from '../types';
@@ -19,6 +20,38 @@ const useStyles = makeStyles(theme => ({
     background: '#fff',
     borderRadius: '24px',
     padding: '35px',
+  },
+  smallRoot: {
+    padding: '35px 0',
+
+    '& .works': {
+      display: 'block'
+    },
+
+    '& .works .pic': {
+      marginRight: 0,
+    },
+
+    '& .pic img': {
+      width: '100%!important',
+      height: 'auto!important'
+    },
+
+    '& .info': {
+      marginTop: '25px',
+
+      '& .btns a': {
+        marginTop: '15px',
+        marginRight: 0,
+        width: '100%',
+        padding: '0',
+        textAlign: 'center',
+
+        '&.submit': {
+          padding: '0',
+        }
+      }
+    }
   },
   works: {
     display: 'flex',
@@ -290,6 +323,7 @@ interface Props {
 }
 const NftShow: FC<Props> = props => {
   const classes = useStyles();
+  const isSmall = useMediaQuery('(max-width: 1280px)');
 
   const path = useSelector((state: AppState) => {
     const location = state?.router?.location;
@@ -311,8 +345,8 @@ const NftShow: FC<Props> = props => {
   // console.log(data, filterValues)
 
   return (
-    <div className={classes.root}>
-      <div className={classes.works}>
+    <div className={clsx(classes.root, isSmall ? classes.smallRoot : '')}>
+      <div className={clsx(classes.works, 'works')}>
         <div className="pic"><img src={data.pic} /></div>
         {name === 'auction' ? <Auction data={data} /> : <Sell data={data} />}
       </div>

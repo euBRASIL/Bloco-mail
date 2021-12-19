@@ -6,7 +6,7 @@ import {
     NumberField,
     TextField,
     BooleanField,
-    useTranslate,
+    useRedirect,
     RecordMap,
     Identifier,
     Record,
@@ -14,6 +14,7 @@ import {
 
 import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
+import Empty from '../components/empty'
 
 const useStyles = makeStyles({
     root: {
@@ -75,6 +76,7 @@ interface MobileGridProps {
 
 const MobileGrid: FC<MobileGridProps> = ({ ids, data, status }) => {
     const classes = useStyles();
+    const redirect = useRedirect();
 
     if (!ids || !ids.length) {
         return null;
@@ -82,9 +84,13 @@ const MobileGrid: FC<MobileGridProps> = ({ ids, data, status }) => {
 
     const list = data ? Object.values(data) : [];
 
+    const toDetail = (id) => () => {
+        redirect('show', './inbox', id);
+    }
+
     return (
         <ul className={classes.root}>
-            {list.map(({ from, subject, date, content, project: { icon } }: RecordMap, key: number) => {
+            {list.map(({ id, from, subject, date, content, project: { icon } }: RecordMap, key: number) => {
                 // const __html = typeof content === 'string' ? content : ''
                 const __html = typeof subject === 'string' ? subject : ''
                 return (
@@ -92,11 +98,11 @@ const MobileGrid: FC<MobileGridProps> = ({ ids, data, status }) => {
                         <div className="ava"><img src={icon} /></div>
                         <div className="info">
                             <div className="from">
-                                <strong>{from}</strong>
+                                <strong onClick={toDetail(id)}>{from}</strong>
                                 <span>{moment(date as moment.MomentInput).format('MM/DD/YYYY ')}</span>
                             </div>
-                            <div className="subject">{subject}</div>
-                            <div className="content" dangerouslySetInnerHTML={{ __html }}></div>
+                            <div className="subject"  onClick={toDetail(id)}>{subject}</div>
+                            <div className="content" dangerouslySetInnerHTML={{ __html }}  onClick={toDetail(id)}></div>
                         </div>
                     </li>
                 )

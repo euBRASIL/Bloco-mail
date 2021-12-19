@@ -110,6 +110,12 @@ const useSmallStyles = makeStyles({
         alignItems: 'center',
         justifyContent: 'space-between',
         position: 'relative',
+
+        '&.noSearch': {
+            height: '40px',
+            padding: '20px 20px 12px', 
+            background: '#fff'
+        }
     },
     menu: {
         marginRight: '15px',
@@ -132,9 +138,18 @@ const useSmallStyles = makeStyles({
         }
     },
     title: {
-        fontSize: '36px',
+        fontSize: '24px',
         lineHeight: '1',
         color: '#000000',
+
+        '&.noSearch': {
+            flex: 'initial'
+        },
+
+        '& i': {
+            width: '14px',
+            height: '25px',
+        },
     },
     search: {
         width: '23px',
@@ -254,6 +269,8 @@ const CustomAppBar = (props: any) => {
         title = <span>Settings</span>;
     }
 
+    const mHasNoSearch = pathname.includes('/settings/show')
+
     const dispatch = useDispatch();
     const toggleMenu = () => {
         dispatch(setSidebarVisibility(true));
@@ -267,21 +284,21 @@ const CustomAppBar = (props: any) => {
     }, [])
 
     return (
-        <div className={isSmall ? smallClasses.root : classes.root}>
+        <div className={clsx(isSmall ? smallClasses.root : classes.root, mHasNoSearch && isSmall ? 'noSearch' : '')}>
             {isSmall ? (
                 <div className={smallClasses.menu} onClick={toggleMenu}><i></i></div>
             ) : null}
             <Typography
                 variant="h6"
                 color="inherit"
-                className={clsx(isSmall ? smallClasses.title : '', classes.title)}
+                className={clsx(isSmall ? smallClasses.title : '', classes.title, mHasNoSearch && isSmall ? 'noSearch' : '')}
                 id="react-admin-title"
             >{title}</Typography>
             {isSmall ? (
-                <>
+                !mHasNoSearch ? (<>
                     <div className={smallClasses.search} onClick={() => showSearchPop(true)}></div>
                     <SearchPop show={searchPopShow} hideSearch={hideSearchPop} pathname={pathname} />
-                </>
+                </>) : <div></div>
             ) : (
                 <div className={classes.right}>
                     {needSearch ? <Search classes={classes.search} defaultValue={searchQValue} pathname={pathname} /> : null}

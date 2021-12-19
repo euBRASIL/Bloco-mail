@@ -154,7 +154,7 @@ interface Props {
 
 const defaultFormData = {
   account: '',
-  subject: '',
+  // subject: '',
   asset: AssetOptions.length ? AssetOptions[0].id : '',
   amount: '',
 }
@@ -203,11 +203,13 @@ const MobileCreate: FC<Props> = () => {
   }
 
   useEffect(() => {
+    console.log(isAllValidExceptContent, isContentValid)
     setSendDisabled(!(isContentValid && isAllValidExceptContent))
   }, [isAllValidExceptContent, isContentValid])
 
   useEffect(() => {
     const hasInvalidFormData = Object.values(formData).filter((value) => !value.trim().length)
+    console.log('formData', formData, hasInvalidFormData)
     setIsAllValidExceptContent(!hasInvalidFormData.length)
   }, [formData])
 

@@ -1,5 +1,7 @@
 import React, { FC, Fragment, useCallback, useEffect, useState, cloneElement, useMemo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { useMediaQuery } from '@material-ui/core';
+import clsx from 'clsx';
 // import {
 //   useNotify,
 //   useRedirect,
@@ -107,6 +109,68 @@ const useStyles = makeStyles(
           }
         }
       },
+    },
+
+    smallModal: {
+      '& .modal-title': {
+        marginBottom: '30px',
+      },
+
+      '& .modal-wrap': {
+        left: '20px',
+        right: '20px',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        minWidth: 'auto',
+        boxShadow: '0px 7px 15px 3px rgba(40, 15, 15, 0.15)',
+        borderRadius: '10px',
+        backgroundColor: '#fff',
+        padding: '25px 25px 28px',
+      },
+
+      '& .modal-form': {
+        minWidth: 'auto',
+      },
+
+      '& .modal-form-item ': {
+        marginLeft: '-10px',
+        marginBottom: '12px',
+
+        '& label': {
+          width: '110px',
+          minWidth: 'auto',
+          fontSize: '14px',
+          marginRight: '10px',
+        }
+      },
+
+      '& .modal-form-input': {
+        flex: 1,
+
+        '& input': {
+          width: '100%',
+          boxSizing: 'border-box',
+          padding: '0 10px',
+        }
+      },
+
+      '& .modal-footer': {
+        marginTop: '30px',
+      },
+
+      '& .modal-btn': {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+
+        '& a': {
+          padding: '0 20px',
+          height: '30px',
+          lineHeight: '30px',
+          fontSize: '16px',
+          marginRight: '0',
+        }
+      },
     }
   }));
 
@@ -117,6 +181,7 @@ interface Props {
 }
 const Modal: FC<Props> = ({ visible, setVisible }) => {
   const classes = useStyles();
+  const isSmall = useMediaQuery('(max-width: 1280px)');
 
   const onOk = () => {
     // do something;
@@ -125,7 +190,7 @@ const Modal: FC<Props> = ({ visible, setVisible }) => {
   const onCancel = () => setVisible(false);
 
   return (
-    <div className={classes.modal} style={{ display: visible ? 'block' : 'none' }}>
+    <div className={clsx(classes.modal, isSmall ? classes.smallModal : '')} style={{ display: visible ? 'block' : 'none' }}>
       <div className="modal-mask"></div>
       <div className="modal-wrap">
         <div className="modal-title">Sell Information</div>

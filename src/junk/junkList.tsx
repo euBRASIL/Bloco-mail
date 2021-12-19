@@ -109,8 +109,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                 <ListContextProvider
                     value={{ ...listContext, ids: selectedIds }}
                 >
-                    <MobileGrid {...props} ids={ids} data={data} status={filterValues.status}>
-                    </ MobileGrid>
+                    {!Object.values(data).length ? <Empty /> : <MobileGrid {...props} ids={ids} data={data} status={filterValues.status} />}
                 </ListContextProvider>
             ) : (
                 <div>

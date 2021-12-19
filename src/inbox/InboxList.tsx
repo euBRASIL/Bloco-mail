@@ -179,9 +179,8 @@ const useGetTotals = (filterValues: any) => {
 
 const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
     const listContext = useListContext();
-    // console.log(listContext)
     const { ids, data, filterValues, setFilters, displayedFilters } = listContext;
-    console.log(11123, displayedFilters, filterValues)
+    // console.log(11123, displayedFilters, filterValues)
     const classes = useStyles();
     // https://material-ui.com/zh/components/use-media-query/
     // https://material-ui.com/zh/customization/breakpoints/
@@ -290,7 +289,7 @@ const TabbedDatagrid: FC<TabbedDatagridProps> = props => {
                     <ListContextProvider
                         value={{ ...listContext, ids: primary }}
                     >
-                        <MobileGrid {...props} ids={ids} data={data} status={filterValues.status} />
+                        {!Object.values(data).length ? <Empty /> : <MobileGrid {...props} ids={ids} data={data} status={filterValues.status} />}
                     </ListContextProvider>
                     <MobileCompose />
                 </>

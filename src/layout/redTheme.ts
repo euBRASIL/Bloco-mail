@@ -188,6 +188,11 @@ export const redTheme = {
 
         '&.small': {
           ...mobileStyles
+        },
+
+        '&.noPadding': {
+          padding: 0, 
+          background: '#F0F0F0 '
         }
       },
     },

@@ -9,6 +9,8 @@ import { useMediaQuery, Divider, Tabs, Tab, Theme, Typography, Avatar } from '@m
 
 import { makeStyles } from '@material-ui/core/styles';
 import Page from './page';
+// import MobileContent from './mobileContent'
+import MobileGrid from './MobileGrid';
 
 const useStyles = makeStyles(
   theme => ({
@@ -46,6 +48,7 @@ const tabs = [
 interface ContentProps { }
 
 const Content: FC<ContentProps> = props => {
+  const isSmall = useMediaQuery('(max-width: 1280px)');
   const listContext = useListContext();
   const { data, ids, filterValues, setFilters, displayedFilters } = listContext;
   const classes = useStyles();
@@ -69,7 +72,7 @@ const Content: FC<ContentProps> = props => {
   );
 
   return (
-    <Fragment>
+    <>
       <Tabs
         variant="scrollable"
         value={filterValues.status}
@@ -86,34 +89,43 @@ const Content: FC<ContentProps> = props => {
           />
         ))}
       </Tabs>
-      <div>
-        {filterValues.status === 'auction' && (
-          <ListContextProvider
-            value={{ ...listContext }}
-          >
-            <Page name="auction" />
-          </ListContextProvider>
-        )}
+      {isSmall ? (
+        <ListContextProvider
+          value={{ ...listContext, ids: 'auction' }}
+        >
+          <MobileGrid {...props} name={filterValues.status} />
+        </ListContextProvider>
+      // <MobileContent ids={ids} data={data} status={filterValues.status} />
+      ) : (
+        <div>
+          {filterValues.status === 'auction' && (
+            <ListContextProvider
+              value={{ ...listContext }}
+            >
+              <Page name="auction" />
+            </ListContextProvider>
+          )}
 
-        {filterValues.status === 'sell' && (
-          <ListContextProvider
-            value={{ ...listContext }}
-          >
-            {/* <Sell /> */}
-            <Page name="sell" />
-          </ListContextProvider>
-        )}
+          {filterValues.status === 'sell' && (
+            <ListContextProvider
+              value={{ ...listContext }}
+            >
+              {/* <Sell /> */}
+              <Page name="sell" />
+            </ListContextProvider>
+          )}
 
-        {filterValues.status === 'my' && (
-          <ListContextProvider
-            value={{ ...listContext }}
-          >
-            {/* <My /> */}
-            <Page name="my" />
-          </ListContextProvider>
-        )}
-      </div>
-    </Fragment>
+          {filterValues.status === 'my' && (
+            <ListContextProvider
+              value={{ ...listContext }}
+            >
+              {/* <My /> */}
+              <Page name="my" />
+            </ListContextProvider>
+          )}
+        </div>
+      )}
+    </>
   );
 };
 

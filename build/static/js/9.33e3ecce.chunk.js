@@ -1,2 +1,0 @@
-(this["webpackJsonpdfn-react-ts"]=this["webpackJsonpdfn-react-ts"]||[]).push([[9],{1906:function(t,e,n){"use strict";n.r(e);var r=n(1901),a=n.n(r),o=n(1513),i=n.n(o),s=n(1561);e.default=function(){var t=Object(s.a)({serializeDate:!0}),e=new a.a.FetchServer("http://localhost:4000");return window&&(window.restServer=e),e.init(t),e.toggleLogging(),i.a.mock("begin:http://localhost:4000",e.getHandler()),function(){return i.a.restore()}}}}]);
-//# sourceMappingURL=9.33e3ecce.chunk.js.map

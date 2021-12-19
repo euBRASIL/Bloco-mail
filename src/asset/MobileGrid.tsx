@@ -6,7 +6,7 @@ import {
     NumberField,
     TextField,
     BooleanField,
-    useTranslate,
+    useRedirect,
     RecordMap,
     Identifier,
     Record,
@@ -17,10 +17,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 import clsx from 'clsx';
 import MobileMove from './MobileMove'
+import ok from '../assets/red/ok2.png';
 
 const useStyles = makeStyles({
     select: {
         marginTop: '20px',
+
+        '& .switch': {
+            fontSize: '20px',
+            color: '#FA6E58',
+        },
 
         '& .actions': {
             display: 'flex',
@@ -103,7 +109,15 @@ const useStyles = makeStyles({
                 background: '#FE493D',
 
                 '&::after': {
-                    background: '#FE493D',
+                    width: ' 30px',
+                    height: ' 21px',
+                    left: '50%',
+                    top: '50%',
+                    right: '0',
+                    bottom: '0',
+                    transform: 'translate(-50%, -50%)',
+                    background: `url(${ok})`,
+                    backgroundSize: '100%',
                 },
             }
         },
@@ -162,6 +176,7 @@ interface MobileGridProps {
 
 const MobileGrid: FC<MobileGridProps> = ({ ids, data, status }) => {
     const classes = useStyles();
+    const redirect = useRedirect();
 
     const [isSelect, switchSelect] = useState(false)
     const [selectAll, switchSelectAll] = useState(false)
@@ -194,11 +209,15 @@ const MobileGrid: FC<MobileGridProps> = ({ ids, data, status }) => {
         return null;
     }
 
+    const toDetail = (id) => () => {
+        !isSelect && redirect('show', './projects', id);
+    }
+
     return (
         <>
             <MobileMove />
             <div className={classes.select}>
-                <div onClick={() => switchSelect(!isSelect)}>switch select</div>
+                <div className="switch" onClick={() => switchSelect(!isSelect)}>switch select</div>
                 <div className={clsx("actions", isSelect ? 'show' : '')}>
                     <span onClick={onSelectAll}>{selectAll ? 'un' : ''}select all</span>
                     <strong>Check {checkedList.length} Item</strong>
@@ -213,14 +232,14 @@ const MobileGrid: FC<MobileGridProps> = ({ ids, data, status }) => {
                         <li key={key} onClick={() => onItemClick(`${id}`)} className={clsx(checkedList.includes(`${id}`) ? 'on' : '')}>
                             <div className={clsx("left", isSelect ? 'showSelect' : '')}>
                                 <div className={clsx("checkbox", checkedList.includes(`${id}`) ? 'checked' : '', isSelect ? '' : '')}></div>
-                                <div className="ava"><img src={icon} /></div>
+                                <div className="ava" onClick={toDetail(id)}><img src={icon} /></div>
                             </div>
                             <div className="info">
                                 <div className="from">
-                                    <strong>{name}</strong>
+                                    <strong onClick={toDetail(id)}>{name}</strong>
                                     <span>{moment(date as moment.MomentInput).format('MM/DD/YYYY ')}</span>
                                 </div>
-                                <div className="subject">{projecttitle}</div>
+                                <div className="subject" onClick={toDetail(id)}>{projecttitle}</div>
                                 {/* <div className="content" dangerouslySetInnerHTML={{ __html }}></div> */}
                             </div>
                         </li>

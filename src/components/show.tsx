@@ -5,6 +5,7 @@ import {
   useShowController,
 } from 'react-admin';
 import clsx from 'clsx';
+import { useMediaQuery, Divider, Tabs, Tab, Theme } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,6 +32,9 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'space-between',
   },
   users: {
+    '& p': {
+      display: 'inline-block',
+    },
     '& span': {
       margin: '0 10px',
       color: '#FA6755',
@@ -45,27 +49,45 @@ const useStyles = makeStyles(theme => ({
     minHeight: '400px',
   },
 
+  smallRoot: {
+    padding: '30px 0',
+
+    '& .info': {
+      display: 'block',
+    },
+
+    '& .time': {
+      marginTop: '15px',
+    },
+
+    '& .users p': {
+      display: 'block',
+      margin: '8px 0',
+    }
+  },
+
 }));
 
 const Show: FC<ShowProps> = props => {
   const classes = useStyles();
+  const isSmall = useMediaQuery('(max-width: 1280px)');
   const { record } = useShowController(props);
 
   if (!record) return null;
   return (
-    <div className={classes.root}>
+    <div className={clsx(classes.root, isSmall ? classes.smallRoot : '')}>
       <div className={classes.header}>
         <div className={classes.title}>
           {record.subject}
         </div>
-        <div className={classes.info}>
-          <div className={classes.users}>
-            from
-                      <span>{record.from}</span>
-                      to
-                      <span>{record.to}</span>
+        <div className={clsx(classes.info, 'info')}>
+          <div className={clsx(classes.users, 'users')}>
+            <p>From</p>
+            <span>{record.from}</span>
+            <p>To</p>
+            <span>{record.to}</span>
           </div>
-          <div className={classes.time}>
+          <div className={clsx(classes.time, 'time')}>
             {record.date}
           </div>
         </div>

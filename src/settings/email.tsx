@@ -372,7 +372,7 @@ const Email: FC<CreateProps> = props => {
 
   useEffect(() => {
     if (requestEmail) {
-      setEmail(requestEmail.replace('@ic.dmail.ai', ''));
+      setEmail(requestEmail.replace(emailHost, ''));
     }
   }, [requestEmail])
 
