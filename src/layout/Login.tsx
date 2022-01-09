@@ -27,6 +27,37 @@ import { redTheme } from './redTheme';
 import { authClient } from '../service';
 import { Identity } from "@dfinity/agent";
 
+const plugAuth = async () => {
+    if ((window as any).ic && (window as any).ic.plug) {
+        try {
+            // Canister Ids
+            const nnsCanisterId = 'pyr3m-ciaaa-aaaai-qasua-cai'
+
+            // Whitelist
+            const whitelist = [
+                nnsCanisterId,
+            ];
+            const res = await (window as any).ic.plug.requestConnect({
+                whitelist,
+                // host: 'http://localhost:3000',
+            });
+            return true
+        } catch (error) {
+            // denied
+            console.log('plugAuth', error)
+            return {
+                code: 1,
+                msg:  error
+            }
+        }
+    } else {
+        return {
+            code: 2,
+            msg: 'Please install TronLink!'
+        }
+    }
+}
+
 
 const useStyles = makeStyles(theme => ({
     logo: {
@@ -134,8 +165,8 @@ const Login = () => {
     const notify = useNotify();
     const dispatch = useDispatch();
     // const login = useLogin();
-    const location = useLocation<{ nextPathname: string } | null>();
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    // const location = useLocation<{ nextPathname: string } | null>();
+    // const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
     const handleSubmit = (auth: FormValues) => {
         setLoading(true);
@@ -144,33 +175,41 @@ const Login = () => {
     const redirect = useRedirect();
 
     const getEmail = (identity: string) => {
-        fetch('users', 'getOne', identity).then((res) => {
-            const { data, success } = res
-            if (success && data) {
-                dispatch(changeEmail(data))
-                Storage.set(Email_Name, data);
-                Storage.set(Username, data.replace(emailHost, ''));
-            }
-        }).catch((error) => {
+        try {
+            fetch('users', 'getOne', identity).then((res) => {
+                const { data, success } = res
+                if (success && data) {
+                    dispatch(changeEmail(data))
+                    Storage.set(Email_Name, data);
+                    Storage.set(Username, data.replace(emailHost, ''));
+                }
+            }).catch((error) => {
+                console.log('error', error);
+            })
+        } catch (error) {
             console.log('error', error);
-        })
+        }
     }
 
     const handleConnect = async () => {
-        //setLoading(true);
-        await authClient.create();
-        await authClient.login();
-        const identity = await authClient.getIdentity();
-        if (identity) {
-            const sIdentity = identity.getPrincipal().toString()
+        setLoading(true);
+        const res = await plugAuth() as any;
+        setLoading(false)
+        if (res === true) {
+            const principalId = await (window as any).ic.plug.agent.getPrincipal()
+            const sIdentity = principalId.toString()
             getEmail(sIdentity);
-            setIsAuthenticated(true);
-            // @TODO: need to put the identity in to the cookie soon
+            // setIsAuthenticated(true);
             Storage.set(Identity_Key, sIdentity);
-            //setLoading(false)
             redirect('./mails');
         } else {
-            console.error("could not get identity");
+            if (res.code === 2) {
+                window.confirm(res.msg);
+                const install = 'https://chrome.google.com/webstore/detail/plug/cfbfdhimifdmdehjmkdobpcjfefblkjm'
+                window.open(install)
+            } else if (res.code === 1) {
+                window.alert(res.msg)
+            }
         }
     }
 
