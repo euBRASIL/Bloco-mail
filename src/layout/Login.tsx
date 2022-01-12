@@ -53,7 +53,7 @@ const plugAuth = async () => {
     } else {
         return {
             code: 2,
-            msg: 'Please install TronLink!'
+            msg: 'Please install Plug!'
         }
     }
 }
@@ -153,10 +153,11 @@ interface FormValues {
 
 const { Form } = withTypes<FormValues>();
 
-type AuthorizeProps = {
-    setIsAuthenticated: (x: boolean) => void;
-};
+// type AuthorizeProps = {
+//     setIsAuthenticated: (x: boolean) => void;
+// };
 
+const isPhone = /Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)
 
 const Login = () => {
     const [loading, setLoading] = useState(false);
@@ -192,37 +193,55 @@ const Login = () => {
     }
 
     const handleConnect = async () => {
-        setLoading(true);
-        const res = await plugAuth() as any;
-        setLoading(false)
-        if (res === true) {
-            const principalId = await (window as any).ic.plug.agent.getPrincipal()
-            const sIdentity = principalId.toString()
-            getEmail(sIdentity);
-            // setIsAuthenticated(true);
-            Storage.set(Identity_Key, sIdentity);
-            redirect('./mails');
+        if (isPhone) {
+            //setLoading(true);
+            await authClient.create();
+            await authClient.login();
+            const identity = await authClient.getIdentity();
+            if (identity) {
+                const sIdentity = identity.getPrincipal().toString()
+                getEmail(sIdentity);
+                // setIsAuthenticated(true);
+                // @TODO: need to put the identity in to the cookie soon
+                Storage.set(Identity_Key, sIdentity);
+                //setLoading(false)
+                redirect('./mails');
+            } else {
+                console.error("could not get identity");
+            }
         } else {
-            if (res.code === 2) {
-                window.confirm(res.msg);
-                const install = 'https://chrome.google.com/webstore/detail/plug/cfbfdhimifdmdehjmkdobpcjfefblkjm'
-                window.open(install)
-            } else if (res.code === 1) {
-                window.alert(res.msg)
+            setLoading(true);
+            const res = await plugAuth() as any;
+            setLoading(false)
+            if (res === true) {
+                const principalId = await (window as any).ic.plug.agent.getPrincipal()
+                const sIdentity = principalId.toString()
+                getEmail(sIdentity);
+                // setIsAuthenticated(true);
+                Storage.set(Identity_Key, sIdentity);
+                redirect('./mails');
+            } else {
+                if (res.code === 2) {
+                    window.confirm(res.msg);
+                    const install = 'https://chrome.google.com/webstore/detail/plug/cfbfdhimifdmdehjmkdobpcjfefblkjm'
+                    window.open(install)
+                } else if (res.code === 1) {
+                    window.alert(res.msg)
+                }
             }
         }
     }
 
-    const validate = (values: FormValues) => {
-        const errors: FormValues = {};
-        if (!values.username) {
-            errors.username = translate('ra.validation.required');
-        }
-        if (!values.password) {
-            errors.password = translate('ra.validation.required');
-        }
-        return errors;
-    };
+    // const validate = (values: FormValues) => {
+    //     const errors: FormValues = {};
+    //     if (!values.username) {
+    //         errors.username = translate('ra.validation.required');
+    //     }
+    //     if (!values.password) {
+    //         errors.password = translate('ra.validation.required');
+    //     }
+    //     return errors;
+    // };
 
     return (
         <Container maxWidth={false} className="login-wrapper">
