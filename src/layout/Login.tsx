@@ -72,7 +72,7 @@ const useStyles = makeStyles(theme => ({
     },
     card: {
         width: '484px',
-        height: '280px',
+        height: '330px',
         padding: '66px 52px',
         position: 'fixed',
         left: '50%',
@@ -85,7 +85,7 @@ const useStyles = makeStyles(theme => ({
 
         '& .login-btn': {
             height: '52px',
-            marginTop: '46px',
+            marginTop: '36px',
             borderRadius: '5px',
             transition: 'transform .3s ease',
 
@@ -192,24 +192,8 @@ const Login = () => {
         }
     }
 
-    const handleConnect = async () => {
-        if (isPhone) {
-            //setLoading(true);
-            await authClient.create();
-            await authClient.login();
-            const identity = await authClient.getIdentity();
-            if (identity) {
-                const sIdentity = identity.getPrincipal().toString()
-                getEmail(sIdentity);
-                // setIsAuthenticated(true);
-                // @TODO: need to put the identity in to the cookie soon
-                Storage.set(Identity_Key, sIdentity);
-                //setLoading(false)
-                redirect('./mails');
-            } else {
-                console.error("could not get identity");
-            }
-        } else {
+    const plugConnect = async () => {
+        if (!isPhone) {
             setLoading(true);
             const res = await plugAuth() as any;
             setLoading(false)
@@ -229,6 +213,24 @@ const Login = () => {
                     window.alert(res.msg)
                 }
             }
+        }
+    }
+
+    const iiConnect =  async () => {
+        //setLoading(true);
+        await authClient.create();
+        await authClient.login();
+        const identity = await authClient.getIdentity();
+        if (identity) {
+            const sIdentity = identity.getPrincipal().toString()
+            getEmail(sIdentity);
+            // setIsAuthenticated(true);
+            // @TODO: need to put the identity in to the cookie soon
+            Storage.set(Identity_Key, sIdentity);
+            //setLoading(false)
+            redirect('./mails');
+        } else {
+            console.error("could not get identity");
         }
     }
 
@@ -254,7 +256,23 @@ const Login = () => {
                         <Card className={clsx(classes.card, "login-card")}>
                             <span className="login-text">WELCOME!</span>
                             <Button
-                                onClick={() => { handleConnect() }}
+                                onClick={() => { iiConnect() }}
+                                color="primary"
+                                // disabled={loading}
+                                className="login-btn"
+                                fullWidth
+                            >
+                                {/* {loading && (
+                                    <CircularProgress
+                                        size={25}
+                                        thickness={2}
+                                    />
+                                )} */}
+                                {/* {translate('pos.login')} */}
+                                Internet Identity Login
+                            </Button>
+                            <Button
+                                onClick={() => { plugConnect() }}
                                 color="primary"
                                 disabled={loading}
                                 className="login-btn"
@@ -266,7 +284,8 @@ const Login = () => {
                                         thickness={2}
                                     />
                                 )}
-                                {translate('pos.login')}
+                                {/* {translate('pos.login')} */}
+                                Plug Login
                             </Button>
                         </Card>
                         <Notification />
