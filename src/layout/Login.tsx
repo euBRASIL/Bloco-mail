@@ -9,6 +9,7 @@ import { changeEmail } from '../configuration/actions';
 import Logo from './Logo';
 import { Storage, Email_Name, Username, Identity_Key } from '../utils/storage'
 import { fetch, emailHost } from '../utils'
+import subTitle from '../assets/red/sub-title.png';
 
 import {
     Container,
@@ -110,13 +111,25 @@ const useStyles = makeStyles(theme => ({
             padding: '42px 48px 48px',
 
             '& .login-btn': {
-                height: '42px',
-                marginTop: '42px',
+                height: '38px',
+                marginTop: '18px',
+
+                '&.is-phone': {
+                    height: '52px',
+                    marginTop: '36px',
+                },
             },
 
             '& .login-text': {
                 fontSize: '24px',
             },
+        },
+
+        "@media screen and (max-width: 450px)": {
+            width: 'auto',
+            left: '20px',
+            right: '20px',
+            transform: 'none',
         },
     },
     description: {
@@ -126,9 +139,21 @@ const useStyles = makeStyles(theme => ({
         top: '22.6%',
         backgroundSize: '100%',
 
+        width: '446px',
+        height: '20px',
+        backgroundImage: `url(${subTitle})`,
+
         "@media screen and (max-height: 800px)": {
             top: '28%',
-        }
+        },
+
+        "@media screen and (max-width: 486px)": {
+            height: '15px',
+            width: 'auto',
+            left: '20px',
+            right: '20px',
+            transform: 'none',
+        },
     },
 }));
 
@@ -259,7 +284,7 @@ const Login = () => {
                                 onClick={() => { iiConnect() }}
                                 color="primary"
                                 // disabled={loading}
-                                className="login-btn"
+                                className={clsx("login-btn", isPhone ? 'is-phone' : '')}
                                 fullWidth
                             >
                                 {/* {loading && (
@@ -269,24 +294,26 @@ const Login = () => {
                                     />
                                 )} */}
                                 {/* {translate('pos.login')} */}
-                                Internet Identity Login
+                                {isPhone ? 'Login' : 'Internet Identity Login'}
                             </Button>
-                            <Button
-                                onClick={() => { plugConnect() }}
-                                color="primary"
-                                disabled={loading}
-                                className="login-btn"
-                                fullWidth
-                            >
-                                {loading && (
-                                    <CircularProgress
-                                        size={25}
-                                        thickness={2}
-                                    />
-                                )}
-                                {/* {translate('pos.login')} */}
-                                Plug Login
-                            </Button>
+                            {isPhone ? null : 
+                                <Button
+                                    onClick={() => { plugConnect() }}
+                                    color="primary"
+                                    disabled={loading}
+                                    className="login-btn"
+                                    fullWidth
+                                >
+                                    {loading && (
+                                        <CircularProgress
+                                            size={25}
+                                            thickness={2}
+                                        />
+                                    )}
+                                    {/* {translate('pos.login')} */}
+                                    Plug Login
+                                </Button>
+                            }
                         </Card>
                         <Notification />
                     </form>

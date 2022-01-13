@@ -156,11 +156,11 @@ export const redTheme = {
         '& .login-logo': {
           backgroundImage: `url(${loginLogo})`,
         },
-        '& .login-description': {
-          width: '446px',
-          height: '20px',
-          backgroundImage: `url(${subTitle})`,
-        }
+        // '& .login-description': {
+        //   width: '446px',
+        //   height: '20px',
+        //   backgroundImage: `url(${subTitle})`,
+        // }
       }
     },
     RaLayout: {
