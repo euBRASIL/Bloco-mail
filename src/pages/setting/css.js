@@ -14,7 +14,7 @@ export const Root = styled.div`
 `
 
 export const Title = styled.div`
-    margin-bottom: 25px;
+    margin-bottom: 40px;
     font-size: 30px;
     font-weight: bold;
     color: #393431;
@@ -22,26 +22,47 @@ export const Title = styled.div`
 `
 
 export const Account = styled.div`
-    border-top: 2px solid  #EAE9E9;
-    padding: 48px 60px 0;
-    color: #393431;
+    max-width: 1000px;
+    margin: 0 auto 40px;
+    padding: 0 100px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
+
+    &:last-child {
+        margin-bottom: 0;
+        border-bottom: none;
+    }
 
     .form li {
         ${flex}
-        margin-bottom: 50px;
+  
+        margin-bottom: 20px;
         line-height: 32px;
     }
 
+    .tips {
+        font-size: 14px;
+        display: block;
+        text-align: center;
+        margin-top: 5px;
+    }
+
+
     .label {
-        width: 340px;
-        font-size: 22px;
-        font-weight: 600;
+        width: 380px;
+        font-size: 18px;
+        font-weight: 500;
+
+        h2 {
+            display: inline;
+            font-size: 22px;
+        }
     }
 
     .item {
         flex: 1;
-        font-size: 20px;
-        font-weight: 600;
+        font-size: 18px;
+        // font-weight: 600;
         color: #4D4D4D;
     }
     .unbound {
@@ -50,17 +71,21 @@ export const Account = styled.div`
     .ava {
         ${flex}
         img {
-            width: 160px;
-            height: 160px;
+            width: 120px;
+            height: 120px;
             margin-right: 28px;
+            border-radius: 15px;
         }
         a {
-            height: 40px;
-            line-height: 40px;
-            color: #777;
-            padding: 0 15px;
+            height: 32px;
+            line-height: 32px;
+            font-size: 16px;
+            color: #333;
+            padding: 0 20px;
             background: #E6E6E6;
             border-radius: 3px;
+        }
+        a:hover{
             cursor: pointer;
         }
     }
@@ -91,8 +116,8 @@ export const Account = styled.div`
 
             a {
                 display: block;
-                height: 48px;
-                line-height: 48px;
+                height: 40px;
+                line-height: 40px;
                 background: #FF5640;
                 border-radius: 5px;
                 text-align: center;
@@ -103,8 +128,8 @@ export const Account = styled.div`
     }
 
     .domain-list {
-        font-size: 24px;
-        font-weight: 600;
+        max-width: 620px;
+        font-size: 18px;
         color: #393431;
 
         .label {
@@ -116,26 +141,35 @@ export const Account = styled.div`
             justify-content: space-between;
             margin-bottom: 24px;
 
+            &:last-child {
+                margin-bottom: 0;
+            }
+
             .user {
+                ${flexAlign}
+                justify-content: center;
+
+                img {
+                    width: 60px;
+                    height: 60px;
+                    margin-right: 15px;
+                    background: #ddd;
+                    border-radius: 50%;
+                }
+
                 p:last-child {
-                    font-size: 20px;
+                    font-size: 16px;
                     color: #B3B3B3;
                 }
             }
 
-            img {
-                width: 60px;
-                height: 60px;
-                background: #ddd;
-                border-radius: 50%;
-            }
-
             a {
-                width: 120px;
+                width: 100px;
                 line-height: 32px;
                 background: #FF5640;
                 border-radius: 6px;
-                font-size: 16px;
+                font-size: 14px;
+                font-weight: 500;
                 text-align: center;
                 color: #fff;
                 cursor: pointer;
@@ -150,11 +184,31 @@ export const Account = styled.div`
                     width: 16px;
                     height: 16px;
                     background: #fff;
-                    margin-right: 10px;
+                    margin-right: 8px;
                     background: url(${Use});
                     background-size: 100%;
                 }
             }
         }
+    }
+`
+
+export const Upload = styled.div`
+    height: 40px;
+    position: relative;
+    cursor: pointer;
+
+    input {
+        position: absolute;
+        width: 100%;
+        height: 151%;
+        opacity: 0;
+        top: -22px;
+        cursor: pointer;
+    }
+
+    a {
+        text-align: center;
+        display: block;
     }
 `

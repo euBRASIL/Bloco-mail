@@ -1,25 +1,35 @@
-import styled, { keyframes }  from 'styled-components';
-import { 
-  flex, flexAlign, flexBetween, flexJustBetween, 
-  FlexWrapper, FlexAlignWrapper, FlexBetweenWrapper, FlexJustBetweenWrapper 
-} from '../../components/css.common'
+import styled, { keyframes } from 'styled-components';
+import {
+    flex, flexAlign, flexBetween, flexJustBetween,
+    FlexWrapper, FlexAlignWrapper, FlexBetweenWrapper, FlexJustBetweenWrapper
+} from '@/components/css.common'
 
-import File from '../../static/images/icon-file.png'
-import Coin from '../../static/images/icon-coin.png'
-import Email1 from '../../static/images/email.png'
-import Email2 from '../../static/images/email2.png'
-import Delete from '../../static/images/delete.png'
-import Collect from '../../static/images/collect.png'
-import Report from '../../static/images/report.png'
+import { Checked, collect } from '@/components/emails/css'
+
+import File from '@/static/images/icon-file.png'
+import Coin from '@/static/images/icon-coin.png'
+import Unread from '@/static/images/email.png'
+import Read from '@/static/images/email2.png'
+import Delete from '@/static/images/delete.png'
+import RealDelete from '@/static/images/real-delete.png'
+import Undelete from '@/static/images/undelete.png'
+import Report from '@/static/images/report.png'
+import Star from '@/static/images/inbox/star.png'
+import Attach from '@/static/images/inbox/attach.png'
+import Assets from '@/static/images/inbox/assets.png'
 
 export { FlexWrapper, FlexAlignWrapper, FlexBetweenWrapper, FlexJustBetweenWrapper }
 
 export const Root = styled.div`
     ${flex}
+    height: calc(100vh - 284px);
+    .right {
+        width: calc(100vw - 896px);
+    }
 `
 
 export const Left = styled.div`
-    padding-top: 30px;
+    // padding-top: 30px;
     width: 520px;
     border-right: 3px solid #F4F5F5;
 
@@ -31,7 +41,6 @@ export const Left = styled.div`
     //     width: 300px;
     // }
 `
-
 
 export const SearchActions = styled.div`
   ${flexAlign}
@@ -60,24 +69,39 @@ export const SearchActions = styled.div`
     border-radius: 5px;
   }
 
-  .email1 {
+  .checked {
+    ${Checked}
+  }
+
+  .unread {
     width: 27px;
     height: 20px;
-    background: url(${Email1}) no-repeat;
+    background: url(${Unread}) no-repeat;
     background-size: 100%;
   }
 
-  .email2 {
+  .read {
     width: 25px;
     height: 25px;
-    background: url(${Email2}) no-repeat;
+    background: url(${Read}) no-repeat;
     background-size: 100%;
   }
 
   .collect {
-    width: 25px;
+    ${collect}
+  }
+
+  .realdelete {
+    width: 24px;
     height: 24px;
-    background: url(${Collect}) no-repeat;
+    background: url(${RealDelete}) no-repeat;
+    background-size: 100%;
+  }
+
+  .undelete {
+    width: 20px;
+    height: 23px;
+    background: url(${Undelete}) no-repeat;
     background-size: 100%;
   }
 
@@ -163,88 +187,44 @@ export const Menus = styled.div`
 `
 
 export const List = styled.div`
+    overflow-y: auto;
+    // height: calc(100vh - 409px);
+    height: 100%;
+    margin-left: -32px;
 
     li {
-        margin-left: -32px;
-        cursor: pointer;
-
-        &:hover, &.on {
-            background: rgba(233, 98, 75, 0.15);
+        &::after {
+            content: '';
+            display: block;
+            margin-left: 33px;
+            height: 3px;
+            background: #F4F5F5;
         }
-
-        .chunk {
-            margin-left: 32px;
-            padding: 24px 24px 20px 0;
-            border-bottom: 3px solid #F4F5F5;
-        }
-
         &:last-child {
-            border-bottom: none;
-        }
-        
-        .checkbox {
-            width: 30px;
-            height: 30px;
-            margin-right: 18px;
-            border: 3px solid #F4F3F3;
-            border-radius: 5px;
-        }
-        .ava {
-            width: 66px;
-            height: 66px;
-            background: rgba(254, 175, 162, 0.5);
-            border-radius: 50%;
-            margin-right: 18px;
-        }
-        .ename {
-            ${flexAlign}
-            color: #38302E;
-            font-size: 22px;
-            font-weight: 600;
-
-            i {
+            &::after {
                 display: none;
-                width: 20px;
-                height: 20px;
-                background: linear-gradient(180deg, #FFB76B, #FF5E5C);
-                border-radius: 50%;
-                margin-right: 8px;
-            }
-        }
-        .id {
-            font-weight: 600;
-            color: #BCBCBC;
-            font-size: 18px;
-        }
-
-        .content {
-            margin-top: 25px;
-            padding-left: 35px;
-            font-size: 20px;
-            font-weight: bold;
-
-            .title {
-                color: #38302E;
-            }
-
-            .desc {
-                display: -webkit-box;
-                overflow: hidden;
-                -webkit-line-clamp: 3;
-                -webkit-box-orient: vertical;
-                margin-top: 5px;
-                font-size: 18px;
-                color: #B8B2B2;
             }
         }
     }
 
     .actions {
         .icons {
-            div {
+            .coin{
                 width: 24px;
                 height: 24px;
                 background-color: #ddd;
+                margin-right: 15px;
+                background: url(${Assets}) no-repeat;
+            }
+            .files{
+                width: 24px;
+                height: 24px;
+                background-color: #ddd;
+                margin-right: 15px;
+                background: url(${Attach}) no-repeat;
+            }
+            .collect {
+                ${collect}
                 margin-right: 15px;
             }
         }
@@ -273,237 +253,123 @@ export const List = styled.div`
             .date {
                 color: #38302E;
             }
+            
         }
     }
 `
 
-export const Body = styled.div`
-    flex: 1;
-    padding: 30px 10px 30px 32px;
-
-    .actions {
-        div {
-            div {
-                width: 60px;
-                height: 60px;
-                border: 3px solid #F4F3F3;
-                border-radius: 5px;
-                margin-right: 15px;
-                box-sizing: border-box;
-
-                &:last-child {
-                    margin-right: 0;
-                }
-            }
-        }
-    }
-
-    .title {
-        margin-top: 22px;
-
-        h1 {
-            line-height: 52px;
-            font-size: 48px;
-            font-weight: bold;
-            color: #38302E;
-        }
-    }
-
-    .content {
-        margin-top: 20px;
-        line-height: 36px;
-        font-size: 20px;
-        font-weight: bold;
-        color: #A59D9D;
-    }
+export const ComposeWrapper = styled.div`
+`
+export const Side = styled.div`
+    width: 354px;
+    margin-left: 25px;
+    padding: 30px 25px;
+    background-color: #fff;
+    border-radius: 15px;
 `
 
-export const Info = styled.div`
-    margin-top: 32px;
-    line-height: 24px;
-    font-size: 24px;
-    color: #38302E;
-
-    .item {
-        ${flex}
-        margin-bottom: 12px;
+export const UserList = styled.div`
+    margin-top: 40px;
+    height: calc(100vh - 356px);
+    overflow-y: auto;
+    li {
+        ${flexAlign};
+        margin-bottom: 20px;
+        line-height: 1.3;
+        color: #38302E;
+        cursor: pointer;
     }
 
-    .label {
-        margin-right: 8px;
-        font-weight: bold;
-    }
-
-    .value {
+    .info {
         flex: 1;
+        width: 0;
+    }
+    
+    img {
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+        background: rgba(255, 145, 101, 0.3);
+        border-radius: 6px;
     }
 
-    .sender {
-        color: #0014E4;
+    .name {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .email {
+        font-size: 14px;
     }
 
     .id {
-        margin-top: 8px;
         font-size: 16px;
-        color: #A59D9D;
-    }
-
-    .icons {
-        div {
-            width: 24px;
-            height: 24px;
-            background-color: #ddd;
-            margin-right: 15px;
-        }
-    }
-
-    .date {
-        font-size: 18px;
-        font-weight: bold;
-        color: #BCBCBC;
-    }
-
-    .status {
-        font-size: 16px;
-        line-height: 24px;
-
-        &.failed {
-            color: #E96243;
-        }
-
-        i {
-            margin-left: 8px;
-            width: 22px;
-            height: 22px;
-            background-color: #ddd;
-        }
-    }
-`
-
-export const More = styled.div`
-    margin-top: 40px;
-
-    .item {
-        border-top: 3px solid #F4F5F5;
-        margin-top: 35px;
-        padding-top: 35px;
-    }
-
-    h2 {
-        font-size: 18px;
-        font-weight: bold;
-        color: #38302E;
-    }
-
-    .desc {
-        margin-left: 20px;
-        font-size: 16px;
-        font-weight: 500;
-        color: #B8B2B2;;
-    }
-
-    .action {
-        font-size: 16px;
-        font-weight: 500;
-        color: #FF9E8E;
-    }
-
-    ul {
-        margin-top: 15px;
-    }
-
-    .tokens {
-        li {
-            ${flexBetween}
-            padding: 0 35px 0 30px;
-            height: 52px;
-            border: 2px solid #F4F5F5;
-            border-bottom: none;
-            font-size: 18px;
-            font-weight: 500;
-            color: #38302E;
-
-            &:last-child {
-                border-bottom: 2px solid #F4F5F5;
-            }
-        }
-
-        .ava {
-            width: 35px;
-            height: 35px;
-            background-color: #ddd;
-            margin-right: 15px;
-            border-radius: 50%;
-        }
-
-        .price {
-            color: #EF9F13;
-        }
-    }
-
-    .appendix {
-        ${flexAlign}
-        flex-wrap: wrap;
-
-        li {
-            ${flexBetween}
-            min-width: 40%;
-            flex: 1;
-            margin-right: 20px;
-            margin-bottom: 12px;
-            height: 40px;
-            padding: 0 8px;
-            border: 2px solid #F4F5F5;
-            border-radius: 7px;
-            font-size: 16px;
-            font-weight: 500;
-            color: #38302E;
-
-            &:nth-child(2n+2) {
-                margin-right: 0;
-            }
-
-            .img {
-                width: 21px;
-                height: 21px;
-                background: #F9EBE6;
-                margin-right: 8px;
-                border-radius: 3px;
-            }
-
-            span:nth-child(3) {
-                margin-left: 18px;
-                color: #B8B2B2;
-            }
-
-            a {
-                width: 18px;
-                height: 18px;
-                background: #ddd;
-            }
-        }
+        color: #A99E9C;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;  
     }
 `
 
 export const Form = styled.div`
-    padding: 30px 10px 10px;
+    flex: 1;
+    background-color: #fff;
+    padding: 30px 42px 40px;
+    border-radius: 15px;
+    
+    .toggle {
+        position: absolute;
+        top: 45px;
+        left: 50%;
+        margin-left: 64px;
+        cursor: pointer;
+        width: 18px;
+        height: 16px;
+        transition: transform .3s ease;
+        transform-origin: center;
+        background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACUAAAAgCAYAAACVU7GwAAAAAXNSR0IArs4c6QAABTNJREFUWEe9l3+IFGUYx7/P7F3aGRQFEhbUPxKSVASFUhIEFhmncrvzzu6eIMqduymS9oMr6ddFZSlkSWndpdaF7cz7zizJJUH9YWmRf9Qf5YUFkX9koWVcQWWeO/PEu95uM+PO3t5d9v75zvN8n8+88z7f9x3CfzDK5fJsrlReA7A/LcSu6UrSdAWklNcR8DoBd2gtIupLm+aW6ehOC0pKudAA9ArdEIZg5i2mZfVNFWzKUK7jLAHRAICrEorvygjRMxWwKUG5jrOCgd1E1B4q+iWAGyMQzO+eqVRWd3d3j04GbtJQnlLrmXl7rMgBIwiKPtFSItoae3aoHVi9TIjvWgWbFJQr5RMA+mPi3lilUszn86f0vFKqxwAGmPlfbaKvyfd70tns4VbAWoZypXwJwP0RUaLBIyMjxf7+/iA870mZYWAQwGWh+RME9KSF2D8R2IRQUsqLDeANAPkY0AsZ03wkqYCUcrFeMQDXhmLOgrk3Y1lvNQNrCrWvVJozlkq9ScDiSMsT9ZkteJFn27ewYWiwm2IQD2aEeDEJLBHKtu35bYbxdkzQZ6KiaZp65VoaruvO5SAYrJlrLYmZN5uWtamRSEMopdQiYi7FPOiXcaBySzShoPLQ0Oxg5ky9YstiuQMZIQpxvfOgXMdZzoAMexAD38L3i2Yu91ESkOs4uYBoWAjxR6MYKeVFhjZb5pXx7k2bpiCierNEoFzH6R136XoeA59RpVLM5PNfNQEqgmgniN5vq1QKy3O5HxJjG3QxAx+n2tpEV1fXzzqvDqUcZxMRPRvZ0MB+Y2ysmF6x4nhSEaVUHzE/H3p+uA1Ys1yII03AtNdpz6sPAkboHNjRKpSn1DZm3hATeXvG6Gixs1D4q4n4ZgDn2wLRNxQEhbRlHWyyuhtBFO/AE+z7glwp957nQcDLGSHikBF9V8odAO5LKsrASQRBwcxm9yXFlJVaFTBrk02FYs5qqIcBhO8/T2aEeDpJaHh4uOPM6dNaKGqmwGMMLCXg1lDuGJjXNDNLZdtddM7LrhjPe6/6+ZTjvEpEawGszwjxShJQqVSa055KaaAlsZi1GSF2env3XsPt7brAXZG9GQQbzWxWH1MNR1nKO1mfl0SnAubO+kaXUuaFEO8kJtr2PDaM3QwsCMX8RkAxLYRTm5NSXjre+iICxtxvWtZTSfqe593c7vujS4U4NuHZV20E217AhjEEYG5I9PsAKAohPmxUyHWcARD1Rp4xb89YVvRQb5A8IZTruncjCHQz1L65lvl8HOiLpDfX866Ueq/qPVsfxDyUtqy4gUZkmkJJKa0UUSlyNwI+GAc61gyo9kwptYmYI/4H5uEZHR3Zzs7OhnaTCKVsu0CGoX8K6oOZbX3+CSF+bwWoFuM6zjoQxRvoUADkhBA/xrUaQnlKPcrMz8WAdpiWtW4yMOFYpVQ3MevO7Ai95UiFOZfNZkcinzhexFVqK5gfigE9Y1rW41MFquV5Ut4L3frAnJDWcQPIdQnxSW0uslLKcfQfyqpYxzyQsaxt0wWqg3nebez72uvm1eYY+JOYcxnLGtZzVagDe/bM/HXWLDt832Hmv7UHTXR1nQps2bbn6xspAwsjX4RopWmaQySlvNIAJIBFdXLmn8aBquQXYniedzUHgb5f3RPT30CuUiNgvj68+aoubVmfXgiYsKaU8hJiHiSibGSjl6W8PQD0SX45mA9WmIvZbPbohQYK67tK7QRzUc8xc391T7muuwS+3zvm+/qn8uT/CVSr5Uq5mZnP6PPxH+YrMiBgnQ5rAAAAAElFTkSuQmCC);
+        background-size: 100%;
+
+        &.un {
+            transform: rotate(180deg);
+        }
+    }
 
     .item {
         ${flexAlign}
-        margin-bottom: 32px;
+        margin-bottom: 35px;
+        position: relative;
+
+        &.hide {
+            display: none;
+        }
     }
 
     .label {
         padding-right: 30px;
         width: 120px;
         text-align: right;
-        font-size: 22px;
+        font-size: 18px;
         font-weight: 500;
         color: #272524;
+
+        span {
+            color: red;
+            margin-right: 5px;
+            position: relative;
+            top: 2px;
+        }
     }
 
     .chunk {
         flex: 1;
+
+        position: relative;
+
+        .error {
+            position: absolute;
+            color: red;
+        }
     }
 
     input {
@@ -527,6 +393,7 @@ export const Form = styled.div`
         margin: 0 auto;
 
         a {
+            ${flexAlign}
             padding: 0 25px;
             line-height: 36px;
             background: #D2D1D3;
@@ -552,7 +419,7 @@ export const Form = styled.div`
 
     .static {
         & > div {
-            width: 50%;
+            // width: 50%;
         }
 
         i {
@@ -599,10 +466,22 @@ export const Form = styled.div`
 
     .attach {
         dt {
+            position: relative;
             i {
                 width: 24px;
                 height: 24px;
                 background-image: url(${File});
+            }
+            input {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                cursor: pointer;
+                opacity: 0;
+
+                &::-webkit-file-upload-button {
+                    cursor: pointer;
+                }
             }
         }
 
@@ -635,3 +514,4 @@ export const Form = styled.div`
         }
     }
 `
+

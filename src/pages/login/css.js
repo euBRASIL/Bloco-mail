@@ -1,7 +1,5 @@
 import styled, { keyframes }  from 'styled-components';
-import { 
-  flex, flexAlign, flexBetween, flexJustBetween, 
-  FlexWrapper, FlexAlignWrapper, FlexBetweenWrapper, FlexJustBetweenWrapper 
+import {  flexAlign,  FlexWrapper, FlexAlignWrapper, FlexBetweenWrapper, FlexJustBetweenWrapper 
 } from '../../components/css.common'
 
 import Bg from '../../static/images/login-bg.jpg'
@@ -109,6 +107,9 @@ export const Content = styled.div`
                 &:hover {
                     background: #DF4631;
                 }
+            .itemLoading{
+                margin-right: 10px;
+            }
             }
         }
     }

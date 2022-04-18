@@ -11,12 +11,17 @@ export const idlFactory = ({ IDL }) => {
     'AmountTooSmall' : IDL.Null,
   });
   const Result = IDL.Variant({ 'Ok' : IDL.Nat, 'Err' : TxError });
+  const ApiError = IDL.Variant({
+    'NotBindingEmailAlias' : IDL.Null,
+    'Unauthorized' : IDL.Null,
+    'Other' : IDL.Text,
+  });
   const EmailHeader = IDL.Record({
     'recipient_alias' : IDL.Text,
     'subject' : IDL.Text,
-    'send_time' : IDL.Nat64,
     'recipient' : IDL.Principal,
     'sender' : IDL.Principal,
+    'update_at' : IDL.Nat64,
     'sender_alias' : IDL.Text,
   });
   const Email = IDL.Record({
@@ -27,16 +32,24 @@ export const idlFactory = ({ IDL }) => {
     'email_id' : IDL.Nat64,
     'email_body_canister_id' : IDL.Principal,
   });
-  const EmailSessionInfo = IDL.Record({
+  const Profile = IDL.Record({
+    'desc' : IDL.Opt(IDL.Text),
+    'avatar_url' : IDL.Opt(IDL.Text),
+    'avatar_base64' : IDL.Opt(IDL.Text),
+  });
+  const EmailSession = IDL.Record({
+    'has_attach' : IDL.Bool,
+    'trash' : IDL.Bool,
     'current_canister_id' : IDL.Principal,
     'session_id' : IDL.Nat64,
+    'favorites' : IDL.Bool,
+    'read' : IDL.Bool,
+    'spam' : IDL.Bool,
+    'last_header' : EmailHeader,
     'email_list' : IDL.Vec(Email),
     'canister_hash_named' : IDL.Text,
-  });
-  const ApiError = IDL.Variant({
-    'NotBindingEmailAlias' : IDL.Null,
-    'Unauthorized' : IDL.Null,
-    'Other' : IDL.Text,
+    'sender_avatar' : IDL.Opt(Profile),
+    'last_body_desc' : IDL.Text,
   });
   const Metadata = IDL.Record({
     'fee' : IDL.Nat,
@@ -56,12 +69,17 @@ export const idlFactory = ({ IDL }) => {
     'feeTo' : IDL.Principal,
   });
   const QueryWrapper = IDL.Record({
+    'trash' : IDL.Bool,
+    'favorites' : IDL.Bool,
+    'read' : IDL.Bool,
+    'send' : IDL.Bool,
+    'spam' : IDL.Bool,
     'offset' : IDL.Nat32,
     'limit' : IDL.Nat32,
   });
   const R = IDL.Record({
     'total' : IDL.Nat64,
-    'data' : IDL.Vec(EmailSessionInfo),
+    'data' : IDL.Vec(EmailSession),
     'offset' : IDL.Nat32,
     'limit' : IDL.Nat32,
   });
@@ -74,9 +92,29 @@ export const idlFactory = ({ IDL }) => {
     'approve' : IDL.Func([IDL.Principal, IDL.Nat], [Result], []),
     'balanceOf' : IDL.Func([IDL.Principal], [IDL.Nat], ['query']),
     'burn' : IDL.Func([IDL.Nat], [Result], []),
+    'change_favorites' : IDL.Func(
+        [IDL.Bool, IDL.Vec(IDL.Nat64)],
+        [IDL.Variant({ 'Ok' : IDL.Bool, 'Err' : ApiError })],
+        [],
+      ),
+    'change_read' : IDL.Func(
+        [IDL.Bool, IDL.Vec(IDL.Nat64)],
+        [IDL.Variant({ 'Ok' : IDL.Bool, 'Err' : ApiError })],
+        [],
+      ),
+    'change_spam' : IDL.Func(
+        [IDL.Bool, IDL.Vec(IDL.Nat64)],
+        [IDL.Variant({ 'Ok' : IDL.Bool, 'Err' : ApiError })],
+        [],
+      ),
+    'change_trash' : IDL.Func(
+        [IDL.Bool, IDL.Vec(IDL.Nat64)],
+        [IDL.Variant({ 'Ok' : IDL.Bool, 'Err' : ApiError })],
+        [],
+      ),
     'create_update_an_email_header' : IDL.Func(
-        [EmailSessionInfo],
-        [IDL.Variant({ 'Ok' : IDL.Opt(EmailSessionInfo), 'Err' : ApiError })],
+        [EmailSession],
+        [IDL.Variant({ 'Ok' : IDL.Opt(EmailSession), 'Err' : ApiError })],
         [],
       ),
     'decimals' : IDL.Func([], [IDL.Nat8], ['query']),
@@ -100,12 +138,7 @@ export const idlFactory = ({ IDL }) => {
     'owner' : IDL.Func([], [IDL.Principal], ['query']),
     'query_all' : IDL.Func([], [IDL.Vec(Email)], []),
     'query_header_by_id' : IDL.Func([IDL.Nat64], [IDL.Opt(Email)], []),
-    'query_receive_header_by_pid' : IDL.Func(
-        [IDL.Principal, QueryWrapper],
-        [IDL.Variant({ 'Ok' : R, 'Err' : ApiError })],
-        [],
-      ),
-    'query_send_header_by_pid' : IDL.Func(
+    'query_header_list_by_pid' : IDL.Func(
         [IDL.Principal, QueryWrapper],
         [IDL.Variant({ 'Ok' : R, 'Err' : ApiError })],
         [],
