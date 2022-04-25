@@ -3,7 +3,7 @@ export const NavLineBeforeItem = 'Assets'
 export const NavList = [
     {
         name: 'Compose',
-        path: '/compose/',
+        path: '/compose',
     },
     {
         name: 'Inbox',
@@ -11,23 +11,23 @@ export const NavList = [
     },
     {
         name: 'Starred',
-        path: '/starred',
+        path: '',
     },
     {
         name: 'Sent',
-        path: '/sent',
+        path: '',
     },
     {
         name: 'Drafts',
-        path: '/drafts',
+        path: '',
     },
     {
         name: 'Spam',
-        path: '/spam',
+        path: '',
     },
     {
         name: 'Trash',
-        path: '/trash',
+        path: '',
     },
     {
         name: 'Setting',
@@ -35,11 +35,11 @@ export const NavList = [
     },
     {
         name: 'Assets',
-        path: '/assets',
+        path: '',
     },
     {
         key: 'Nft',
         name: 'NFT Market',
-        path: '/market',
+        path: '',
     },
 ]

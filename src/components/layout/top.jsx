@@ -1,26 +1,20 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
-import { observer, inject } from "mobx-react";
-import styled, { keyframes } from "styled-components";
-import { withRouter, useHistory } from "react-router-dom";
+import React, { useEffect, useState, useCallback, useRef, Children } from 'react';
+import styled, { keyframes }  from 'styled-components';
 
-import { flex, flexAlign, flexBetween, flexJustBetween } from "../css.common";
+import { flex, flexAlign, flexBetween, flexJustBetween } from '../css.common'
 
-import { Info, User } from "./css";
-import UserAva from "../../static/images/avatar.png";
+import { Info, User } from './css'
+import UserAva from '../../static/images/default-ava.png'
 
 const Root = styled.div`
   ${flexBetween}
   margin-bottom: 25px;
-`;
+`
 
-const Top = ({ children, store }) => {
-  const { bindedNft, principalId, profileInfo } = store.common;
-  const history = useHistory();
-  const email = "";
-
-  const onBinding = () => {
-    history.push("/setting");
-  };
+const Top = ({ children }) => {
+  const [ava, setAva] = useState(UserAva);
+  // const email = '097376394@dmail.ai'
+  const email = ''
 
   return (
     <>
@@ -28,30 +22,23 @@ const Top = ({ children, store }) => {
         <Info>
           <p>
             <strong>Principal ID:</strong>
-            <span>{principalId}</span>
+            <span>2e2zr-ylqej-iruuu-ugkd3-bmv6e-cvceo-davpx-6lbbm-v</span>
           </p>
           {email ? (
-            <p>
+             <p>
               <strong>NFT Domain Account:</strong>
               <span>{email}</span>
             </p>
           ) : (
             <p>
-              <strong>NFT Domain Account:</strong>
-              {bindedNft ? (
-                `${bindedNft.emailName}@dmail.ai`
-              ) : (
-                <a onClick={onBinding} className="binding">
-                  Binding
-                </a>
-              )}
+              <strong>NFT Domain Account</strong>
+              <a href="" className='binding'>Binding</a>
             </p>
           )}
+         
         </Info>
         <User>
-          <div className="ava">
-            <img src={profileInfo || UserAva} alt="" />
-          </div>
+          <div className="ava"><img src={ava} alt="" /></div>
           <div className="logout">
             <i></i>
             <strong>Quit</strong>
@@ -60,6 +47,7 @@ const Top = ({ children, store }) => {
       </Root>
     </>
   );
-};
+}
 
-export default withRouter(inject("store")(observer(Top)));
+export default Top;
+  

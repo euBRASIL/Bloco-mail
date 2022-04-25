@@ -1,7 +1,7 @@
-import styled, { keyframes } from 'styled-components';
-import {
-  flex, flexAlign, flexBetween, flexJustBetween,
-  FlexWrapper, FlexAlignWrapper, FlexBetweenWrapper, FlexJustBetweenWrapper
+import styled, { keyframes }  from 'styled-components';
+import { 
+  flex, flexAlign, flexBetween, flexJustBetween, 
+  FlexWrapper, FlexAlignWrapper, FlexBetweenWrapper, FlexJustBetweenWrapper 
 } from '../css.common'
 
 import Assets from '../../static/images/nav/assets.png'
@@ -24,31 +24,25 @@ import Star from '../../static/images/nav/star.png'
 import StarHover from '../../static/images/nav/star-hover.png'
 import Trash from '../../static/images/nav/trash.png'
 import TrashHover from '../../static/images/nav/trash-hover.png'
-import SearchBar from '../../static/images/search.png';
-import Quit from '../../static/images/quit.png'
 
 export { FlexWrapper, FlexAlignWrapper, FlexBetweenWrapper, FlexJustBetweenWrapper }
 
 export const Logo = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 13vh;
+  margin: 55px 55px 0;
+
   img {
-    height: 5.5vh;
-    width:auto;
+    width: 100%;
   }
 `
 
 export const Nav = styled.div`
-  margin: 0 0 0 3.7vw;
+  margin: 80px 0 130px 55px;
 
   .li {
     ${flexAlign}
     margin-bottom: 2px;
-    height: 6vh;
-    margin-bottom: 15px;
-    font-size: 20px;
+    height: 64px;
+    font-size: 22px;
     font-weight: bold;
     color: #fff;
     cursor: pointer;
@@ -77,58 +71,58 @@ export const Nav = styled.div`
     }
 
     i {
-      margin-right: 30px;
+      margin-right: 22px;
       background-size: 100%;
     }
 
     .Inbox {
-      width: 30px;
-      height: 23px;
+      width: 35px;
+      height: 27px;
       background-image: url(${Inbox});
     }
     .Compose {
-      width: 30px;
-      height: 21px;
+      width: 36px;
+      height: 25px;
       background-image: url(${Compose});
     }
     .Starred {
-      width: 30px;
-      height: 28px;
+      width: 34px;
+      height: 32px;
       background-image: url(${Star});
     }
     .Sent {
-      width: 27px;
-      height: 27px;
+      width: 28px;
+      height: 28px;
       background-image: url(${Sent});
     }
     .Drafts {
-      width: 24px;
-      height: 27px;
+      width: 29px;
+      height: 33px;
       background-image: url(${Drafts});
     }
     .Spam {
-      width: 29px;
-      height: 23px;
+      width: 33px;
+      height: 27px;
       background-image: url(${Spam});
     }
     .Trash {
-      width: 26px;
-      height: 28px;
+      width: 29px;
+      height: 32px;
       background-image: url(${Trash});
     }
     .Setting {
-      width: 27px;
-      height: 28px;
+      width: 29px;
+      height: 30px;
       background-image: url(${Setting});
     }
     .Assets {
-      width: 24px;
-      height: 26px;
+      width: 27px;
+      height: 29px;
       background-image: url(${Assets});
     }
     .Nft {
-      width: 26px;
-      height: 27px;
+      width: 30px;
+      height: 31px;
       background-image: url(${Nft});
     }
 
@@ -185,17 +179,17 @@ export const SplitLine = styled.div`
   width: 164px;
   height: 1px;
   background-color: rgba(255, 255, 255, 0.3);
-  margin: 2vh 0;
+  margin: 28px 0;
 `
 
 export const Info = styled.div`
-  padding-left: 5px;
+  padding-left: 15px;
   line-height: 24px;
-  font-size: 20px;
+  font-size: 24px;
   color: #38302E;
 
   p {
-    margin-bottom: 3px;
+    margin-bottom: 8px;
 
     &:last-child {
       margin-bottom: 0;
@@ -213,9 +207,6 @@ export const Info = styled.div`
     font-weight: 600;
     line-height: 30px;
   }
-  .binding:hover{
-    cursor:pointer
-  }
 
   strong {
     margin-right: 10px;
@@ -226,31 +217,25 @@ export const User = styled.div`
   ${flexAlign}
 
   .ava img {
-    display: block;
-    width: 50px;
-    height: 50px;
-    margin-right: 25px;
+    margin-right: 24px;
+    width: 60px;
+    height: 60px;
     border-radius: 10px;
     background-color: #f4f4f4;
   }
 
   .logout {
     ${flexAlign}
-    font-size: 20px;
+    font-size: 24px;
     color: rgba(0, 0, 0, .3);
 
     i {
-      width: 20px;
-      height: 20px;
-      background-image: url(${Quit});
-      background-size: 100%;
-      margin-right: 6px;
+      width: 24px;
+      height: 24px;
+      background-color: #f4f4f4;
+      margin-right: 4px;
     }
-    
   }
-  .logout:hover{
-      cursor:pointer
-    }
 `
 
 export const SearchChunk = styled.div`
@@ -261,7 +246,7 @@ export const SearchChunk = styled.div`
 export const Search = styled.div`
   ${flexAlign}
 
-  //width: 485px;
+  width: 485px;
   height: 48px;
   background: #F4F3F3;
   border-radius: 10px;
@@ -282,12 +267,8 @@ export const Search = styled.div`
   .search-btn {
     width: 23px;
     height: 23px;
-    background: url(${SearchBar}) no-repeat;
+    background-color: #ccc;
     margin-left: 20px;
-    background-size: 100%;
-  }
-  .search-btn:hover{
-    cursor:pointer
   }
 
   @media (max-width: 1800px) {
