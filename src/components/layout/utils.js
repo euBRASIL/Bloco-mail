@@ -2,44 +2,53 @@ export const NavLineBeforeItem = 'Assets'
 
 export const NavList = [
     {
+        key: 'compose',
         name: 'Compose',
-        path: '/compose',
+        path: '/compose/',
     },
     {
+        key: 'inbox',
         name: 'Inbox',
         path: '/inbox',
     },
     {
+        key: 'star',
         name: 'Starred',
-        path: '',
+        path: '/starred',
     },
     {
+        key: 'sent',
         name: 'Sent',
-        path: '',
+        path: '/sent',
     },
     {
+        key: 'drafts',
         name: 'Drafts',
-        path: '',
+        path: '/drafts',
     },
     {
+        key: 'spam',
         name: 'Spam',
-        path: '',
+        path: '/spam',
     },
     {
+        key: 'trash',
         name: 'Trash',
-        path: '',
+        path: '/trash',
     },
     {
+        key: 'setting',
         name: 'Setting',
         path: '/setting',
     },
     {
+        key: 'assets',
         name: 'Assets',
-        path: '',
+        path: '/assets',
     },
     {
-        key: 'Nft',
+        key: 'nft',
         name: 'NFT Market',
-        path: '',
+        path: '/market',
     },
 ]

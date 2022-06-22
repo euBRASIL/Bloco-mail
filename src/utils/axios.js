@@ -1,58 +1,60 @@
-import axios from 'axios';
+import axios from "axios";
+import { clearStorage } from "@/utils/index";
+import { Storage, Web_key } from "@/utils/storage";
+import Message from "@/components/Message/index";
+
+export const baseURL = "https://ic.dmail.ai/api/v3";
 
 export const axiosInstance = axios.create({
-  baseURL: `/`,
+  baseURL,
 });
 
 axiosInstance.defaults.timeout = 120000;
 
+export const cache = {
+  enpid: Storage.get(Web_key) || undefined,
+};
+
+axiosInstance.interceptors.request.use(
+  (config) => {
+    // Do something before request is sent
+    if (cache.enpid === undefined) {
+      cache.enpid = Storage.get(Web_key) || undefined;
+    }
+
+    if (cache.enpid && config.headers) {
+      config.headers["dm-encstring"] = cache.enpid;
+    }
+    return config;
+  },
+  (error) => {
+    // Do something with request error
+    return Promise.reject(error);
+  }
+);
+
 axiosInstance.interceptors.response.use(
-  res => {
-    // if (res.config.method === 'get' && res.status !== 200 || (res.config.method === 'post' && res.status !== 201)) {
-    //   // notification.error({
-    //     // message: `${res.data.errorTitle}请求失败`,
-    //   // });
-
-    //   return Promise.reject(res);
-    // } else if (!res.data.success && res.data.code === '-1') {
-    //   // notification.error({
-    //     // message: `${res.data.errorTitle}错误：${res.data.msg}`,
-    //   // });
-
-    //   return Promise.reject(res);
-    // } else if (!res.data.success && res.data.code === '401') {
-    //   // window.location.href = __LoginHost;
-    // } else if (!res.data.success && res.data.code === '9') {
-    //   // router.push('/ErrorPage?code=403');
-    // }
+  (res) => {
+    const code = res.data.code;
+    if (code == -1 || code == -2) {
+      Message.warn("Login status is disabled");
+      clearStorage();
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 500);
+    } else if (code === 0) {
+      // Message.error(res.data.msg || "Request error");
+    }
     return res;
   },
-  error => {
-    if (error.code == 'ECONNABORTED' && error.message.includes('15000ms')) {
+  (error) => {
+    if (error.code == "ECONNABORTED" && error.message.includes("15000ms")) {
       return Promise.reject(error);
     }
 
-    if (error.code == 'ECONNABORTED') {
-      // notification.error({
-        // message: `请求超时`,
-      // });
+    if (error.code == "ECONNABORTED") {
       return Promise.reject(error);
     }
-
-    // if (error.response.status == 408) {
-    //   return Promise.reject(error);
-    // }
-
-    // if (error.response.status > 400) {
-    //   // notification.error({
-    //     // message: `请求出错了。${error.response.status}`,
-    //   // });
-    // } else {
-    //   // router.push('/ErrorPage?code=500');
-    //   // notification.error({
-    //     // message: `请求出错了。`,
-    //   // });
-    // }
     return Promise.reject(error);
   }
 );
@@ -63,7 +65,7 @@ export default function (config) {
       config.transformResponse = [];
     }
     Array.isArray(config.transformResponse) &&
-      config.transformResponse.push(data => ({
+      config.transformResponse.push((data) => ({
         ...JSON.parse(data),
         errorTitle: config.errorTitle,
       }));

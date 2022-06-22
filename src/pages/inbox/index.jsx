@@ -1,279 +1,208 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
-import Container from '@/components/container'
-import SearchBar from '@/components/layout/searchBar';
-import { getPosToParent } from '@/utils/index'
-import { mailHeaderId, http, transformPrincipalId } from '../../api/index'
-import { Root, Left, Menus, SearchActions, List, Body, Info, More, FlexWrapper, FlexBetweenWrapper, FlexAlignWrapper, FlexJustBetweenWrapper } from './css'
-import { withRouter, useHistory } from 'react-router-dom';
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { withRouter, useHistory, useParams } from "react-router-dom";
+import { observer, inject } from "mobx-react";
+import { fromJS } from "immutable";
+import { scrollIntoViewKey } from '@/utils/index'
+import {
+  useQueryMenus,
+  loadNormalItems,
+  setFavorites,
+  setRead,
+  batchDelete,
+  batchSpam,
+} from "./fetch";
+import { MenuTabs, getDelList, getUpdateList, batchAction, useMenuChecked, useInit } from './utils'
+import { Root, Left, Menus, SearchActions, List } from "./css";
 
-const MenuList = [
-  {
-    name: 'All',
-    value: 'all',
-  },
-  {
-    name: 'Have read',
-    value: 'readed',
-  },
-  {
-    name: 'Unread',
-    value: 'unread',
-  },
-]
+import Message from "@/components/Message/index";
+import Pagination from "@/components/layout/pagination";
+import Container from "@/components/container";
+import SearchBar from "@/components/layout/searchBar";
+import EmailItem from "@/components/emails/emails";
+import Content from "@/components/emails/content";
+import PageEmpty from "@/components/empty";
+import { Spin } from "@/components/Loading";
 
-const testData = [
-  {
-    unread: true,
-    email: 'Eee@gmail.com',
-    id: 'yhv98-n097376394',
-    date: '17 Feb,20:30',
-    title: 'Arun S K,here is what happening on Twitter',
-    desc: 'Hello! I am in the process of developing an online. magazine dedicated to everything men fashion. magazine dedicated to everything men fashion. magazine dedicated to everything men fashion',
-  },
-  {
-    unread: false,
-    email: 'Eee@gmail.com',
-    id: 'yhv98-n097376394',
-    date: '17 Feb,20:30',
-    title: 'Arun S K,here is what happening on Twitter',
-    desc: 'Hello! I am in the process of developing an online. magazine dedicated to everything men fashion. magazine dedicated to everything men fashion',
-  }
-]
+const Index = ({ store }) => {
+  const { bindedNft, principalId, inboxRefresh, stopKeyDownSwitchEmail } = store.common;
+  const [currentEmailIndex, setCurrentEmailIndex] = useState(-1);
+  const [detailLoading, setDetailLoading] = useState(false)
+  // const { Params, token } = useParams;
 
-const Index = () => {
-  const [currentMenu, setCurrentMenu] = useState(MenuList[0].value);
-  const [emailList, setEmailList] = useState(testData);
-  const menusRef = useRef(null);
-  const focusLineRef = useRef(null);
+  const {
+    toPage,
+    offset,
+    limit,
+    menuList,
+    menuListRef,
+    setMenuList,
+    loading: queryMenusLoading,
+    allEmailsloaded,
+    total,
+    reQueryFirstPage,
+    error: queryMenusError,
+  } = useQueryMenus(loadNormalItems, principalId, "")
 
   useEffect(() => {
-    if (!focusLineRef.current || !menusRef.current) {
-      return;
-    }
-    const index = MenuList.findIndex(({ value }) => value === currentMenu)
-    const currentLi = menusRef.current.querySelectorAll('li')[index]
-    const left = getPosToParent(menusRef.current, currentLi)
-    const width = currentLi.clientWidth
-    focusLineRef.current.style = `left: ${left}px; width: ${width}px;`
-  }, [currentMenu])
+    principalId && reQueryFirstPage()
+  }, [principalId])
 
-  useEffect(async () => {
-    const res = await http(mailHeaderId, 'query_send_header_by_pid', [transformPrincipalId('6cjya-hnrph-ohcs7-pt7m4-dxzwj-zax3s-b5f2w-n472d-mulap-7jaeg-2ae'), {
-      offset: window['BigInt'](0),
-      // 起点
-      limit: window['BigInt'](3),
-      // keyword: 'test',
-    }])
-    console.log(res.Ok);
-    if (res.Ok && ('data' in res.Ok)) {
-      const { data, limit, offset, total } = res.Ok
-      const list = Array.isArray(data) ? data : [];
-      const emails = list.map(({ email_list }) => {
-        return '';
-      })
-      // setEmailList()
+  const onDelete = async (current, ev = null) => {
+    const success = await batchAction(menuListRef, setMenuList, current, false, async (params) => await batchDelete(params, principalId), getDelList, ev)
+    setCurrentEmailIndex(null);
+    if (success && !menuListRef.current.length) {
+      reQueryFirstPage()
     }
-    console.log(111, res);
-  }, [])
+  };
+
+  const onSpam = async (current, ev = null) => {
+    const success = await batchAction(menuListRef, setMenuList, current, false, async (params) => await batchSpam(params, principalId), getDelList, ev)
+    setCurrentEmailIndex(null);
+    if (success && !menuListRef.current.length) {
+      reQueryFirstPage()
+    }
+  };
+
+  const setReadOrUnread = async (value, current = null, ev = null) => {
+    if (current && value && current.other?.is_read) {
+      return
+    }
+    const success = await batchAction(menuListRef, setMenuList, current, principalId, async (params) => await setRead(value, params, principalId), getUpdateList(value, 'read'), ev)
+    if (success) {
+      store.common.queryFrequentData()
+    }
+  };
+
+  const setCollected = async (value, current = null, ev = null) => {
+    const success = await batchAction(menuListRef, setMenuList, current, principalId, async (params) => await setFavorites(value, params, principalId), getUpdateList(value, 'favorites'), ev)
+    if (success && !current) {
+      _setCollected(value)
+    }
+  };
+
+  const {
+    collected,
+    _setCollected,
+    allChecked,
+    anyChecked,
+    setAllChecked,
+    onCheckbox,
+    unCheckedAll,
+  } = useMenuChecked(menuList, menuListRef, setMenuList, setCurrentEmailIndex, principalId)
+
+  const querySessionById = async (index, item, ev) => {
+    ev && ev.preventDefault && ev.preventDefault();
+    if (item.loading) {
+      return
+    }
+    setCurrentEmailIndex(index);
+    unCheckedAll()
+    // set read
+    await setReadOrUnread(true, item);
+  };
+  useEffect(() => {
+    if (queryMenusLoading) {
+      setCurrentEmailIndex(-1)
+    }
+  }, [queryMenusLoading])
+  useEffect(() => {
+    reQueryFirstPage()
+  }, [inboxRefresh])
+
+  useInit(stopKeyDownSwitchEmail, currentEmailIndex, setCurrentEmailIndex, setReadOrUnread, menuListRef)
+
+  // const { focusLineRef, menusRef } = useSetFocusLineStyle(currentMenu)
 
   return (
     <Container>
       <SearchBar>
         <SearchActions>
           <div className="chunk">
-            <div className="checkbox"></div>
-            <div className="email1"></div>
-            <div className="email2"></div>
+            <div
+              className={ `checkbox ${allChecked ? "checked" : ""}` }
+              onClick={ onCheckbox("multi", !allChecked) }
+            ></div>
+            <div
+              title="unread"
+              className={`iconfontdmail dmailicon-unread ${anyChecked ? "black" : ""}`}
+              onClick={ () => anyChecked && setReadOrUnread(false) }
+            >
+            </div>
+            <div 
+              title="read"
+              className={`iconfontdmail dmailicon-read ${anyChecked ? "black" : ""}`} 
+              onClick={ () => anyChecked && setReadOrUnread(true) }
+            >
+            </div>
           </div>
           <div className="chunk">
-            <div className="delete"></div>
+            <div title="trash" className={`iconfontdmail dmailicon-trash ${anyChecked ? "black" : ""}`} onClick={ () => anyChecked && onDelete("multi") }></div>
+            <div title="spam" className={`iconfontdmail dmailicon-warn1 ${anyChecked ? "black" : ""}`} onClick={ () => anyChecked && onSpam("multi") }></div>
           </div>
           <div className="chunk">
-            <div className="collect"></div>
-            <div className="report"></div>
+            <div
+              title={`${collected ? 'un' : ''}star`}
+              className={ `iconfontdmail ${collected ? "dmailicon-star_y on" : "dmailicon-star"} ${anyChecked ? "black" : ""}` }
+              onClick={ () => anyChecked && setCollected(!collected) }
+            >
+            </div>
           </div>
         </SearchActions>
+        <Pagination disablePage={!allEmailsloaded} loading={queryMenusLoading} limit={limit} total={total} offset={offset} toPage={toPage} />
       </SearchBar>
-      <Root>
-        <Left>
-          <Menus>
-            <ul ref={menusRef}>
-              {MenuList.map(({ name, value }) => (
-                <li className={value === currentMenu ? 'on' : ''} onClick={()=> setCurrentMenu(value)} key={value}>{name}</li>
-              ))}
-            </ul>
-            <div className="focusLine" ref={focusLineRef}></div>
-            <div className="orders">
-              <span>latest</span>
-              <i></i>
-            </div>
-          </Menus>
-          <List>
-            <ul>
-              {emailList.map((item, index) => (
-                <li className={item.unread ? "unread" : ""} key={index}>
-                  <div className="chunk">
-                    <FlexBetweenWrapper>
-                      <FlexAlignWrapper>
-                        <div className="checkbox"></div>
-                        <div className="ava"></div>
-                        <div>
-                          <div className="ename">
-                            <i></i>
-                            <span>{item.email}</span>
-                          </div>
-                          <div className="id">{item.id}</div>
-                        </div>
-                      </FlexAlignWrapper>
-                      <div className="actions">
-                        <FlexAlignWrapper className="icons">
-                          <div className='coin'></div>
-                          <div className='files'></div>
-                          <div className='collection'></div>
-                        </FlexAlignWrapper>
-                        <div className="date">{item.date}</div>
-                      </div>
-                    </FlexBetweenWrapper>
-                    <div className="content">
-                      <div className="title">{item.title}</div>
-                      <div className="desc">{item.desc}</div>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </List>
-        </Left>
-        <Body>
-          <FlexBetweenWrapper className='actions'>
-            <FlexAlignWrapper>
-              <div className='reply'></div>
-              <div className='share'></div>
-            </FlexAlignWrapper>
-            <FlexAlignWrapper>
-              <div className='collection'></div>
-              <div className='warn'></div>
-              <div className='delete'></div>
-            </FlexAlignWrapper>
-          </FlexBetweenWrapper>
-          <div className="title">
-            <h1>Arun S K,here is what happening on Twitter</h1>
-          </div>
-          <Info>
-            <FlexAlignWrapper className='item'>
-              <div className="label">Sender:</div>
-              <FlexJustBetweenWrapper className="value">
-                <FlexAlignWrapper className="sender">
-                  <a>Lily998@dmail.cn</a>
-                  <i></i>
-                </FlexAlignWrapper>
-                <FlexAlignWrapper className='icons'>
-                  <div className='coin'></div>
-                  <div className='files'></div>
-                  <div className='collection'></div>
-                </FlexAlignWrapper>
-              </FlexJustBetweenWrapper>
-            </FlexAlignWrapper>
-            <FlexWrapper className='item'>
-              <div className="label">Recipient:</div>
-              <div style={{ flex: '1' }}>
-                <FlexJustBetweenWrapper className="value">
-                  <FlexAlignWrapper className="recipient">
-                    <span>32967564@dmail.cn</span>
-                  </FlexAlignWrapper>
-                  <div className="date">17 Feb,20:30 2021</div>
-                </FlexJustBetweenWrapper>
-                <div className="id">2e2zr-ylqej-iruuu-ugkd3-bmv6e-cvceo-davpx-6lbbm-vyfh4-ply3e-qae</div>
-              </div>
-            </FlexWrapper>
-            <FlexAlignWrapper className='item'>
-              <div className="label">Status:</div>
-              <FlexJustBetweenWrapper className="value">
-                <FlexAlignWrapper className="status failed">
-                  <span>Failed to send</span>
-                  <i></i>
-                </FlexAlignWrapper>
-              </FlexJustBetweenWrapper>
-            </FlexAlignWrapper>
-          </Info>
-          <div className="content">
-          There are moments in life when you miss someone so much that you just want to pick them from your dreams and hug them for real! Dream what you want to dream;go where you want to go;be what you want to be,because you have only one life and one chance to do all the things you want to do.
-          May you have enough happiness to make you sweet,enough trials to make you strong,enough sorrow to keep you human,enough hope to make you happy? Always put yourself in others’shoes.If you feel that it hurts you,it probably hurts the other person, too.
-          The happiest of people don’t necessarily have the best of everything;they just make the most of everything that comes along their way.Happiness lies for those who cry,those who hurt, those who have searched,and those who have tried,for only they can appreciate the importance of people
-          </div>
-          <More>
-            {/* <div className="item">
-              <FlexBetweenWrapper>
-                <h2>Tokens:</h2>
-                <div className="action">View in Assets</div>
-              </FlexBetweenWrapper>
-              <ul className="tokens">
-                <li>
-                  <FlexAlignWrapper>
-                    <div className="ava"></div>
-                    <span>ICP</span>
-                  </FlexAlignWrapper>
-                  <div className="price">45244.976</div>
-                  <div className="status">completion</div>
-                </li>
-                <li>
-                  <FlexAlignWrapper>
-                    <div className="ava"></div>
-                    <span>USDT</span>
-                  </FlexAlignWrapper>
-                  <div className="price">3634.976</div>
-                  <div className="status">in progress</div>
-                </li>
+      { !menuList.length ? (
+        <PageEmpty />
+      ) : (
+        <Root>
+          <Left>
+            {/* <Menus>
+              <ul ref={menusRef}>
+                {MenuTabs.map(({ name, value }) => (
+                  <li
+                    className={value === currentMenu ? "on" : ""}
+                    onClick={() => currentMenuChange(value)}
+                    key={value}
+                  >
+                    {name}
+                  </li>
+                ))}
               </ul>
-            </div> */}
-            <div className="item">
-              <FlexBetweenWrapper>
-                <FlexAlignWrapper>
-                  <h2>Appendix</h2>
-                  <div className="desc">136KB in total</div>
-                </FlexAlignWrapper>
-                <div className="action">download all</div>
-              </FlexBetweenWrapper>
-              <ul className="appendix">
-                <li>
-                  <FlexAlignWrapper>
-                    <div className="img"></div>
-                    <span>4655789098765432</span>
-                    <span>(34KB)</span>
-                  </FlexAlignWrapper>
-                  <a href="" className="down"></a>
-                </li>
-                <li>
-                  <FlexAlignWrapper>
-                    <div className="img"></div>
-                    <span>4655789098765432</span>
-                    <span>(34KB)</span>
-                  </FlexAlignWrapper>
-                  <a href="" className="down"></a>
-                </li>
-                <li>
-                  <FlexAlignWrapper>
-                    <div className="img"></div>
-                    <span>4655789098765432</span>
-                    <span>(34KB)</span>
-                  </FlexAlignWrapper>
-                  <a href="" className="down"></a>
-                </li>
-                <li>
-                  <FlexAlignWrapper>
-                    <div className="img"></div>
-                    <span>4655789098765432</span>
-                    <span>(34KB)</span>
-                  </FlexAlignWrapper>
-                  <a href="" className="down"></a>
-                </li>
-              </ul>
-            </div>
-          </More>
-        </Body>
-      </Root>
+              <div className="focusLine" ref={focusLineRef}></div>
+            </Menus> */}
+            <List>
+              <Spin loading={ queryMenusLoading }>
+                <ul>
+                  { menuList.map((item, index) => {
+                    return (
+                      <EmailItem
+                        key={ index }
+                        index={ index }
+                        data={ item }
+                        selected={currentEmailIndex === index}
+                        detailLoading={ detailLoading }
+                        viewDetail={ querySessionById }
+                        onCheckbox={ onCheckbox }
+                        setCollected={ setCollected }
+                      />
+                    );
+                  }) }
+                </ul>
+              </Spin>
+            </List>
+          </Left>
+          <Content
+            loading={ detailLoading }
+            data={ menuList[currentEmailIndex] }
+            total={ total }
+            setCollected={ setCollected }
+            onDelete={ onDelete }
+            onSpam={ onSpam }
+            Status={ "index" }
+          />
+        </Root>
+      ) }
     </Container>
   );
-}
+};
 
-export default Index;
+export default withRouter(inject("store")(observer(Index)));

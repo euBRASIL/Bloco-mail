@@ -2,6 +2,7 @@ html,
 body {
   margin: 0 !important;
   padding: 0 !important;
+  width: 100%;
   font-family: PingFang SC, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -56,29 +57,38 @@ input {
 }
 
 .chunks {
-  padding: 20px 32px;
+  padding: 14px 30px;
   background-color: #fff;
-  border-radius: 15px;
+  border-radius: 8px;
 }
 
+.copy {
+  margin-left: 8px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAcJJREFUWEftl7tLw1AUxr+T2L9AXEU7inlIh7ZUUAdBBwcRxc3NwcHJUejk6OjgfyC0Ijg5CC2oGIXSPNTNB3XUyVWTK0lNS59JG2w65I6559zzy3fvzflCCHlQyPXRFiAlT88HARsxqXJtGC9+1mgASMliFgwrICT8JHeNYThlDPk7XT/pFtcM8ApgInBxdwGGC0XTl30BVGXnCtVgayEYBGUBcrZRUfWu56w22QygqA/FfiFSslAYOoBMYmr8pvRUaX6pgSnwp/A6Mbq81bQzF2TQAAWAFRXVqJ2xEAAAMpl4axiGrUIoAPYtcw95BBApECkQKTA8CswKQvyHp+dqk2B9t+J6t3P8wJui6pP2s07tvtERSWIehLV+fUCbvH1F1Q98AyRFcZMIWyAsBYT4AJADrJz7zfelQMCiXdOTkrBNRMeO4SNTvi8/ag3d8D+LO1swI547jhvANx8bK5VKn54Ato0yTS4eDI6bA7AIIFNdh3KKqm20OKJORVKyeARgJxhEPbvZJXv+mqUlaZWRteu63L5BGA4VTd/raEq9Fk4LgsB4NuoV1zJvcV8xnn+/Kpftm9EyPBXouWCPCaED/AIulVYwZeWy3gAAAABJRU5ErkJggg==) no-repeat;
+  background-size: 100%;
+  vertical-align: middle;
+}
 
 @font-face {
   font-family: "Montserrat";
   src: url(../font/Roboto-Black.ttf);
   src: url(../font/Roboto-Black.ttf)  format('truetype'),
-  url('../font/roboto-black.woff')format('woff');
+  url('../font/roboto-black.woff') format('woff');
 }
 @font-face {
   font-family: "Roboto-Bold";
   src: url('../font/Roboto-Bold.ttf');
   src: url('../font/Roboto-Bold.ttf')  format('truetype'),
-        url('../font/roboto-bold.woff')format('woff');
+        url('../font/roboto-bold.woff') format('woff');
 }
 @font-face {
       font-family: "Montserrat-Light";
       src: url(../font/Roboto-Light.ttf);
       src: url(../font/Roboto-Light.ttf)  format('truetype'),
-            url('../font/roboto-light.woff')format('woff');
+            url('../font/roboto-light.woff') format('woff');
 }
 @font-face {
       font-family: "Montserrat-Medium";
@@ -103,20 +113,20 @@ input {
   font-family: "Roboto";
   src: url(../font/Roboto-Black.ttf);
   src: url(../font/Roboto-Black.ttf)  format('truetype'),
-  url('../font/roboto-black.woff')format('woff');
+  url('../font/roboto-black.woff') format('woff');
   
 }
 @font-face {
       font-family: "Roboto-Bold";
       src: url('../font/Roboto-Bold.ttf');
       src: url('../font/Roboto-Bold.ttf')  format('truetype'),
-            url('../font/roboto-bold.woff')format('woff');
+            url('../font/roboto-bold.woff') format('woff');
 }
 @font-face {
       font-family: "Roboto-Light";
       src: url(../font/Roboto-Light.ttf);
       src: url(../font/Roboto-Light.ttf)  format('truetype'),
-            url('../font/roboto-light.woff')format('woff');
+            url('../font/roboto-light.woff') format('woff');
 }
 @font-face {
       font-family: "Roboto-Medium";
