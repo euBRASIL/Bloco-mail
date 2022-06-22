@@ -1,65 +1,21 @@
-# Dmail
+# dmailv2
 
-## Deploy online
-```sh
-Create all canister:
-Deploying all canisters.
-All canisters have already been created.
-Building canisters...
-Building frontend...
-Installing canisters...
-Upgrading code for canister dmail, with canister_id rrkah-fqaaa-aaaaa-aaaaq-cai
-Upgrading code for canister dmail_assets, with canister_id ryjl3-tyaaa-aaaaa-aaaba-cai
-Authorizing our identity (default) to the asset canister...
-Uploading assets to asset canister...
-```
+Dmail mailbox V2
 
+## before
+### install dfx and run dfx
+- install: `sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"`
+- see version: `dfx --version`
+- enter root: `cd dmail`
+- run: `dfx start`
+- run: `dfx deploy`
 
-build
-```sh
-sudo dfx build --network ic  --all
-Building canisters...
-Building frontend...
-```
+## Available Scripts
 
-install
-```
-sudo dfx canister --network=ic install --all -m=reinstall
-```
+In the project directory, you can run:
 
-## Deploy local
-```sh
-sudo dfx deploy
-Create all canister:
-Deploying all canisters.
-All canisters have already been created.
-Building canisters...
-Building frontend...
-Installing canisters...
-Upgrading code for canister dmail, with canister_id rrkah-fqaaa-aaaaa-aaaaq-cai
-Upgrading code for canister dmail_assets, with canister_id ryjl3-tyaaa-aaaaa-aaaba-cai
-Authorizing our identity (default) to the asset canister...
-Uploading assets to asset canister...
-```
+### develop
+`yarn start`
 
-## Run local
-```sh
-sudo npm start
-```
-
-
-
-build
-```sh
-sudo dfx build --all
-Building canisters...
-Building frontend...
-```
-
-install
-```
-sudo dfx canister install --all -m=reinstall
-```
-
-## develop
-* nodejs version: 16.6.1+
+### production
+`yarn build`

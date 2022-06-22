@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx",
-    "target": "es6",
+    "target": "es5",
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext",
+      "esnext"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -19,13 +18,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "noImplicitAny": false
+    "jsx": "react-jsx"
   },
   "include": [
-    "src",
-    "./types/**/*"
-  ],
-  "exclude": [
-    "node_modules"
+    "src"
   ]
 }

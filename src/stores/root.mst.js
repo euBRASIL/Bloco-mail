@@ -1,12 +1,10 @@
 import { makeAutoObservable, observable, computed, toJS } from 'mobx'
 import CommonStore from './common.store'
-// import WalletStore from './wallet.store'
-// import PresaleStore from './pages/presale.store'
+import ComposeStore from './pages/compose.store'
 
 export class RootStore {
   common = new CommonStore()
-  // wallet = new WalletStore()
-  // presale = new PresaleStore()
+  compose = new ComposeStore()
 
   constructor() {
     makeAutoObservable(this)

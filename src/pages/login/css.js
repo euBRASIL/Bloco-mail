@@ -1,7 +1,5 @@
 import styled, { keyframes }  from 'styled-components';
-import { 
-  flex, flexAlign, flexBetween, flexJustBetween, 
-  FlexWrapper, FlexAlignWrapper, FlexBetweenWrapper, FlexJustBetweenWrapper 
+import {  flexAlign,  FlexWrapper, FlexAlignWrapper, FlexBetweenWrapper, FlexJustBetweenWrapper 
 } from '../../components/css.common'
 
 import Bg from '../../static/images/login-bg.jpg'
@@ -56,16 +54,20 @@ export const Content = styled.div`
     .login {
         margin-top: 56px;
         background: rgba(255, 255, 255, 0.08);
-        padding: 58px 140px 82px 88px;
+        padding: 58px 120px 82px 108px;
         border-radius: 10px;
 
         .btns {
             margin-top: 56px;
         }
 
+        .welcome {
+            padding-left: 12px;
+        }
+
         .item {
             ${flexAlign}
-            margin-bottom: 18px;
+            margin-bottom: 22px;
 
             &:last-child {
                 margin-bottom: 0;
@@ -73,7 +75,7 @@ export const Content = styled.div`
 
             i {
                 width: 64px;
-                margin-right: 15px;
+                margin-right: 20px;
                 background: center no-repeat;
                 background-size: contain;
             }
@@ -103,13 +105,42 @@ export const Content = styled.div`
                 line-height: 48px;
                 background: #FF563F;
                 border-radius: 8px;
-                font-size: 18px;
+                font-size: 16px;
                 cursor: pointer;
 
                 &:hover {
                     background: #DF4631;
                 }
+                .itemLoading{
+                    vertical-align: middle;
+                    margin-right: 10px;
+                }
             }
         }
+    }
+
+    @media (max-width: 1790px) {
+        width: 520px;
+
+        .logo {
+            font-size: 18px;
+
+            p {
+                margin-top: 20px;
+            }
+        }
+
+        .login {
+            margin-top: 40px;
+            padding: 40px 92px 56px 80px;
+
+            .btns {
+                margin-top: 40px;
+            }
+        }
+    }
+
+    @media (max-width: 1600px) {
+        top: 10%;
     }
 `

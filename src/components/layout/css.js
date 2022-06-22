@@ -1,49 +1,35 @@
-import styled, { keyframes }  from 'styled-components';
-import { 
-  flex, flexAlign, flexBetween, flexJustBetween, 
-  FlexWrapper, FlexAlignWrapper, FlexBetweenWrapper, FlexJustBetweenWrapper 
+import styled, { keyframes } from 'styled-components';
+import {
+  flex, flexAlign, flexBetween, flexJustBetween,
+  FlexWrapper, FlexAlignWrapper, FlexBetweenWrapper, FlexJustBetweenWrapper
 } from '../css.common'
 
-import Assets from '../../static/images/nav/assets.png'
-import AssetsHover from '../../static/images/nav/assets-hover.png'
-import Compose from '../../static/images/nav/compose.png'
-import ComposeHover from '../../static/images/nav/compose-hover.png'
-import Drafts from '../../static/images/nav/drafts.png'
-import DraftsHover from '../../static/images/nav/drafts-hover.png'
-import Inbox from '../../static/images/nav/inbox.png'
-import InboxHover from '../../static/images/nav/inbox-hover.png'
-import Nft from '../../static/images/nav/nft.png'
-import NftHover from '../../static/images/nav/nft-hover.png'
-import Sent from '../../static/images/nav/sent.png'
-import SentHover from '../../static/images/nav/sent-hover.png'
-import Setting from '../../static/images/nav/setting.png'
-import SettingHover from '../../static/images/nav/setting-hover.png'
-import Spam from '../../static/images/nav/spam.png'
-import SpamHover from '../../static/images/nav/spam-hover.png'
-import Star from '../../static/images/nav/star.png'
-import StarHover from '../../static/images/nav/star-hover.png'
-import Trash from '../../static/images/nav/trash.png'
-import TrashHover from '../../static/images/nav/trash-hover.png'
+import SearchBar from '../../static/images/search.png';
+import Quit from '../../static/images/quit.png'
 
 export { FlexWrapper, FlexAlignWrapper, FlexBetweenWrapper, FlexJustBetweenWrapper }
 
 export const Logo = styled.div`
-  margin: 55px 55px 0;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 14vh;
   img {
-    width: 100%;
+    height: 5vh;
+    width:auto;
   }
 `
 
 export const Nav = styled.div`
-  margin: 80px 0 130px 55px;
+  margin: 10px 0 0 3vw;
 
   .li {
     ${flexAlign}
-    margin-bottom: 2px;
-    height: 64px;
-    font-size: 22px;
-    font-weight: bold;
+    height: 4vh;
+    margin-bottom: 10px;
+    font-size: 16px;
+    //font-weight: bold;
+    font-family: PingFangSC-Regular;
     color: #fff;
     cursor: pointer;
     position: relative;
@@ -51,19 +37,19 @@ export const Nav = styled.div`
     .unread {
       display: none;
       position: absolute;
-      right: 50px;
+      right: 44px;
       top: 50%;
       transform: translateX(50%) translateY(-50%);
       min-width: 10px;
-      padding: 0 9px;
-      height: 28px;
-      line-height: 28px;
+      padding: 0 6px;
+      height: 22px;
+      line-height: 22px;
       background: #E9624B;
-      border-radius: 28px;
+      border-radius: 22px;
       text-align: center;
       color: #fff;
-      font-size: 18px;
-      font-weight: 600;
+      font-size: 14px;
+  
     }
 
     .show {
@@ -75,55 +61,8 @@ export const Nav = styled.div`
       background-size: 100%;
     }
 
-    .Inbox {
-      width: 35px;
-      height: 27px;
-      background-image: url(${Inbox});
-    }
-    .Compose {
-      width: 36px;
-      height: 25px;
-      background-image: url(${Compose});
-    }
-    .Starred {
-      width: 34px;
-      height: 32px;
-      background-image: url(${Star});
-    }
-    .Sent {
-      width: 28px;
-      height: 28px;
-      background-image: url(${Sent});
-    }
-    .Drafts {
-      width: 29px;
-      height: 33px;
-      background-image: url(${Drafts});
-    }
-    .Spam {
-      width: 33px;
-      height: 27px;
-      background-image: url(${Spam});
-    }
-    .Trash {
-      width: 29px;
-      height: 32px;
-      background-image: url(${Trash});
-    }
-    .Setting {
-      width: 29px;
-      height: 30px;
-      background-image: url(${Setting});
-    }
-    .Assets {
-      width: 27px;
-      height: 29px;
-      background-image: url(${Assets});
-    }
-    .Nft {
-      width: 30px;
-      height: 31px;
-      background-image: url(${Nft});
+    .nav-icon {
+      margin-right: 22px;
     }
 
     &.on, &:hover {
@@ -132,44 +71,13 @@ export const Nav = styled.div`
 
       &:after {
         content: '';
-        width: 6px;
+        width: 5px;
         position: absolute;
         right: 0;
         top:0;
         bottom: 0;
-        background: #FF5640;
-        border-radius: 5px 0px 0px 5px;
-      }
-
-      .Inbox {
-        background-image: url(${InboxHover});
-      }
-      .Compose {
-        background-image: url(${ComposeHover});
-      }
-      .Starred {
-        background-image: url(${StarHover});
-      }
-      .Sent {
-        background-image: url(${SentHover});
-      }
-      .Drafts {
-        background-image: url(${DraftsHover});
-      }
-      .Spam {
-        background-image: url(${SpamHover});
-      }
-      .Trash {
-        background-image: url(${TrashHover});
-      }
-      .Setting {
-        background-image: url(${SettingHover});
-      }
-      .Assets {
-        background-image: url(${AssetsHover});
-      }
-      .Nft {
-        background-image: url(${NftHover});
+        background: #E9624B;
+        border-radius: 4px 0px 0px 4px;
       }
     }
   }
@@ -179,21 +87,29 @@ export const SplitLine = styled.div`
   width: 164px;
   height: 1px;
   background-color: rgba(255, 255, 255, 0.3);
-  margin: 28px 0;
+  margin: 2.8vh 0;
 `
 
 export const Info = styled.div`
-  padding-left: 15px;
+  padding-left: 5px;
   line-height: 24px;
-  font-size: 24px;
+  font-size: 16px;
   color: #38302E;
 
   p {
-    margin-bottom: 8px;
+    margin-bottom: 3px;
 
     &:last-child {
       margin-bottom: 0;
     }
+
+    .pid {
+      cursor: pointer;
+    }
+  }
+
+  .can-copy {
+    cursor: pointer;
   }
 
   .binding {
@@ -203,9 +119,12 @@ export const Info = styled.div`
     background: #E9624B;
     border-radius: 5px;
     color: #fff;
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 16px;
+
     line-height: 30px;
+  }
+  .binding:hover{
+    cursor:pointer
   }
 
   strong {
@@ -217,23 +136,34 @@ export const User = styled.div`
   ${flexAlign}
 
   .ava img {
-    margin-right: 24px;
-    width: 60px;
-    height: 60px;
+    display: block;
+    width: 45px;
+    height: 45px;
+    margin-right: 18px;
     border-radius: 10px;
     background-color: #f4f4f4;
   }
 
   .logout {
     ${flexAlign}
-    font-size: 24px;
-    color: rgba(0, 0, 0, .3);
+    font-size: 16px;
+    color: rgba(0, 0, 0, .5);
 
     i {
-      width: 24px;
-      height: 24px;
-      background-color: #f4f4f4;
-      margin-right: 4px;
+      width: 16px;
+      height: 16px;
+      font-size: 16px;
+      //background-image: url(${Quit});
+      background-size: 100%;
+      margin-right: 3px;
+    }
+    
+  }
+  .logout:hover{
+    cursor: pointer;
+    color: #FA6E58;
+    i {
+      color: #FA6E58;
     }
   }
 `
@@ -246,18 +176,18 @@ export const SearchChunk = styled.div`
 export const Search = styled.div`
   ${flexAlign}
 
-  width: 485px;
-  height: 48px;
+  height: 36px;
   background: #F4F3F3;
-  border-radius: 10px;
-  padding: 0 18px;
+  border-radius: 8px;
+  padding: 0 10px;
 
   input {
     flex: 1;
-    line-height: 24px;
+    line-height: 20px;
     border: none;
     background: transparent;
-    font-size: 22px;
+    font-size: 14px;
+    min-width: 0;
 
     &::placeholder {
       color: rgba(56, 48, 46, 0.3);
@@ -265,19 +195,24 @@ export const Search = styled.div`
   }
 
   .search-btn {
-    width: 23px;
-    height: 23px;
-    background-color: #ccc;
+    width: 16px;
+    height: 16px;
+    background: url(${SearchBar}) no-repeat;
     margin-left: 20px;
+    background-size: 100%;
+    flex-shrink:0;
+  }
+  .search-btn:hover{
+    cursor:pointer
   }
 
-  @media (max-width: 1800px) {
-    width: 320px;
+  // @media (max-width: 1800px) {
+  //   width: 14vw;
 
-    input {
-      font-size: 18px;
-    }
-  }
+  //   input {
+  //     font-size: 14px;
+  //   }
+  // }
 `
 
 export const Redirect = styled.div`
@@ -304,7 +239,7 @@ export const Redirect = styled.div`
 
   @media (max-width: 1800px) {
     margin-left: 45px;
-    font-size: 18px;
+    font-size: 16px;
   }
 `
 
@@ -337,7 +272,7 @@ export const GoPage = styled.div`
     padding: 0 10px;
     border: 1px solid #BFB7B6;
     color: #7C7370;
-    font-size: 18px;
+    font-size: 16px;
 
     &::-webkit-inner-spin-button {
       display: none!important;
@@ -347,5 +282,35 @@ export const GoPage = styled.div`
   a {
     color: #463F3D;
     cursor: pointer;
+  }
+`
+
+export const UseLimit = styled.div`
+  position: absolute;
+  bottom: 40px;
+  left: 20px;
+  right: 20px;
+  color: #fff;
+  font-size: 12px;
+
+  .limit {
+    span {
+      color: #FA6E58;
+    }
+  }
+
+  .use-volume {
+    height: 8px;
+    background: #fff;
+    margin: 10px 0;
+    border-radius: 2px;
+    overflow: hidden;
+
+    i {
+      height: 100%;
+      display: block;
+      // position: absolute;
+      background: #E9624B;
+    }
   }
 `
