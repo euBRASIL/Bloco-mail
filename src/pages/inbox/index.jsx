@@ -24,7 +24,7 @@ import PageEmpty from "@/components/empty";
 import { Spin } from "@/components/Loading";
 
 const Index = ({ store }) => {
-  const { bindedNft, principalId, inboxRefresh, stopKeyDownSwitchEmail } = store.common;
+  const { principalId, inboxRefresh, stopKeyDownSwitchEmail } = store.common;
   const [currentEmailIndex, setCurrentEmailIndex] = useState(-1);
   const [detailLoading, setDetailLoading] = useState(false)
   // const { Params, token } = useParams;

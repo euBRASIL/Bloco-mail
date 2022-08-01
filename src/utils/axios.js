@@ -1,10 +1,11 @@
 import axios from "axios";
-import { clearStorage } from "@/utils/index";
-import { Storage, Web_key } from "@/utils/storage";
+import { userInfoStorage, userInfoKeys, clearStorage } from "@/utils/storage";
 import Message from "@/components/Message/index";
 
-export const baseURL = "https://ic.dmail.ai/api/v3";
-
+const isDev = process.env.NODE_ENV === "development";
+export const baseURL = isDev
+  ? "https://testmail.dmail.ai/api/v3"
+  : "https://ic.dmail.ai/api/v3";
 export const axiosInstance = axios.create({
   baseURL,
 });
@@ -12,14 +13,14 @@ export const axiosInstance = axios.create({
 axiosInstance.defaults.timeout = 120000;
 
 export const cache = {
-  enpid: Storage.get(Web_key) || undefined,
+  enpid: userInfoStorage.get(userInfoKeys[5]) || undefined,
 };
 
 axiosInstance.interceptors.request.use(
   (config) => {
     // Do something before request is sent
     if (cache.enpid === undefined) {
-      cache.enpid = Storage.get(Web_key) || undefined;
+      cache.enpid = userInfoStorage.get(userInfoKeys[5]) || undefined;
     }
 
     if (cache.enpid && config.headers) {

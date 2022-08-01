@@ -27,7 +27,7 @@ const Routes = () => (
       <Route exact path="/drafts" component={ Drafts } />
       <Route exact path="/spam" component={ Spam } />
       <Route exact path="/trash" component={ Trash } />
-      <Route exact path="/setting" component={ Setting } />
+      <Route exact path="/setting/:tabname?" component={ Setting } />
       <Route exact path="/assets" component={ Assets } />
       <Route exact path="/market" component={ Market } />
       <Redirect from="*" to="/inbox" /> 

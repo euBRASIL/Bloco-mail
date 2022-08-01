@@ -1,19 +1,5 @@
 import Modal from "@/components/Modal/index";
 import Message from "@/components/Message/index";
-import {
-  Storage,
-  Web_key,
-  Principal_key,
-  Volume_Will_Full,
-} from "../utils/storage";
-
-export const getPosToParent = (parent, sub, isTop = false) => {
-  const parentClient = parent.getBoundingClientRect();
-  const subClient = sub.getBoundingClientRect();
-  return parseInt(
-    subClient[isTop ? "top" : "left"] - parentClient[isTop ? "top" : "left"]
-  );
-};
 
 // var bigInt = require("big-integer");
 // export const BigInt =
@@ -39,6 +25,14 @@ export const scrollIntoViewKey = document.body.scrollIntoViewIfNeeded
   : document.body.scrollIntoView
   ? "scrollIntoView"
   : "";
+
+export const getPosToParent = (parent, sub, isTop = false) => {
+  const parentClient = parent.getBoundingClientRect();
+  const subClient = sub.getBoundingClientRect();
+  return parseInt(
+    subClient[isTop ? "top" : "left"] - parentClient[isTop ? "top" : "left"]
+  );
+};
 
 export const deduplication = (arr) => Array.from(new Set(arr));
 
@@ -86,26 +80,35 @@ export const timeConverter = (UNIX_timestamp) => {
   return time;
 };
 
-export const con = (str) => {
+export const con = (str, prefix = 5, suffix = 8) => {
   if (!str) return;
   let n = str.split("");
-  return n.slice(0, 5).join("") + "***" + n.slice(-8).join("");
+  return n.slice(0, prefix).join("") + "***" + n.slice(-suffix).join("");
 };
 
 export const remainDecimal = (num, digits = 2) => {
-  const n = Math.pow(10, 2);
+  const n = Math.pow(10, digits);
   return Math.round(+num * n) / n;
 };
 
-export const getFileSize = (num) => {
+export const getFileSize = (num, returnArray) => {
   const size = Number(num);
-  if (size / 1024 > 1) {
-    if (size / (1024 * 1024) > 1) {
-      return `${remainDecimal(size / 1024 / 1024)}MB`;
-    }
-    return `${remainDecimal(size / 1024)}KB`;
+  let result = 0;
+  let unit = "B";
+  if (size / (1024 * 1024 * 1024) > 1) {
+    result = remainDecimal(size / 1024 / 1024 / 1024);
+    unit = "GB";
+  } else if (size / (1024 * 1024) > 1) {
+    result = remainDecimal(size / 1024 / 1024);
+    unit = "MB";
+  } else if (size / 1024 > 1) {
+    result = remainDecimal(size / 1024);
+    unit = "KB";
+  } else {
+    result = remainDecimal(size, 4);
+    unit = "B";
   }
-  return `${remainDecimal(size, 4)}B`;
+  return returnArray ? [result, unit] : `${result}${unit}`;
 };
 
 export const bindNftDialog = (cb) => {
@@ -169,9 +172,3 @@ function fallbackCopyTextToClipboard(text) {
   document.body.removeChild(textArea);
   return success;
 }
-
-export const clearStorage = () => {
-  Storage.remove(Principal_key);
-  Storage.remove(Volume_Will_Full);
-  Storage.remove(Web_key);
-};

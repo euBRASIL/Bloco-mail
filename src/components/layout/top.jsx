@@ -2,14 +2,17 @@ import React, { useEffect, useState, useCallback, useRef } from "react";
 import { observer, inject } from "mobx-react";
 import styled, { keyframes } from "styled-components";
 import { withRouter, useHistory } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
 
+import { userInfoKeys } from "@/utils/storage";
 import Modal from "@/components/Modal/index";
-import rootStore from '@/stores';
-import { copyTextToClipboard, clearStorage } from '@/utils/index'
-import { flex, flexAlign, flexBetween, flexJustBetween } from "../css.common";
+import { copyTextToClipboard, con } from '@/utils/index'
+import { clearStorage } from "@/utils/storage";
 
-import { Info, User } from "./css";
-import UserAva from "../../static/images/avatar.svg";
+import { flexBetween, LoginLogo } from "../css.common";
+
+import { UserInfo, Info, User } from "./css";
+import UserAva from "@/static/images/avatar.svg";
 
 const Root = styled.div`
   ${flexBetween}
@@ -17,8 +20,11 @@ const Root = styled.div`
 `;
 
 const Top = ({ location: { pathname }, store }) => {
-  const { bindedNft, principalId, profileInfo, gettingMyNft, routerBlockFn } = store.common;
+  const { bindedNft, gettingBindedNft, principalId, profileInfo, userInfo, usedVolume, routerBlockFn } = store.common;
   const history = useHistory();
+
+  const loginType = userInfo[userInfoKeys[1]]
+  const address = userInfo[userInfoKeys[2]]
 
   // const onBinding = () => {
   //   if (pathname.includes('setting')) {
@@ -41,6 +47,8 @@ const Top = ({ location: { pathname }, store }) => {
   //     history.push("/setting");
   //   }
   // };
+
+  const toSetting = () => history.push("/setting");
 
   const logoutModal = () => {
     Modal({
@@ -80,8 +88,9 @@ const Top = ({ location: { pathname }, store }) => {
           </p>
           <p className={bindedNft ? 'can-copy' : ''}>
             <strong>NFT Domain Account:</strong>
+            {!gettingBindedNft && <span className="nft-getting"><CircularProgress size={14} /></span>}
             {bindedNft ? (
-              <span onClick={onCopy(`${bindedNft.emailName}@dmail.ai`)}>{`${bindedNft.emailName}@dmail.ai`} <i className="copy" title="copy" /></span>
+              <span onClick={onCopy(`${bindedNft}@dmail.ai`)}>{`${bindedNft}@dmail.ai`} <i className="copy" title="copy" /></span>
             ) : (
               <span style={{color: 'gray'}}>Unbound</span>
               // <a rel="noopener noreferrer"   onClick={onBinding} className="binding">
@@ -90,15 +99,42 @@ const Top = ({ location: { pathname }, store }) => {
             )}
           </p>
         </Info>
-        <User>
-          <div className="ava">
-            <img src={profileInfo || UserAva} alt="" />
+        <UserInfo>
+          <div className="address" title={address}>{con(address, 5, 3)}</div>
+          <div className="user-pop">
+            <div className="item logo">
+              {/* <LoginLogo className={`logo-icon logo-${loginType}`}></LoginLogo> */}
+              <img src={profileInfo || UserAva} width={45} height={45} />
+              <span className="address" title={address}>{con(address, 5, 3)}</span>
+            </div>
+            <div className="line"></div>
+            <div className="item">
+              <span>Daily limit</span>
+              <span className="value">{usedVolume.totalPage}</span>
+            </div>
+            <div className="item">
+              <span>Storage</span>
+              <span className="value">{usedVolume.totalVolume}{usedVolume.totalVolumeUnit}</span>
+            </div>
+            <div className="line"></div>
+            {/* <div className="item">
+              <span>Events</span>
+            </div>
+            <div className="line"></div> */}
+            <div className="item">
+              <a className="can-click" onClick={toSetting}>Setting</a>
+            </div>
+            <div className="item">
+              <a href="https://dmailofficial.gitbook.io/helpcenter/v/english/" target="_blank" className="can-click">Help</a>
+            </div>
+            <div className="logout">
+              <div className="logout-btn" onClick={onQuit}>
+                <i className="iconfontdmail dmailicon-quit"></i>
+                <span>Logout</span>
+              </div>
+            </div>
           </div>
-          <div className="logout" onClick={onQuit}>
-            <i className="iconfontdmail dmailicon-quit"></i>
-            <span>Logout</span>
-          </div>
-        </User>
+        </UserInfo>
       </Root>
     </>
   );

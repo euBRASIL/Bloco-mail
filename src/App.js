@@ -18,7 +18,7 @@ function App() {
     if (window.location.href.includes("/login")) {
       return;
     }
-    await rootStore.common.initData("app");
+    await rootStore.common.initData();
   }, []);
 
   const getFrequentData = (immediately) => {

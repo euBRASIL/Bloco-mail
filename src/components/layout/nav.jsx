@@ -20,9 +20,9 @@ const Root = styled.div`
 `;
 
 const Header = ({ location: { pathname }, store }) => {
-  const { unReadList, usedVolume, bindedNft, initing, routerBlockFn } = store.common;
+  const { unReadList, usedVolume, initing, routerBlockFn } = store.common;
   const history = useHistory();
-  const toPath = (path) => () => {
+  const toPath = (path) => async () => {
     const notInbox = !pathname.includes('/inbox') && path.includes(pathname)
     if (initing || notInbox) {
       return
@@ -34,8 +34,10 @@ const Header = ({ location: { pathname }, store }) => {
     if (path.includes('/setting')) {
       history.push(path);
       return
-    } else if (!bindedNft) {
-      bindNftDialog(()=> history.push("/setting"))
+    }
+    const bindedNft = await store.common.detectGettingBindedNftEnded()
+    if (!bindedNft) {
+      bindNftDialog(()=> history.push("/setting/account"))
     } else if (path) {
       if (path.includes('/inbox')) {
         store.common.triggerInboxRefresh()
@@ -81,11 +83,11 @@ const Header = ({ location: { pathname }, store }) => {
             <div className="limit"><span>{usedVolume.page}</span>/{usedVolume.totalPage}</div>
           </FlexBetweenWrapper>
           <div className="use-volume" title={`${usedVolume.volume}${usedVolume.volumeUnit} used`}>
-            <i style={{ width: `${usedVolume.volume/usedVolume.totalVolume*100}%` }}></i>
+            <i style={{ width: `${usedVolume.usedVolumePercent}%` }}></i>
           </div>
           <FlexBetweenWrapper>
-            <div className="name">V1.0.3_beta</div>
-            <div className="limit"><span>{usedVolume.volume}{usedVolume.volumeUnit}</span>/{usedVolume.totalVolume}{usedVolume.volumeUnit}</div>
+            <div className="name">V1.2.1_beta</div>
+            <div className="limit"><span>{usedVolume.volume}{usedVolume.volumeUnit}</span>/{usedVolume.totalVolume}{usedVolume.totalVolumeUnit}</div>
           </FlexBetweenWrapper>
         </UseLimit>
       </Root>
