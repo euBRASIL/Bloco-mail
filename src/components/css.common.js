@@ -1,5 +1,10 @@
 import styled, { keyframes } from "styled-components";
 
+import Identity from "@/static/images/login-identity.png";
+import Plug from "@/static/images/login-plug2.png";
+import Metamask from "@/static/images/login-metamask.png";
+import Infinityswap from "@/static/images/infinityswap-logo.png";
+
 export const flex = `display: flex;`;
 export const flexAlign = `${flex}; align-items: center;`;
 export const flexAlignRight = `${flex}; align-items: center; justify-content: end;`;
@@ -24,4 +29,68 @@ export const FlexBetweenWrapper = styled.div`
 
 export const FlexJustBetweenWrapper = styled.div`
   ${flexJustBetween}
+`;
+
+export const Tabs = styled.div`
+  ${flexAlign}
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+
+  .item {
+    margin-right: 90px;
+    position: relative;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    color: #999999;
+
+    &:after {
+      opacity: 0;
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 100%;
+      transform: translateX(-50%);
+      margin-top: 13.5px;
+      width: 40px;
+      height: 4px;
+      background: #e76350;
+      border-radius: 3px;
+      transition: opacity 0.3s ease-out 0s;
+    }
+  }
+  .on {
+    color: #333333;
+
+    &:after {
+      opacity: 1;
+    }
+  }
+`;
+
+export const LoginLogo = styled.i`
+  &.logo-icon {
+    width: ${(props) => props.width || 30}px;
+    height: ${(props) => props.height || 30}px;
+    border-radius: 4px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  &.logo-plug {
+    background-image: url(${Plug});
+  }
+
+  &.logo-ii {
+    background-image: url(${Identity});
+  }
+
+  &.logo-infinity {
+    background-image: url(${Infinityswap});
+  }
+
+  &.logo-metamask {
+    background-image: url(${Metamask});
+  }
 `;

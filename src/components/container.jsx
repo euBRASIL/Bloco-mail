@@ -54,16 +54,16 @@ const Main = styled.div`
     background-color: transparent;
   }
   
-  .main-setting {
-    height: calc(100vh - 184px);
-    overflow-y: hidden;
-    padding: 30px 40px;
+  // .main-setting {
+  //   height: calc(100vh - 184px);
+  //   overflow-y: hidden;
+  //   padding: 30px 40px;
 
-    &>div {
-      height: 100%;
-      overflow-y: auto;
-    }
-  }
+  //   &>div {
+  //     height: 100%;
+  //     overflow-y: auto;
+  //   }
+  // }
 
   .no-search {
     border-top: none;

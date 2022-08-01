@@ -1,29 +1,45 @@
 import { makeAutoObservable, toJS } from "mobx";
 import {
   Storage,
-  Web_key,
-  Principal_key,
-  Volume_Will_Full,
-} from "../utils/storage";
+  userInfoStorage,
+  userInfoKeys,
+} from "@/utils/storage";
 import { CanisterIds, http, transformPrincipalId, getAlias } from "@/api/index";
 import { getCallerToken } from "@/api/getCallerToken";
 import { getUsedVolume } from "@/api/web2/index";
-import { setCanisterId, getCanisterId } from "@/api/canisterId";
+import { setBodyCid, setCanisterId, getCanisterId } from "@/api/canisterId";
 import { bindNftDialog } from "@/utils/index";
 import Modal from "@/components/Modal/index";
 
 const defaultUsedVolume = {
+  level: 0,
+  points: 0,
+  levelName: "Basic",
+  decentralizedStorage: true,
+  emailEncryption: true,
+  rewardFactor: 1.2,
+
   page: 0,
   volume: 0,
+  bVolume: 0,
   totalPage: 20,
-  totalVolume: 200,
   volumeUnit: "MB",
+  totalVolume: 200,
+  bTotalVolume: 200 * 1024 * 1024,
+  totalVolumeUnit: "MB",
+  // usedVolumePercent%
+  usedVolumePercent: 0,
   hasTipVolumeWillFull: false,
 };
 
 export default class CommonStore {
+  userInfo = userInfoKeys.reduce((res, key) => {
+    res[key] = "";
+    return res;
+  }, {});
   principalId = "";
-  tokenGetted = false;
+  // tokenGetted = false;
+  tokenGetted = true;
 
   stopKeyDownSwitchEmail = false;
 
@@ -34,8 +50,11 @@ export default class CommonStore {
     ...defaultUsedVolume,
   };
 
-  initing = true;
-  bindedNft = null;
+  // initing = true;
+  initing = false;
+  gettingBindedNft = false;
+  // exclude '@dmail.ai'
+  bindedNft = '';
   myNftList = [];
 
   profileInfo = null;
@@ -57,25 +76,41 @@ export default class CommonStore {
     this.stopKeyDownSwitchEmail = status;
   }
 
+  async detectGettingBindedNftEnded() {
+    if (this.gettingBindedNft) {
+      return this.bindedNft;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    return await this.detectGettingBindedNftEnded();
+  }
+
   async getNftAlias() {
     const alias = await getAlias(this.principalId);
+    this.gettingBindedNft = true;
     if (alias) {
-      this.setBindedNft({
-        emailName: `${alias}`,
-      });
+      this.setBindedNft(`${alias}`);
     }
     return alias;
   }
 
-  async initData(from = "app") {
-    await getCallerToken();
-    this.tokenGetted = true;
+  async initData() {
+    // await getCallerToken();
+    // this.tokenGetted = true;
+    const bodyCid = userInfoStorage.get(userInfoKeys[3])
+    if (bodyCid) {
+      setBodyCid(bodyCid);
+    }
     return new Promise(async (resolve) => {
       if (!this.principalId) {
         resolve(false);
         return false;
       }
       this.getProfileInfo();
+      if (bodyCid) {
+        this.getNftAlias();
+        resolve(true);
+        return true;
+      }
       this.initing = true;
       const [canisterId, alias] = await Promise.all([
         (async () => await getCanisterId(this.principalId))(),
@@ -87,10 +122,14 @@ export default class CommonStore {
       ]);
       if (!alias) {
         !window.location.href.includes("/setting") &&
-          bindNftDialog(() => (window.location.href = "/setting"));
+          bindNftDialog(() => (window.location.href = "/setting/account"));
       }
+      let _canisterId = canisterId;
       if (!canisterId && alias) {
-        await setCanisterId(this.principalId);
+        _canisterId = await setCanisterId(this.principalId);
+      }
+      if (_canisterId) {
+        this.setUserInfo({[userInfoKeys[3]]: _canisterId })
       }
       this.initing = false;
     });
@@ -106,6 +145,13 @@ export default class CommonStore {
     };
   }
 
+  setUsedVolume(newData) {
+    this.usedVolume = {
+      ...this.usedVolume,
+      ...newData,
+    };
+  }
+
   async queryFrequentData() {
     if (window.location.href.includes("/login")) {
       return;
@@ -114,17 +160,14 @@ export default class CommonStore {
     if (!principalId) {
       return false;
     }
-    const encstring = Storage.get(Web_key);
+    const encstring = this.userInfo[userInfoKeys[5]] || userInfoStorage.get(userInfoKeys[5])
     if (!encstring) {
       return false;
     }
     const data = await getUsedVolume(principalId);
     if (data) {
       const { notReadSize, ...newData } = data;
-      this.usedVolume = {
-        ...this.usedVolume,
-        ...newData,
-      };
+      this.setUsedVolume(newData);
       this.setUnRead(notReadSize);
       this.volumeFullTip();
     }
@@ -132,13 +175,18 @@ export default class CommonStore {
 
   volumeFullTip() {
     // hasTipVolumeWillFull is avoid to get localstorage data
+    const hasExceedLimit =
+      this.usedVolume.bVolume >=
+      this.usedVolume.bTotalVolume - 20 * 1024 * 1024;
     if (
-      this.usedVolume.volume >= 180 &&
+      hasExceedLimit &&
       !this.usedVolume.hasTipVolumeWillFull &&
-      !Storage.get(Volume_Will_Full)
+      userInfoStorage.get(userInfoKeys[6])
     ) {
       this.usedVolume.hasTipVolumeWillFull = true;
-      Storage.set(Volume_Will_Full, true);
+      this.setUserInfo({
+        [userInfoKeys[6]]: true
+      })
       Modal({
         type: "warn",
         title: "Insufficient space",
@@ -153,9 +201,22 @@ export default class CommonStore {
     }
   }
 
-  setPrincipalId(principalId) {
-    Storage.set(Principal_key, principalId);
-    this.principalId = principalId;
+  setUserInfo(data) {
+    const res = userInfoStorage.set(data, this.userInfo);
+    if (res) {
+      this.userInfo = res
+      if (!this.principalId && res[userInfoKeys[0]]) {
+        this.principalId = res[userInfoKeys[0]];
+      }
+    }
+    return res;
+  }
+
+  getUserInfo() {
+    const userInfo = userInfoStorage.get("all");
+    if (typeof userInfo === "object") {
+      this.userInfo = { ...this.userInfo, ...userInfo };
+    }
   }
 
   getPrincipalId() {
@@ -163,32 +224,28 @@ export default class CommonStore {
       return this.principalId;
     }
 
-    this.principalId = Storage.get(Principal_key) || "";
+    this.getUserInfo();
+    this.principalId = this.userInfo[userInfoKeys[0]] || "";
+    this.bindedNft = this.userInfo[userInfoKeys[4]] || "";
     return this.principalId;
   }
 
-  getBindedNft() {
-    return this.bindedNft;
-  }
-
-  // o: { emailName, id }, emailName exclude '@dmail.ai'
-  setBindedNft(o) {
-    this.bindedNft = o;
-    // Storage.set(Binded_Nft, o);
+  setBindedNft(emailName) {
+    if (emailName) {
+      this.setUserInfo({ [userInfoKeys[4]]: emailName })
+      this.bindedNft = emailName;
+    }
   }
 
   updateMyNftList(nft) {
-    this.setBindedNft({
-      id: nft.id,
-      emailName: nft.emailName,
-    });
+    this.setBindedNft(nft.emailName);
     this.myNftList = this.myNftList.map(({ id, token_id, emailName }) => ({
       id,
       token_id,
       emailName,
       useing: token_id === nft.token_id,
     }));
-    this.sortMyNftList();
+    // this.sortMyNftList();
   }
 
   setProfileInfo(avatar_base64) {
@@ -220,46 +277,36 @@ export default class CommonStore {
       return;
     }
     try {
-      const list = await http(CanisterIds.nft, "getMetadataForUserDip721", [
+      const list = await http(CanisterIds.nft_market, "query", [
         transformPrincipalId(principalId),
       ]);
 
       this.myNftList = Array.isArray(list)
         ? list
-            .map(({ metadata_desc, token_id }) => {
-              if (!Array.isArray(metadata_desc) || !metadata_desc.length) {
-                return null;
+            .map(({ nft_content, index, bind }) => { 
+              let sContent = ''
+              if (typeof nft_content === 'string') {
+                sContent = nft_content.replaceAll('\n', '').replaceAll(' ', '').replace(/,\}/g, "}")
               }
-              const [{ key_val_data }] = metadata_desc;
-              if (!Array.isArray(key_val_data) || key_val_data.length < 2) {
-                return null;
+              const data = JSON.parse(sContent)
+              if (!data || !data.alias) {
+                return null
               }
-              const [email, useing] = key_val_data;
-              if (
-                !("val" in email) ||
-                !("val" in useing) ||
-                !email.val ||
-                !useing.val
-              ) {
-                return null;
-              }
-              if (useing.val.TextContent === "true") {
-                this.setBindedNft({
-                  id: Number(token_id),
-                  emailName: email.val.TextContent,
-                });
+              if (bind) {
+                this.setBindedNft(data.alias);
               }
               return {
-                token_id,
-                id: Number(token_id),
-                emailName: email.val.TextContent,
-                useing: useing.val.TextContent === "true",
-              };
+                token_id: index,
+                id: Number(index),
+                emailName: data.alias,
+                useing: !!bind,
+              }; 
             })
             .filter((item) => !!item)
         : [];
     } catch (error) {
       //
+      console.log(error)
     }
     this.sortMyNftList();
   }

@@ -1,13 +1,25 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes } from "styled-components";
 import {
-  flex, flexAlign, flexBetween, flexJustBetween,
-  FlexWrapper, FlexAlignWrapper, FlexBetweenWrapper, FlexJustBetweenWrapper
-} from '../css.common'
+  LoginLogo,
+  flexAlign,
+  flexBetween,
+  flexJustBetween,
+  FlexWrapper,
+  FlexAlignWrapper,
+  FlexBetweenWrapper,
+  FlexJustBetweenWrapper,
+} from "../css.common";
 
-import SearchBar from '../../static/images/search.png';
-import Quit from '../../static/images/quit.png'
+import SearchBar from "../../static/images/search.png";
+import Quit from "../../static/images/quit.png";
 
-export { FlexWrapper, FlexAlignWrapper, FlexBetweenWrapper, FlexJustBetweenWrapper }
+export {
+  LoginLogo,
+  FlexWrapper,
+  FlexAlignWrapper,
+  FlexBetweenWrapper,
+  FlexJustBetweenWrapper,
+};
 
 export const Logo = styled.div`
   display: flex;
@@ -16,9 +28,9 @@ export const Logo = styled.div`
   height: 14vh;
   img {
     height: 5vh;
-    width:auto;
+    width: auto;
   }
-`
+`;
 
 export const Nav = styled.div`
   margin: 10px 0 0 3vw;
@@ -44,12 +56,11 @@ export const Nav = styled.div`
       padding: 0 6px;
       height: 22px;
       line-height: 22px;
-      background: #E9624B;
+      background: #e9624b;
       border-radius: 22px;
       text-align: center;
       color: #fff;
       font-size: 14px;
-  
     }
 
     .show {
@@ -65,36 +76,41 @@ export const Nav = styled.div`
       margin-right: 22px;
     }
 
-    &.on, &:hover {
-      background: linear-gradient(-90deg, rgba(233, 99, 75, 0.31), rgba(39, 37, 36, 0.31));
-      color: #FA6E58;
+    &.on,
+    &:hover {
+      background: linear-gradient(
+        -90deg,
+        rgba(233, 99, 75, 0.31),
+        rgba(39, 37, 36, 0.31)
+      );
+      color: #fa6e58;
 
       &:after {
-        content: '';
+        content: "";
         width: 5px;
         position: absolute;
         right: 0;
-        top:0;
+        top: 0;
         bottom: 0;
-        background: #E9624B;
+        background: #e9624b;
         border-radius: 4px 0px 0px 4px;
       }
     }
   }
-`
+`;
 
 export const SplitLine = styled.div`
   width: 164px;
   height: 1px;
   background-color: rgba(255, 255, 255, 0.3);
   margin: 2.8vh 0;
-`
+`;
 
 export const Info = styled.div`
   padding-left: 5px;
   line-height: 24px;
   font-size: 16px;
-  color: #38302E;
+  color: #38302e;
 
   p {
     margin-bottom: 3px;
@@ -112,25 +128,34 @@ export const Info = styled.div`
     cursor: pointer;
   }
 
+  .nft-getting {
+    vertical-align: middle;
+    margin-right: 3px;
+
+    .MuiCircularProgress-root {
+      color: #38302e;
+    }
+  }
+
   .binding {
     display: inline-block;
     margin-left: 10px;
     padding: 0 15px;
-    background: #E9624B;
+    background: #e9624b;
     border-radius: 5px;
     color: #fff;
     font-size: 16px;
 
     line-height: 30px;
   }
-  .binding:hover{
-    cursor:pointer
+  .binding:hover {
+    cursor: pointer;
   }
 
   strong {
     margin-right: 10px;
   }
-`
+`;
 
 export const User = styled.div`
   ${flexAlign}
@@ -147,7 +172,7 @@ export const User = styled.div`
   .logout {
     ${flexAlign}
     font-size: 16px;
-    color: rgba(0, 0, 0, .5);
+    color: rgba(0, 0, 0, 0.5);
 
     i {
       width: 16px;
@@ -157,27 +182,146 @@ export const User = styled.div`
       background-size: 100%;
       margin-right: 3px;
     }
-    
   }
-  .logout:hover{
+  .logout:hover {
     cursor: pointer;
-    color: #FA6E58;
+    color: #fa6e58;
     i {
-      color: #FA6E58;
+      color: #fa6e58;
     }
   }
-`
+`;
+
+export const UserInfo = styled.div`
+  position: relative;
+  z-index: 100;
+
+  &:hover {
+    .user-pop {
+      display: block;
+    }
+  }
+
+  div.address {
+    padding: 0 32px;
+    line-height: 40px;
+    background: #e76350;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .user-pop {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 15px;
+    width: 215px;
+    padding: 30px;
+    background: #fff;
+    font-size: 14px;
+    color: #333333;
+    box-shadow: 0px 1px 12px 1px rgba(0, 0, 0, 0.2);
+    border-radius: 8px 0px 8px 8px;
+    box-sizing: border-box;
+
+    &:before {
+      content: "";
+      height: 15px;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -15px;
+    }
+  }
+
+  .line {
+    height: 1px;
+    background: #eee;
+    line-height: 0;
+    overflow: hidden;
+  }
+
+  .item {
+    ${flexBetween};
+    margin: 15px 0;
+
+    .value {
+      font-weight: 400;
+      font-size: 12px;
+    }
+
+    a {
+      color: #333333;
+
+      &:hover {
+        color: #fa6e58;
+      }
+    }
+  }
+
+  .can-click {
+    cursor: pointer;
+  }
+
+  .logo {
+    margin-top: 0;
+    margin-bottom: 20px;
+
+    img {
+      border-radius: 5px;
+      background: #e6e6e6;
+    }
+
+    span {
+      font-weight: 600;
+      color: #000000;
+    }
+  }
+
+  .logout {
+    margin-top: 26px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .logout-btn {
+    // line-height: 35px;
+    padding: 5px;
+    // border: 1px solid #cccccc;
+    // border-radius: 6px;
+    color: #919191;
+    font-size: 14px;
+    cursor: pointer;
+
+    &:hover,
+    &:hover .iconfontdmail {
+      color: #fa6e58;
+    }
+
+    // &:hover {
+    //   border-color: #fa6e58;
+    // }
+
+    i {
+      font-size: 16px;
+      margin-right: 5px;
+    }
+  }
+`;
 
 export const SearchChunk = styled.div`
   ${flexAlign}
-  
-`
+`;
 
 export const Search = styled.div`
   ${flexAlign}
 
   height: 36px;
-  background: #F4F3F3;
+  background: #f4f3f3;
   border-radius: 8px;
   padding: 0 10px;
 
@@ -200,10 +344,10 @@ export const Search = styled.div`
     background: url(${SearchBar}) no-repeat;
     margin-left: 20px;
     background-size: 100%;
-    flex-shrink:0;
+    flex-shrink: 0;
   }
-  .search-btn:hover{
-    cursor:pointer
+  .search-btn:hover {
+    cursor: pointer;
   }
 
   // @media (max-width: 1800px) {
@@ -213,18 +357,18 @@ export const Search = styled.div`
   //     font-size: 14px;
   //   }
   // }
-`
+`;
 
 export const Redirect = styled.div`
   ${flexAlign}
   margin-left: 68px;
-  color: #B4B0AF;
+  color: #b4b0af;
   font-size: 20px;
   font-weight: 600;
   position: relative;
 
   strong {
-    color: #38302E;
+    color: #38302e;
   }
 
   .to {
@@ -241,7 +385,7 @@ export const Redirect = styled.div`
     margin-left: 45px;
     font-size: 16px;
   }
-`
+`;
 
 export const GoPage = styled.div`
   ${flexAlign}
@@ -250,10 +394,10 @@ export const GoPage = styled.div`
   top: 100%;
   padding: 0 16px;
   height: 60px;
-  background: #FFFFFF;
-  border: 1px solid #F0F0F0;
+  background: #ffffff;
+  border: 1px solid #f0f0f0;
   box-shadow: 0px 6px 8px 1px rgba(183, 173, 171, 0.45);
-  color: #7C7370;
+  color: #7c7370;
   font-size: 20px;
   display: none;
 
@@ -270,20 +414,20 @@ export const GoPage = styled.div`
     height: 30px;
     margin: 0 10px;
     padding: 0 10px;
-    border: 1px solid #BFB7B6;
-    color: #7C7370;
+    border: 1px solid #bfb7b6;
+    color: #7c7370;
     font-size: 16px;
 
     &::-webkit-inner-spin-button {
-      display: none!important;
+      display: none !important;
     }
   }
 
   a {
-    color: #463F3D;
+    color: #463f3d;
     cursor: pointer;
   }
-`
+`;
 
 export const UseLimit = styled.div`
   position: absolute;
@@ -295,7 +439,7 @@ export const UseLimit = styled.div`
 
   .limit {
     span {
-      color: #FA6E58;
+      color: #fa6e58;
     }
   }
 
@@ -310,7 +454,7 @@ export const UseLimit = styled.div`
       height: 100%;
       display: block;
       // position: absolute;
-      background: #E9624B;
+      background: #e9624b;
     }
   }
-`
+`;
