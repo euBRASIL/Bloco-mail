@@ -4,11 +4,13 @@ import {
   userInfoStorage,
   userInfoKeys,
 } from "@/utils/storage";
+import Message from "@/components/Message/index";
+import { sendWelcome, dmailPid } from '@/utils/send'
+import { cache, baseURL } from "@/utils/axios";
+import { bindNftDialog, isLoginPage } from "@/utils/index";
 import { CanisterIds, http, transformPrincipalId, getAlias } from "@/api/index";
-import { getCallerToken } from "@/api/getCallerToken";
-import { getUsedVolume } from "@/api/web2/index";
+import { getUsedVolume, getToken, bindAlias } from "@/api/web2/index";
 import { setBodyCid, setCanisterId, getCanisterId } from "@/api/canisterId";
-import { bindNftDialog } from "@/utils/index";
 import Modal from "@/components/Modal/index";
 
 const defaultUsedVolume = {
@@ -52,10 +54,13 @@ export default class CommonStore {
 
   // initing = true;
   initing = false;
-  gettingBindedNft = false;
+  bindingDmailAlias = false;
+  getBindedNftEnd = false;
   // exclude '@dmail.ai'
   bindedNft = '';
   myNftList = [];
+  aminoNftList = [];
+  gettingNftList = false;
 
   profileInfo = null;
 
@@ -77,7 +82,7 @@ export default class CommonStore {
   }
 
   async detectGettingBindedNftEnded() {
-    if (this.gettingBindedNft) {
+    if (this.getBindedNftEnd) {
       return this.bindedNft;
     }
     await new Promise((resolve) => setTimeout(resolve, 400));
@@ -85,12 +90,31 @@ export default class CommonStore {
   }
 
   async getNftAlias() {
-    const alias = await getAlias(this.principalId);
-    this.gettingBindedNft = true;
+    const { alias, index} = await getAlias(this.principalId);
+    this.getBindedNftEnd = true;
     if (alias) {
       this.setBindedNft(`${alias}`);
     }
     return alias;
+  }
+
+  async getTokenAndStoreUserInfo(sIdentity, loadingKey, loginAddress, notInitData = false) {
+    const token = await getToken(sIdentity)
+    cache.enpid = token
+    const res = this.setUserInfo({
+      [userInfoKeys[0]]: sIdentity,
+      [userInfoKeys[1]]: loadingKey,
+      [userInfoKeys[2]]: loginAddress,
+      [userInfoKeys[5]]: token,
+    });
+
+    if (!res) {
+      Message.error('Login error.');
+      return false
+    }
+    
+    !notInitData && await this.initData();
+    return true
   }
 
   async initData() {
@@ -153,7 +177,7 @@ export default class CommonStore {
   }
 
   async queryFrequentData() {
-    if (window.location.href.includes("/login")) {
+    if (isLoginPage()) {
       return;
     }
     const principalId = this.principalId || this.getPrincipalId();
@@ -237,6 +261,46 @@ export default class CommonStore {
     }
   }
 
+  // if not bind, currentBindedNftId is 0
+  async bindDmailAlias(nft, currentBindedNftId = 0, autoBind = false) {
+    const principalId = this.principalId
+    if (this.bindingDmailAlias) {
+      return false
+    }
+    this.bindingDmailAlias = true;
+    let success = false
+    const lastBindedNft = this.bindedNft
+    try {
+      const res = await http(CanisterIds.nft_market, "bind", [
+        transformPrincipalId(principalId),
+        currentBindedNftId || nft.id,
+        nft.id,
+      ]);
+      if (res.Ok) {
+        success = true
+        !autoBind && Message.success('Bind successfully')
+        this.updateMyNftList(nft);
+        bindAlias(nft.emailName, principalId)
+        const close = !autoBind ? Message.loading('Canister ID initialization...') : function() {}
+        setCanisterId(principalId)
+          .then(async (canisterId) => {
+            close()
+            if (!lastBindedNft && canisterId) {
+              const dmailCid = await getCanisterId(dmailPid, true)
+              dmailCid && sendWelcome(dmailCid, canisterId, principalId, nft.emailName)
+            }
+          })
+          .catch(() => {
+            close()
+          })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+    this.bindingDmailAlias = false;
+    return success
+  }
+
   updateMyNftList(nft) {
     this.setBindedNft(nft.emailName);
     this.myNftList = this.myNftList.map(({ id, token_id, emailName }) => ({
@@ -267,47 +331,71 @@ export default class CommonStore {
     }
   }
 
-  async getMyNftList() {
+  setAminoNfts (list) {
+    this.aminoNftList = list
+  }
+
+  async getMyNftList(afterGettedCb = null) {
     const principalId = this.principalId || this.getPrincipalId();
     if (!principalId) {
       console.error("no principalId");
       return;
     }
-    if (this.myNftList.length) {
+    if (this.myNftList.length || this.aminoNftList.length) {
       return;
     }
+    if (this.gettingNftList) {
+      return;
+    }
+    this.gettingNftList = true
     try {
       const list = await http(CanisterIds.nft_market, "query", [
         transformPrincipalId(principalId),
       ]);
 
-      this.myNftList = Array.isArray(list)
-        ? list
-            .map(({ nft_content, index, bind }) => { 
-              let sContent = ''
-              if (typeof nft_content === 'string') {
-                sContent = nft_content.replaceAll('\n', '').replaceAll(' ', '').replace(/,\}/g, "}")
-              }
-              const data = JSON.parse(sContent)
-              if (!data || !data.alias) {
-                return null
-              }
-              if (bind) {
-                this.setBindedNft(data.alias);
-              }
-              return {
-                token_id: index,
-                id: Number(index),
-                emailName: data.alias,
-                useing: !!bind,
-              }; 
+      if (Array.isArray(list) && list.length) {
+        list.forEach(({ nft_theme, nft_content, index, bind }) => { 
+          const isDmailNft = nft_theme === "Dmail"
+          const isAminoDmailNft = nft_theme === "amino_nft"
+          let sContent = ''
+          if (typeof nft_content === 'string') {
+            sContent = nft_content.replaceAll('\n', '').replaceAll(' ', '').replace(/,\}/g, "}")
+          }
+          const data = JSON.parse(sContent)
+          if (!data) {
+            return null
+          }
+          if (bind) {
+            isDmailNft && this.setBindedNft(data.alias);
+          }
+          if (isDmailNft) {
+            this.myNftList.push({
+              type: 'dmail',
+              token_id: index,
+              id: Number(index),
+              emailName: data.alias,
+              useing: !!bind,
             })
-            .filter((item) => !!item)
-        : [];
+          } else if (isAminoDmailNft) {
+            this.aminoNftList.push({
+              type: 'amino',
+              token_id: index,
+              id: Number(data.id),
+              url: data.url,
+              attributes: Array.isArray(data.attributes) ? data.attributes : [],
+              useing: !!bind,
+            })
+          }
+        })
+      } else {
+        this.myNftList = []
+        this.aminoNftList = []
+      }
     } catch (error) {
-      //
       console.log(error)
     }
+    typeof afterGettedCb === 'function' && await afterGettedCb(this)
+    this.gettingNftList = false
     this.sortMyNftList();
   }
 

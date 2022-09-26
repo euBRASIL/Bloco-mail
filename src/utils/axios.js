@@ -13,17 +13,23 @@ export const axiosInstance = axios.create({
 axiosInstance.defaults.timeout = 120000;
 
 export const cache = {
+  pid: userInfoStorage.get(userInfoKeys[0]) || undefined,
   enpid: userInfoStorage.get(userInfoKeys[5]) || undefined,
 };
 
 axiosInstance.interceptors.request.use(
   (config) => {
     // Do something before request is sent
+    if (cache.pid === undefined) {
+      cache.pid = userInfoStorage.get(userInfoKeys[0]) || undefined;
+    }
+
     if (cache.enpid === undefined) {
       cache.enpid = userInfoStorage.get(userInfoKeys[5]) || undefined;
     }
 
-    if (cache.enpid && config.headers) {
+    if (cache.pid && cache.enpid && config.headers) {
+      config.headers["dm-pid"] = cache.pid;
       config.headers["dm-encstring"] = cache.enpid;
     }
     return config;

@@ -9,6 +9,11 @@ export class RootStore {
   constructor() {
     makeAutoObservable(this)
   }
+
+  resetStores() {
+    this.common = new CommonStore()
+    this.compose = new ComposeStore()
+  }
 }
 
 const rootStore = new RootStore()

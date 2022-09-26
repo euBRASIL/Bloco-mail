@@ -4,6 +4,7 @@ import rootStore from "@/stores";
 import { BrowserRouter as Router, useHistory } from "react-router-dom";
 import Routes from "@/router";
 
+import { isLoginPage } from "@/utils/index";
 import { preLoadApp } from "@/utils/preload";
 import "./static/css/index.css";
 import "./App.css";
@@ -11,11 +12,11 @@ import "./App.css";
 function App() {
   useEffect(async () => {
     const principalId = rootStore.common.getPrincipalId();
-    if (!principalId && !window.location.href.includes("/login")) {
+    if (!principalId && !isLoginPage()) {
       window.location.href = "/login";
       return;
     }
-    if (window.location.href.includes("/login")) {
+    if (isLoginPage()) {
       return;
     }
     await rootStore.common.initData();

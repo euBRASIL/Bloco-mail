@@ -224,16 +224,6 @@ export const TabContent = styled.div`
       min-height: 116px;
     }
   }
-
-  @media (max-width: 1440px) {
-    .nfts {
-      li {
-        .permanent {
-          margin-right: 160px;
-        }
-      }
-    }
-  }
 `;
 
 export const Title = styled.div`

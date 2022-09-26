@@ -40,8 +40,6 @@ export const Nav = styled.div`
     height: 4vh;
     margin-bottom: 10px;
     font-size: 16px;
-    //font-weight: bold;
-    font-family: PingFangSC-Regular;
     color: #fff;
     cursor: pointer;
     position: relative;
