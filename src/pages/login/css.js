@@ -9,11 +9,19 @@ import {
 } from "../../components/css.common";
 
 import Bg from "../../static/images/login-bg.jpg";
-import Star from "../../static/images/star.png";
 import Identity from "../../static/images/login-identity.png";
 import Plug from "../../static/images/login-plug2.png";
 import Metamask from "../../static/images/login-metamask.png";
 import Infinityswap from "../../static/images/infinityswap-logo.png";
+import Bitkeep from "../../static/images/login-bitkeep.svg";
+import Bnb from "../../static/images/bnb.png";
+import L1 from "../../static/images/login-l1.png";
+import L2 from "../../static/images/login-l2.png";
+import L3 from "../../static/images/login-l3.png";
+import L4 from "../../static/images/login-l4.png";
+import Red from "../../static/images/red.png";
+import Yellow from "../../static/images/yellow.png";
+import Blue from "../../static/images/blue.png";
 
 export {
   FlexWrapper,
@@ -23,7 +31,7 @@ export {
 };
 
 export const Root = styled.div`
-  background: url(${Bg});
+  background: #fff center;
   background-size: cover;
   position: fixed;
   left: 0;
@@ -31,95 +39,93 @@ export const Root = styled.div`
   top: 0;
   bottom: 0;
 
-  &:before {
-    content: "";
-    background: url(${Star});
-    background-size: contain;
-    background-repeat: no-repeat;
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 100%;
+  .bubble {
+    width: 280px;
+    height: 280px;
+    position: fixed;
+    background: no-repeat center;
+    background-size: 100%;
+
+    &.red {
+      right: 0;
+      top: 20%;
+      transform: translateX(140px);
+      background-image: url(${Red});
+    }
+    &.yellow {
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-330px);
+      background-image: url(${Yellow});
+    }
+    &.blue {
+      left: 0;
+      bottom: 0;
+      transform: translateX(-100px) translateY(100px);
+      background-image: url(${Blue});
+    }
   }
 `;
 
 export const Content = styled.div`
   position: absolute;
-  width: 640px;
   left: 50%;
-  top: 45%;
+  top: 50%;
   transform: translateX(-50%) translateY(-50%);
+  margin-top: -60px;
+
+  color: #333333;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
 
   .logo {
     text-align: center;
-    color: #fff;
-    font-size: 18px;
 
     img {
-      width: 300px;
+      width: 238px;
     }
 
     p {
-      margin-left: -100px;
-      margin-right: -100px;
-      margin-top: 12px;
-      line-height: 22px;
+      margin-top: 15px;
     }
   }
 
   .login {
-    margin-top: 60px;
-    background: rgba(255, 255, 255, 0.08);
-    padding: 20px 55px 32px;
-    border-radius: 34px;
-  }
-
-  .welcome {
-    line-height: 28px;
-    font-size: 26px;
-    color: #fff;
-    text-align: center;
-  }
-
-  .help {
-    margin-top: 30px;
-    text-align: center;
-
-    a {
-      color: #999;
-      line-height: 18px;
-    }
+    margin-top: 50px;
+    padding: 40px 114px;
+    width: 312px;
+    background: #FFFFFF;
+    border-radius: 20px;
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
   }
 
   .split-line {
     ${flexAlign};
     height: 1px;
-    margin-top: 38px;
-    margin-bottom: 30px;
+    margin-top: 48px;
+    margin-bottom: 28px;
 
     &:before,
     &:after {
       flex: 1;
       content: "";
       height: 1px;
-      background: rgba(255, 255, 255, 0.2);
+      background: #eee;
     }
 
     span {
       position: relative;
-      top: -2px;
+      top: -1px;
       width: 78px;
       line-height: 20px;
-      font-size: 16px;
-      font-weight: 600;
-      color: #fff;
+      // font-size: 16px;
+      // font-weight: 600;
       text-align: center;
     }
   }
 
   .btns {
-    margin-top: 30px;
-
     a {
       position: relative;
       overflow: hidden;
@@ -140,167 +146,129 @@ export const Content = styled.div`
       }
     }
 
-    .plug {
-      background-image: url(${Plug});
-      background-size: 45px 45px;
-    }
-
     .metamask {
       background-image: url(${Metamask});
-      background-size: 32px 30px;
+      background-size: 27px 25px;
+    }
+    .bnb {
+      background-image: url(${Bnb});
+      background-size: 23px 27px;
+    }
+
+    .bitkeep {
+      background-image: url(${Bitkeep});
+      background-size: 23px 23px;
+    }
+
+    .plug {
+      background-image: url(${Plug});
+      background-size: 27px 27px;
     }
 
     .infinityswap {
       background-image: url(${Infinityswap});
-      background-size: 45px 35px;
+      background-size: 30px 23px;
     }
 
     .identity {
       background-image: url(${Identity});
-      background-size: 36px 20px;
+      background-size: 27px 15px;
     }
   }
 
   .main-btn {
+    margin-bottom: 20px;
+
     a {
-      ${flexBetween};
-      position: relative;
-      width: 272px;
-      margin: 0 auto;
-      box-sizing: border-box;
-      line-height: 48px;
-      padding: 12px 52px;
-      border-radius: 36px;
-      background: #ff563f;
-      font-size: 20px;
-      cursor: pointer;
-      color: #fff;
-
-      strong {
-        font-weight: normal;
-      }
-
-      &:hover {
-        background: #df4631;
-      }
-      // .itemLoading {
-      //   vertical-align: middle;
-      //   margin-right: 10px;
-      // }
-
-      i {
-        width: 48px;
-        height: 48px;
-        background: no-repeat center;
+      .bnb {
+        height: 27px;
       }
     }
   }
 
   .other-btns {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    ${flexAlign};
+    justify-content: space-around;
 
     a {
-      margin-right: 60px;
+      ${flexAlign};
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      background: #FFFFFF;
+      box-shadow: 0 0 10px 3px rgb(0, 0, 0, .1);
       cursor: pointer;
-      border-radius: 50%;
+      border-radius: 8px;
+      transition: background 0.5s ease;
 
-      &:last-child {
-        margin-right: 0;
+      &:hover {
+        background: #F5F5F5;
       }
     }
 
     i {
       display: block;
-      width: 72px;
-      height: 72px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
-      background: #fff no-repeat center;
-    }
-
-    .plug {
-      background-size: 18px 25px;
+      background: no-repeat center;
     }
   }
 
-  @media (max-width: 1790px) {
-    // @media (max-width: 100px) {
-    width: 470px;
-    top: 40%;
+  .help {
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    margin-top: 40px;
+    transform: translateX(-50%);
 
-    .welcome {
-      font-size: 24px;
-    }
+    a {
+      color: #FF563F;
+      font-size: 14px;
+      line-height: 16px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #FF563F;
 
-    .logo {
-      img {
-        width: 270px;
+      &:hover {
+        border-color: #333;
+        color: #333;
       }
-      p {
-        margin-top: 15px;
-      }
-    }
-
-    .login {
-      padding: 18px 40px;
-      margin-top: 52px;
-    }
-
-    .split-line {
-      margin-top: 28px;
-      margin-bottom: 25px;
-
-      span {
-        width: 55px;
-      }
-    }
-
-    .main-btn {
-      a {
-        width: 200px;
-        padding: 9px 35px;
-        line-height: 35px;
-        font-size: 16px;
-
-        i {
-          width: 35px;
-          height: 35px;
-        }
-      }
-    }
-
-    .btns {
-      i {
-        width: 45px;
-        height: 45px;
-      }
-
-      .metamask {
-        background-size: 22px 21px;
-      }
-
-      .plug {
-        background-size: 30px 30px;
-      }
-
-      .infinityswap {
-        background-size: 30px 23px;
-      }
-
-      .identity {
-        background-size: 27px 15px;
-      }
-    }
-
-    .other-btns {
-      a {
-        margin-right: 34px;
-      }
-    }
-
-    .help {
-      margin-top: 20px;
     }
   }
 `;
+
+export const Links = styled.div`
+  ${flexAlign};
+  justify-content: center;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 40px;
+
+  a {
+    width: 32px;
+    height: 32px;
+    margin-right: 30px;
+    background: url(${L1}) no-repeat;
+    background-size: 100%;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.15);
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .telegram {
+    background-image: url(${L2});
+  }
+  .m {
+    background-image: url(${L3});
+  }
+  .discord {
+    background-image: url(${L4});
+  }
+`

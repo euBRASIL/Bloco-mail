@@ -20,7 +20,7 @@ const Root = styled.div`
 `;
 
 const Top = ({ location: { pathname }, store }) => {
-  const { bindedNft, gettingBindedNft, principalId, profileInfo, userInfo, usedVolume, routerBlockFn } = store.common;
+  const { bindedNft, getBindedNftEnd, bindingDmailAlias, principalId, profileInfo, userInfo, usedVolume, routerBlockFn } = store.common;
   const history = useHistory();
 
   const loginType = userInfo[userInfoKeys[1]]
@@ -88,7 +88,7 @@ const Top = ({ location: { pathname }, store }) => {
           </p>
           <p className={bindedNft ? 'can-copy' : ''}>
             <strong>NFT Domain Account:</strong>
-            {!gettingBindedNft && <span className="nft-getting"><CircularProgress size={14} /></span>}
+            {(!getBindedNftEnd || bindingDmailAlias) ? <span className="nft-getting"><CircularProgress size={14} /></span> : null}
             {bindedNft ? (
               <span onClick={onCopy(`${bindedNft}@dmail.ai`)}>{`${bindedNft}@dmail.ai`} <i className="copy" title="copy" /></span>
             ) : (

@@ -4,6 +4,7 @@ import Identity from "@/static/images/login-identity.png";
 import Plug from "@/static/images/login-plug2.png";
 import Metamask from "@/static/images/login-metamask.png";
 import Infinityswap from "@/static/images/infinityswap-logo.png";
+import Bnb from "@/static/images/bnb.png";
 
 export const flex = `display: flex;`;
 export const flexAlign = `${flex}; align-items: center;`;
@@ -92,5 +93,9 @@ export const LoginLogo = styled.i`
 
   &.logo-metamask {
     background-image: url(${Metamask});
+  }
+
+  &.logo-binance {
+    background-image: url(${Bnb});
   }
 `;

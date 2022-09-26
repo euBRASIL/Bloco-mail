@@ -25,6 +25,7 @@ export const scrollIntoViewKey = document.body.scrollIntoViewIfNeeded
   : document.body.scrollIntoView
   ? "scrollIntoView"
   : "";
+export const isLoginPage = () => window.location.href.includes("/login") || window.location.href.includes("/dlogin") || window.location.href.includes("/alogin")
 
 export const getPosToParent = (parent, sub, isTop = false) => {
   const parentClient = parent.getBoundingClientRect();
@@ -131,13 +132,13 @@ export const copyFromDomText = (dom) => {};
 export const copyTextToClipboard = (text, successText) => {
   if (!navigator.clipboard) {
     const success = fallbackCopyTextToClipboard(text);
-    const msg = success ? successText || "Copy success" : "Copy failed";
+    const msg = success ? successText || "Copy successfully" : "Copy failed";
     Message[success ? "success" : "error"](msg);
     return;
   }
   navigator.clipboard.writeText(text).then(
     function () {
-      Message.success(successText || "Copy success");
+      Message.success(successText || "Copy successfully");
     },
     function (err) {
       Message.error("Copy failed");

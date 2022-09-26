@@ -86,7 +86,7 @@ const Header = ({ location: { pathname }, store }) => {
             <i style={{ width: `${usedVolume.usedVolumePercent}%` }}></i>
           </div>
           <FlexBetweenWrapper>
-            <div className="name">V1.2.1_beta</div>
+            <div className="name">V1.2.5_beta</div>
             <div className="limit"><span>{usedVolume.volume}{usedVolume.volumeUnit}</span>/{usedVolume.totalVolume}{usedVolume.totalVolumeUnit}</div>
           </FlexBetweenWrapper>
         </UseLimit>

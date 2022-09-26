@@ -3,9 +3,10 @@ body {
   margin: 0 !important;
   padding: 0 !important;
   width: 100%;
-  font-family: PingFang SC, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  /* font-family: PingFang SC, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    sans-serif; */
+  font-family: Arial, Helvetica, Verdana, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #F0F0F0;
@@ -72,79 +73,155 @@ input {
   vertical-align: middle;
 }
 
+.login-btn {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 240px;
+  margin: 0px auto;
+  box-sizing: border-box;
+  line-height: 48px;
+  padding-left: 50px;
+  border-radius: 36px;
+  background: rgb(51, 51, 51);
+  font-size: 16px;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  transition: background 0.5s ease 0s;
+  overflow: hidden;
+}
+.login-btn.disabled {
+  cursor: not-allowed;
+}
+.login-btn.disabled:hover {
+  background: rgb(51, 51, 51);
+  transition: none;
+}
+.login-btn strong {
+  font-weight: normal;
+}
+.login-btn:hover {
+  background: #000;
+}
+.login-btn i {
+  width: 27px;
+  height: 25px;
+  margin-right: 15px;
+  background: no-repeat center;
+}
+.login-btn .metamask {
+  background-image: url(../images/login-metamask.png);
+  background-size: 27px 25px;
+}
+.login-btn .loading {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+.login-btn .loading .MuiCircularProgress-svg {
+  color: #fff;
+}
+
+/* @font-face {
+  font-family: "League Spartan-Regular";
+  src: url(../font/LeagueSpartan-Regular.ttf);
+  src: url(../font/LeagueSpartan-Regular.ttf)  format('truetype'),
+  url('../font/LeagueSpartan-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: "League Spartan-Bold";
+  src: url(../font/LeagueSpartan-SemiBold.ttf);
+  src: url(../font/LeagueSpartan-SemiBold.ttf)  format('truetype'),
+  url('../font/LeagueSpartan-SemiBold.woff') format('woff');
+}
+
+@font-face {
+  font-family: "League Spartan-Medium";
+  src: url(../font/LeagueSpartan-Medium.ttf);
+  src: url(../font/LeagueSpartan-Medium.ttf)  format('truetype'),
+  url('../font/LeagueSpartan-Medium.woff') format('woff');
+} */
+
 @font-face {
   font-family: "Montserrat";
-  src: url(../font/Roboto-Black.ttf);
-  src: url(../font/Roboto-Black.ttf)  format('truetype'),
-  url('../font/roboto-black.woff') format('woff');
+  src: url(../font2/Roboto-Black.ttf);
+  src: url(../font2/Roboto-Black.ttf)  format('truetype'),
+  url('../font2/roboto-black.woff') format('woff');
 }
 @font-face {
   font-family: "Roboto-Bold";
-  src: url('../font/Roboto-Bold.ttf');
-  src: url('../font/Roboto-Bold.ttf')  format('truetype'),
-        url('../font/roboto-bold.woff') format('woff');
+  src: url('../font2/Roboto-Bold.ttf');
+  src: url('../font2/Roboto-Bold.ttf')  format('truetype'),
+        url('../font2/roboto-bold.woff') format('woff');
 }
 @font-face {
       font-family: "Montserrat-Light";
-      src: url(../font/Roboto-Light.ttf);
-      src: url(../font/Roboto-Light.ttf)  format('truetype'),
-            url('../font/roboto-light.woff') format('woff');
+      src: url(../font2/Roboto-Light.ttf);
+      src: url(../font2/Roboto-Light.ttf)  format('truetype'),
+            url('../font2/roboto-light.woff') format('woff');
 }
 @font-face {
       font-family: "Montserrat-Medium";
-      src: url(../font/Roboto-Medium.ttf);
-      src: url(../font/Roboto-Medium.ttf)  format('truetype'),
-            url(../font/roboto-medium.woff)  format('woff');
+      src: url(../font2/Roboto-Medium.ttf);
+      src: url(../font2/Roboto-Medium.ttf)  format('truetype'),
+            url(../font2/roboto-medium.woff)  format('woff');
 }
 @font-face {
       font-family: "Montserrat-Regular";
-      src: url(../font/Roboto-Regular.ttf);
-      src: url(../font/Roboto-Regular.ttf)  format('truetype'),
-          url(../font/roboto-regular.woff)  format('woff');
+      src: url(../font2/Roboto-Regular.ttf);
+      src: url(../font2/Roboto-Regular.ttf)  format('truetype'),
+          url(../font2/roboto-regular.woff)  format('woff');
 }
 @font-face {
       font-family: "Montserrat-Thin";
-      src: url(../font/Roboto-Thin.ttf);
-      src: url(../font/Roboto-Thin.ttf)  format('truetype'),
-        url(../font/roboto-thin.woff)  format('woff');
+      src: url(../font2/Roboto-Thin.ttf);
+      src: url(../font2/Roboto-Thin.ttf)  format('truetype'),
+        url(../font2/roboto-thin.woff)  format('woff');
 }
 
 @font-face {
   font-family: "Roboto";
-  src: url(../font/Roboto-Black.ttf);
-  src: url(../font/Roboto-Black.ttf)  format('truetype'),
-  url('../font/roboto-black.woff') format('woff');
+  src: url(../font2/Roboto-Black.ttf);
+  src: url(../font2/Roboto-Black.ttf)  format('truetype'),
+  url('../font2/roboto-black.woff') format('woff');
   
 }
 @font-face {
       font-family: "Roboto-Bold";
-      src: url('../font/Roboto-Bold.ttf');
-      src: url('../font/Roboto-Bold.ttf')  format('truetype'),
-            url('../font/roboto-bold.woff') format('woff');
+      src: url('../font2/Roboto-Bold.ttf');
+      src: url('../font2/Roboto-Bold.ttf')  format('truetype'),
+            url('../font2/roboto-bold.woff') format('woff');
 }
 @font-face {
       font-family: "Roboto-Light";
-      src: url(../font/Roboto-Light.ttf);
-      src: url(../font/Roboto-Light.ttf)  format('truetype'),
-            url('../font/roboto-light.woff') format('woff');
+      src: url(../font2/Roboto-Light.ttf);
+      src: url(../font2/Roboto-Light.ttf)  format('truetype'),
+            url('../font2/roboto-light.woff') format('woff');
 }
 @font-face {
       font-family: "Roboto-Medium";
-      src: url(../font/Roboto-Medium.ttf);
-      src: url(../font/Roboto-Medium.ttf)  format('truetype'),
-            url(../font/roboto-medium.woff)  format('woff');
+      src: url(../font2/Roboto-Medium.ttf);
+      src: url(../font2/Roboto-Medium.ttf)  format('truetype'),
+            url(../font2/roboto-medium.woff)  format('woff');
 }
 @font-face {
       font-family: "Roboto-Regular";
-      src: url(../font/Roboto-Regular.ttf);
-      src: url(../font/Roboto-Regular.ttf)  format('truetype'),
-          url(../font/roboto-regular.woff)  format('woff');
+      src: url(../font2/Roboto-Regular.ttf);
+      src: url(../font2/Roboto-Regular.ttf)  format('truetype'),
+          url(../font2/roboto-regular.woff)  format('woff');
       
 }
 @font-face {
       font-family: "Roboto-Thin";
-      src: url(../font/Roboto-Thin.ttf);
-      src: url(../font/Roboto-Thin.ttf)  format('truetype'),
-        url(../font/roboto-thin.woff)  format('woff');
+      src: url(../font2/Roboto-Thin.ttf);
+      src: url(../font2/Roboto-Thin.ttf)  format('truetype'),
+        url(../font2/roboto-thin.woff)  format('woff');
       
 }

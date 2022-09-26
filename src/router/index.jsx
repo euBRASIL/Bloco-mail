@@ -13,6 +13,10 @@ import Trash from "@/pages/trash/index";
 import Assets from "@/pages/assets/index";
 import Market from "@/pages/market/index";
 
+import DLogin from "@/pages/dlogin/index";
+import AminoLogin from "@/pages/amino/login";
+
+
 // const Compose = React.lazy(() => import("@/pages/compose/index"));
 
 const Routes = () => (
@@ -20,6 +24,9 @@ const Routes = () => (
     <Switch>
       {/* <Route exact path="/" component={ Inbox } /> */}
       <Route exact path="/login" component={ Login } />
+      <Route exact path="/dlogin" component={ DLogin } />
+      <Route exact path="/alogin/:key" component={AminoLogin} />
+      
       <Route exact path="/compose/:emailId?" component={ Compose } />
       <Route exact path="/inbox" component={ Inbox } />
       <Route exact path="/starred" component={ Starred } />
@@ -28,8 +35,8 @@ const Routes = () => (
       <Route exact path="/spam" component={ Spam } />
       <Route exact path="/trash" component={ Trash } />
       <Route exact path="/setting/:tabname?" component={ Setting } />
+      <Route exact path="/market/:tabname?" component={ Market } />
       <Route exact path="/assets" component={ Assets } />
-      <Route exact path="/market" component={ Market } />
       <Redirect from="*" to="/inbox" /> 
     </Switch>
   </BrowserRouter>

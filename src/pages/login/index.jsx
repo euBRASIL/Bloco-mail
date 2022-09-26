@@ -1,23 +1,22 @@
 import React, { useRef, useState, useEffect } from "react";
 import { observer, inject } from "mobx-react";
 import { useHistory, withRouter } from "react-router-dom";
-import { useWeb3React } from "@web3-react/core";
-import { ExternalProvider, Web3Provider } from "@ethersproject/providers";
+import { Web3Provider } from "@ethersproject/providers";
 import { Web3ReactProvider } from "@web3-react/core";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import Message from "@/components/Message/index";
-import { Storage, userInfoStorage, userInfoKeys } from "@/utils/storage";
-import { getToken } from "@/api/web2/index";
-import axios from "axios";
-import { cache, baseURL } from "@/utils/axios";
+import { clearStorage } from "@/utils/storage";
+// import { Storage, userInfoStorage, userInfoKeys } from "@/utils/storage";
+// import axios from "axios";
+// import { cache, baseURL } from "@/utils/axios";
 
 import { plugAuth, infinityswapAuth, loginTypes } from './utils'
+import { bnbAuth, bitkeepAuth } from './metamask/bsc'
 import { authClient } from "./authClient";
 import MetaMask from './metamask/index'
-import { Root, Content } from "./css";
-// import Logo from "../../static/images/login-logo.png";
-import Logo from "../../static/images/logo.svg";
+import { Root, Content, Links } from "./css";
+import Logo from "../../static/images/login-logo.svg";
 
 function getLibrary(provider) {
   const library = new Web3Provider(provider);
@@ -59,28 +58,24 @@ const Index = ({ store }) => {
     setLoading(newLoading)
   }
 
-  const afterGetIdentity = async (sIdentity, loadingKey, loginAddress) => {
-    const token = await getToken(sIdentity)
-    cache.enpid = token
-    const res = store.common.setUserInfo({
-      [userInfoKeys[0]]: sIdentity,
-      [userInfoKeys[1]]: loadingKey,
-      [userInfoKeys[2]]: loginAddress,
-      [userInfoKeys[5]]: token,
-    });
 
-    if (!res) {
-      Message.error('Login error.');
+  const afterGetIdentity = async (sIdentity, loadingKey, loginAddress) => {
+    if (!await store.common.getTokenAndStoreUserInfo(sIdentity, loadingKey, loginAddress)) {
       return
     }
-    
-    await store.common.initData();
     _setLoading(loadingKey, false)
     history.push("/inbox");
   }
 
-  const iiConnect = async () => {
+  const detectIsLoading = () => {
     if (Object.values(loading).filter(item => !!item).length) {
+      return true;
+    }
+    return false
+  }
+
+  const iiConnect = async () => {
+    if (detectIsLoading()) {
       return;
     }
     await authClient.create();
@@ -97,7 +92,7 @@ const Index = ({ store }) => {
   };
 
   const plugConnect = async () => {
-    if (Object.values(loading).filter(item => !!item).length) {
+    if (detectIsLoading()) {
       return;
     }
     if (!isPhone) {
@@ -118,7 +113,7 @@ const Index = ({ store }) => {
 
   // https://infinityswap-docs-wallet.web.app/docs/Infinity-swap-wallet/integration
   const infinityConnect = async () => {
-    if (Object.values(loading).filter(item => !!item).length) {
+    if (detectIsLoading()) {
       return;
     }
     if (!isPhone) {
@@ -135,76 +130,128 @@ const Index = ({ store }) => {
     }
   };
 
-  useEffect(() => {
-    const data = userInfoStorage.get('all')
-    if (!data || !Object.keys(data).length) {
-      return
-    }
-    const principalId = data[userInfoKeys[0]]
-    const loginType = data[userInfoKeys[1]]
-    const enpid = data[userInfoKeys[5]]
-    if (!principalId || !loginType || !enpid) {
+  // https://docs.bnbchain.org/docs/wallet/wallet_api
+  const bnbConnect = async () => {
+    if (detectIsLoading()) {
       return;
     }
-    const axiosInstance = axios.create({baseURL})
-    axiosInstance.interceptors.request.use(
-      (config) => {
-        if (config.headers) {
-          config.headers["dm-encstring"] = enpid;
-        }
-        return config;
-      },
-      (error) => Promise.reject(error)
-    );
-    axiosInstance({
-      url: `mails/getSize/${principalId}`,
-      method: "get",
-    }).then(async (res) => {
-      const { code, data } = res.data
-      if (code !== -1 && code !== -2 && data && 'limitSize' in data) { 
-        _setLoading(loginType, true)
-        const close = Message.loading('Accessing Dmail Network...')
-        await store.common.initData()
-        _setLoading(loginType, false)
-        close()
-        history.push("/inbox")
+    if (!isPhone) {
+      _setLoading('binance', true);
+      const [principalId, account] = await bnbAuth(() => setLoading("binance", false));
+      if (typeof principalId === 'string' && principalId) {
+        await afterGetIdentity(principalId, 'binance', account)
+      } else {
+        _setLoading('binance', false);
       }
-    }).catch((res) => {
-      //
-    });
+    }
+  }
+
+  // http://docs.bitkeep.io/guide/connect-wallet-for-dapp.html#evm
+  const bitkeepConnect = async () => {
+    if (detectIsLoading()) {
+      return;
+    }
+    if (!isPhone) {
+      _setLoading('bitkeep', true);
+      const [principalId, account] = await bitkeepAuth(() => setLoading("bitkeep", false));
+      if (typeof principalId === 'string' && principalId) {
+        await afterGetIdentity(principalId, 'bitkeep', account)
+      } else {
+        _setLoading('bitkeep', false);
+      }
+    }
+  }
+
+  useEffect(() => {
+    clearStorage();
+    store.resetStores();
   }, [])
+
+  const setMetamaskLoading = (status) => _setLoading("metamask", status)
+  
+  // useEffect(() => {
+  //   const data = userInfoStorage.get('all')
+  //   if (!data || !Object.keys(data).length) {
+  //     return
+  //   }
+  //   const principalId = data[userInfoKeys[0]]
+  //   const loginType = data[userInfoKeys[1]]
+  //   const enpid = data[userInfoKeys[5]]
+  //   if (!principalId || !loginType || !enpid) {
+  //     return;
+  //   }
+  //   const axiosInstance = axios.create({baseURL})
+  //   axiosInstance.interceptors.request.use(
+  //     (config) => {
+  //       if (config.headers) {
+  //         config.headers["dm-encstring"] = enpid;
+  //       }
+  //       return config;
+  //     },
+  //     (error) => Promise.reject(error)
+  //   );
+  //   axiosInstance({
+  //     url: `mails/getSize/${principalId}`,
+  //     method: "get",
+  //   }).then(async (res) => {
+  //     const { code, data } = res.data
+  //     if (code !== -1 && code !== -2 && data && 'limitSize' in data) { 
+  //       _setLoading(loginType, true)
+  //       const close = Message.loading('Accessing Dmail Network...')
+  //       await store.common.initData()
+  //       _setLoading(loginType, false)
+  //       close()
+  //       history.push("/inbox")
+  //     }
+  //   }).catch((res) => {
+  //     //
+  //   });
+  // }, [])
 
   return (
     <Root>
+      <div className="bubble red"></div>
+      <div className="bubble yellow"></div>
+      <div className="bubble blue"></div>
       <Content>
         <div className="logo">
           <img src={ Logo } alt="" />
           <p>Construct DID in Web 3.0, Not Just an Email.</p>
         </div>
         <div className="login">
-          <div className="item welcome">
-            <span>Login</span>
-          </div>
           <div className="btns">
             <div
               className="main-btn"
             >
-              <a rel="noopener noreferrer" onClick={ plugConnect }>
-                <i className="plug"></i>
-                { loading.plug && <span className="loading">{BtnLoading}</span> }
-                <strong>Plug Wallet</strong>
+              <Web3ReactProvider getLibrary={getLibrary}>
+                <MetaMask loading={loading.metamask} setLoading={setMetamaskLoading} afterGetIdentity={afterGetIdentity} detectIsLoading={detectIsLoading}>
+                  <i className="metamask"></i>
+                  { loading.metamask && <span className="loading">{BtnLoading}</span> }
+                  <strong>MetaMask</strong>
+                </MetaMask>
+              </Web3ReactProvider>
+            </div>
+            <div
+              className="main-btn"
+            >
+              <a rel="noopener noreferrer" onClick={bnbConnect}  className="login-btn">
+                <i className="bnb"></i>
+                { loading.binance && <span className="loading">{BtnLoading}</span> }
+                <strong>Binance Wallet</strong>
               </a>
             </div>
             <div className="split-line">
               <span>or</span>
             </div>
             <div className="other-btns">
-              <Web3ReactProvider getLibrary={getLibrary}>
-                <MetaMask loadingRef={loadingRef} setLoading={_setLoading} afterGetIdentity={afterGetIdentity}>
-                  { loading.metamask && <span className="loading">{BtnLoading}</span> }
-                  <i className="metamask"></i>
-                </MetaMask>
-              </Web3ReactProvider>
+              <a rel="noopener noreferrer" onClick={ plugConnect }>
+                { loading.plug && <span className="loading">{BtnLoading}</span> }
+                <i className="plug"></i>
+              </a>
+              <a rel="noopener noreferrer" onClick={ bitkeepConnect }>
+                { loading.bitkeep && <span className="loading">{BtnLoading}</span> }
+                <i className="bitkeep"></i>
+              </a>
               <a rel="noopener noreferrer" onClick={ infinityConnect } >
                 { loading.infinity && <span className="loading">{BtnLoading}</span> }
                 <i className="infinityswap"></i>
@@ -214,12 +261,18 @@ const Index = ({ store }) => {
                 <i className="identity"></i>
               </a>
             </div>
-            <div className="help">
-              <a href="https://dmailofficial.gitbook.io/helpcenter/v/english/" target="_blank">Help Center</a>
-            </div>
           </div>
         </div>
+        <div className="help">
+          <a href="https://dmailofficial.gitbook.io/helpcenter/v/english/" target="_blank">Help Center</a>
+        </div>
       </Content>
+      <Links>
+        <a href="https://twitter.com/dmailofficial" className="twitter" target="_blank"></a>
+        <a href="https://t.me/dmailofficial" className="telegram" target="_blank"></a>
+        <a href="https://medium.com/@dmail_official" className="m" target="_blank"></a>
+        <a href="https://discord.gg/QbvaeqwMFg" className="discord" target="_blank"></a>
+      </Links>
     </Root>
   );
 };
