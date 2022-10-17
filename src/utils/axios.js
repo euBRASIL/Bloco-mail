@@ -3,9 +3,10 @@ import { userInfoStorage, userInfoKeys, clearStorage } from "@/utils/storage";
 import Message from "@/components/Message/index";
 
 const isDev = process.env.NODE_ENV === "development";
-export const baseURL = isDev
-  ? "https://testmail.dmail.ai/api/v3"
-  : "https://ic.dmail.ai/api/v3";
+export const baseURL = !isDev || process.env.REACT_APP_ENV === "production"
+  ? "https://ic.dmail.ai/api/v3"
+  : "https://testmail.dmail.ai/api/v3";
+  
 export const axiosInstance = axios.create({
   baseURL,
 });
@@ -43,7 +44,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (res) => {
     const code = res.data.code;
-    if (code == -1 || code == -2) {
+    if ((code == -1 || code == -2) && process.env.NODE_ENV !== "development") {
       Message.warn("Login status is disabled");
       clearStorage();
       setTimeout(() => {

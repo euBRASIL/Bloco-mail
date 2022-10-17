@@ -5,9 +5,11 @@ import Plug from "@/static/images/login-plug2.png";
 import Metamask from "@/static/images/login-metamask.png";
 import Infinityswap from "@/static/images/infinityswap-logo.png";
 import Bnb from "@/static/images/bnb.png";
+import Bitkeep from "@/static/images/login-bitkeep.svg";
 
 export const flex = `display: flex;`;
 export const flexAlign = `${flex}; align-items: center;`;
+export const flexAlignCenter = `${flex}; align-items: center; justify-content: center;`;
 export const flexAlignRight = `${flex}; align-items: center; justify-content: end;`;
 export const flexBetween = `${flexAlign};justify-content: space-between;`;
 export const flexJustBetween = `${flex}; justify-content: space-between;`;
@@ -32,6 +34,14 @@ export const FlexJustBetweenWrapper = styled.div`
   ${flexJustBetween}
 `;
 
+export const Title = styled.div`
+  margin-bottom: 30px;
+  line-height: 24px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #e76350;
+`;
+
 export const Tabs = styled.div`
   ${flexAlign}
   border-bottom: 1px solid #eee;
@@ -44,6 +54,10 @@ export const Tabs = styled.div`
     font-weight: 600;
     font-size: 16px;
     color: #999999;
+
+    &:hover {
+      color :#333333;
+    }
 
     &:after {
       opacity: 0;
@@ -97,5 +111,9 @@ export const LoginLogo = styled.i`
 
   &.logo-binance {
     background-image: url(${Bnb});
+  }
+
+  &.logo-bitkeep {
+    background-image: url(${Bitkeep});
   }
 `;

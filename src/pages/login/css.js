@@ -9,12 +9,6 @@ import {
 } from "../../components/css.common";
 
 import Bg from "../../static/images/login-bg.jpg";
-import Identity from "../../static/images/login-identity.png";
-import Plug from "../../static/images/login-plug2.png";
-import Metamask from "../../static/images/login-metamask.png";
-import Infinityswap from "../../static/images/infinityswap-logo.png";
-import Bitkeep from "../../static/images/login-bitkeep.svg";
-import Bnb from "../../static/images/bnb.png";
 import L1 from "../../static/images/login-l1.png";
 import L2 from "../../static/images/login-l2.png";
 import L3 from "../../static/images/login-l3.png";
@@ -145,35 +139,6 @@ export const Content = styled.div`
         }
       }
     }
-
-    .metamask {
-      background-image: url(${Metamask});
-      background-size: 27px 25px;
-    }
-    .bnb {
-      background-image: url(${Bnb});
-      background-size: 23px 27px;
-    }
-
-    .bitkeep {
-      background-image: url(${Bitkeep});
-      background-size: 23px 23px;
-    }
-
-    .plug {
-      background-image: url(${Plug});
-      background-size: 27px 27px;
-    }
-
-    .infinityswap {
-      background-image: url(${Infinityswap});
-      background-size: 30px 23px;
-    }
-
-    .identity {
-      background-image: url(${Identity});
-      background-size: 27px 15px;
-    }
   }
 
   .main-btn {
@@ -195,6 +160,9 @@ export const Content = styled.div`
       justify-content: center;
       width: 38px;
       height: 38px;
+      padding: 0;
+      margin: 0;
+      line-height: 38px;
       background: #FFFFFF;
       box-shadow: 0 0 10px 3px rgb(0, 0, 0, .1);
       cursor: pointer;
@@ -207,11 +175,8 @@ export const Content = styled.div`
     }
 
     i {
-      display: block;
-      width: 30px;
-      height: 30px;
+      margin: 0;
       border-radius: 50%;
-      background: no-repeat center;
     }
   }
 
@@ -244,6 +209,10 @@ export const Links = styled.div`
   left: 0;
   right: 0;
   bottom: 40px;
+
+  @media (max-height: 650px) {
+    display: none;
+  }
 
   a {
     width: 32px;

@@ -46,11 +46,20 @@ li {
 
 a {
   text-decoration: none;
+  user-select: none;
 }
 
 select,
 input {
   outline: none;
+}
+
+.common-dialog .MuiPaper-root {
+  max-width: inherit;
+}
+
+.common-dialog .MuiDialogActions-root {
+  display: none;
 }
 
 .hide {
@@ -83,25 +92,29 @@ input {
   line-height: 48px;
   padding-left: 50px;
   border-radius: 36px;
-  background: rgb(51, 51, 51);
   font-size: 16px;
   cursor: pointer;
-  color: rgb(255, 255, 255);
   transition: background 0.5s ease 0s;
   overflow: hidden;
+}
+.login-btn-main {
+  background: rgb(51, 51, 51);
+  color: rgb(255, 255, 255);
+}
+.login-btn-main:hover {
+  background: #000;
 }
 .login-btn.disabled {
   cursor: not-allowed;
 }
 .login-btn.disabled:hover {
-  background: rgb(51, 51, 51);
   transition: none;
+}
+.login-btn-main.disabled:hover {
+  background: rgb(51, 51, 51);
 }
 .login-btn strong {
   font-weight: normal;
-}
-.login-btn:hover {
-  background: #000;
 }
 .login-btn i {
   width: 27px;
@@ -112,6 +125,30 @@ input {
 .login-btn .metamask {
   background-image: url(../images/login-metamask.png);
   background-size: 27px 25px;
+}
+.login-btn .bnb {
+  background-image: url(../images/bnb.png);
+  background-size: 23px 27px;
+}
+
+.login-btn .bitkeep {
+  background-image: url(../images/login-bitkeep.svg);
+  background-size: 23px 23px;
+}
+
+.login-btn .plug {
+  background-image: url(../images/login-plug2.png);
+  background-size: 27px 27px;
+}
+
+.login-btn .infinityswap {
+  background-image: url(../images/infinityswap-logo.png);
+  background-size: 30px 23px;
+}
+
+.login-btn .identity {
+  background-image: url(../images/login-identity.png);
+  background-size: 27px 15px;
 }
 .login-btn .loading {
   position: absolute;
@@ -126,6 +163,19 @@ input {
 }
 .login-btn .loading .MuiCircularProgress-svg {
   color: #fff;
+}
+
+.dmail-ava {
+  width: 43px;
+  height: 38px;
+  background: url(../images/b.png);
+  background-size: 100%;
+}
+.dmail-ava.e {
+  background-image: url(../images/e.png);
+}
+.dmail-ava.d {
+  background-image: url(../images/d.png);
 }
 
 /* @font-face {

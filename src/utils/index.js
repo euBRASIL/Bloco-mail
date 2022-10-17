@@ -37,6 +37,14 @@ export const getPosToParent = (parent, sub, isTop = false) => {
 
 export const deduplication = (arr) => Array.from(new Set(arr));
 
+export const remainDecimalByString = (num, digits = 2) => {
+  if (!/^[0-9]+.?[0-9]*$/.test(num + "")) {
+    return num;
+  }
+  const n = Math.pow(10, digits);
+  return Math.round(+num * n) / n;
+};
+
 export const throttle = (fn, wait = 300) => {
   var timer = null;
   return function () {
@@ -51,8 +59,8 @@ export const throttle = (fn, wait = 300) => {
   };
 };
 
-export const shortPrincipalId = (principalId) => {
-  return principalId.slice(0, 9) + "****" + principalId.slice(-6);
+export const shortPrincipalId = (principalId, isPid = true) => {
+  return principalId.slice(0, isPid ? 9 : 5) + "****" + principalId.slice(isPid ? -6 : -5);
 };
 
 export const timeConverter = (UNIX_timestamp) => {
@@ -112,18 +120,22 @@ export const getFileSize = (num, returnArray) => {
   return returnArray ? [result, unit] : `${result}${unit}`;
 };
 
-export const bindNftDialog = (cb) => {
+export const bindNftDialog = (cb, cancelCb) => {
   Modal({
     type: "error",
     title: "Please bind an NFT Domain Account!",
-    noCancel: true,
     content:
       "Before sending emails,you should bind an NFT Domain Account with Dmail. <br />Please register or purchase an NFT Domain Account and bind it.",
     okText: "Binding",
+    cancelText: "Buy NFT",
     onOk: async () => {
       typeof cb === "function" && cb();
       return true;
     },
+    onCancel() {
+      typeof cancelCb === "function" && cancelCb();
+      return true
+    }
   });
 };
 

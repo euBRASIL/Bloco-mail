@@ -49,6 +49,7 @@ const Top = ({ location: { pathname }, store }) => {
   // };
 
   const toSetting = () => history.push("/setting");
+  const toPresale = () => history.push("/presale");
 
   const logoutModal = () => {
     Modal({
@@ -121,6 +122,10 @@ const Top = ({ location: { pathname }, store }) => {
               <span>Events</span>
             </div>
             <div className="line"></div> */}
+            <div className="item">
+              <a className="can-click" onClick={toPresale}>Presale</a>
+            </div>
+            <div className="line"></div>
             <div className="item">
               <a className="can-click" onClick={toSetting}>Setting</a>
             </div>

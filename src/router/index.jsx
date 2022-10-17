@@ -12,6 +12,9 @@ import Spam from "@/pages/spam/index";
 import Trash from "@/pages/trash/index";
 import Assets from "@/pages/assets/index";
 import Market from "@/pages/market/index";
+import Presale from "@/pages/presale/index";
+import Orders from "@/pages/presale/orders/index";
+import Referrals from "@/pages/presale/referrals/index";
 
 import DLogin from "@/pages/dlogin/index";
 import AminoLogin from "@/pages/amino/login";
@@ -36,6 +39,9 @@ const Routes = () => (
       <Route exact path="/trash" component={ Trash } />
       <Route exact path="/setting/:tabname?" component={ Setting } />
       <Route exact path="/market/:tabname?" component={ Market } />
+      <Route exact path="/presale/:channelId?" component={ Presale } />
+      <Route exact path="/orders" component={ Orders } />
+      <Route exact path="/referrals" component={ Referrals } />
       <Route exact path="/assets" component={ Assets } />
       <Redirect from="*" to="/inbox" /> 
     </Switch>
