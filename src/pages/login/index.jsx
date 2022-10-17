@@ -59,8 +59,8 @@ const Index = ({ store }) => {
   }
 
 
-  const afterGetIdentity = async (sIdentity, loadingKey, loginAddress) => {
-    if (!await store.common.getTokenAndStoreUserInfo(sIdentity, loadingKey, loginAddress)) {
+  const afterGetIdentity = async (sIdentity, loadingKey, loginAddress, chainId = '') => {
+    if (!await store.common.getTokenAndStoreUserInfo(sIdentity, loadingKey, loginAddress, chainId, false)) {
       return
     }
     _setLoading(loadingKey, false)
@@ -137,9 +137,9 @@ const Index = ({ store }) => {
     }
     if (!isPhone) {
       _setLoading('binance', true);
-      const [principalId, account] = await bnbAuth(() => setLoading("binance", false));
+      const [principalId, account, chainId] = await bnbAuth(() => setLoading("binance", false));
       if (typeof principalId === 'string' && principalId) {
-        await afterGetIdentity(principalId, 'binance', account)
+        await afterGetIdentity(principalId, 'binance', account, chainId)
       } else {
         _setLoading('binance', false);
       }
@@ -153,9 +153,9 @@ const Index = ({ store }) => {
     }
     if (!isPhone) {
       _setLoading('bitkeep', true);
-      const [principalId, account] = await bitkeepAuth(() => setLoading("bitkeep", false));
+      const [principalId, account, chainId] = await bitkeepAuth(() => setLoading("bitkeep", false));
       if (typeof principalId === 'string' && principalId) {
-        await afterGetIdentity(principalId, 'bitkeep', account)
+        await afterGetIdentity(principalId, 'bitkeep', account, chainId)
       } else {
         _setLoading('bitkeep', false);
       }
@@ -234,7 +234,7 @@ const Index = ({ store }) => {
             <div
               className="main-btn"
             >
-              <a rel="noopener noreferrer" onClick={bnbConnect}  className="login-btn">
+              <a rel="noopener noreferrer" onClick={bnbConnect}  className="login-btn login-btn-main">
                 <i className="bnb"></i>
                 { loading.binance && <span className="loading">{BtnLoading}</span> }
                 <strong>Binance Wallet</strong>
@@ -244,19 +244,19 @@ const Index = ({ store }) => {
               <span>or</span>
             </div>
             <div className="other-btns">
-              <a rel="noopener noreferrer" onClick={ plugConnect }>
+              <a rel="noopener noreferrer" onClick={ plugConnect }  className="login-btn">
                 { loading.plug && <span className="loading">{BtnLoading}</span> }
                 <i className="plug"></i>
               </a>
-              <a rel="noopener noreferrer" onClick={ bitkeepConnect }>
+              <a rel="noopener noreferrer" onClick={ bitkeepConnect }  className="login-btn">
                 { loading.bitkeep && <span className="loading">{BtnLoading}</span> }
                 <i className="bitkeep"></i>
               </a>
-              <a rel="noopener noreferrer" onClick={ infinityConnect } >
+              <a rel="noopener noreferrer" onClick={ infinityConnect }   className="login-btn">
                 { loading.infinity && <span className="loading">{BtnLoading}</span> }
                 <i className="infinityswap"></i>
               </a>
-              <a rel="noopener noreferrer" onClick={ () => iiConnect() }>
+              <a rel="noopener noreferrer" onClick={ () => iiConnect() }  className="login-btn">
                 { loading.ii && <span className="loading">{BtnLoading}</span> }
                 <i className="identity"></i>
               </a>

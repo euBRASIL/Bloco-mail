@@ -23,15 +23,6 @@ export {
 
 export const Root = styled.div`
   padding: 30px;
-`;
-
-export const TabContent = styled.div`
-  .item {
-    max-height: calc(100vh - 295px);
-    overflow-y: auto;
-    margin: 2px -30px 0;
-    padding: 25px 30px 0;
-  }
 
   .chunk {
     padding: 35px 0;

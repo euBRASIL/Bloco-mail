@@ -1,6 +1,5 @@
 import { makeAutoObservable, toJS } from "mobx";
 import {
-  Storage,
   userInfoStorage,
   userInfoKeys,
 } from "@/utils/storage";
@@ -98,7 +97,7 @@ export default class CommonStore {
     return alias;
   }
 
-  async getTokenAndStoreUserInfo(sIdentity, loadingKey, loginAddress, notInitData = false) {
+  async getTokenAndStoreUserInfo(sIdentity, loadingKey, loginAddress, chainId = '', notInitData = false) {
     const token = await getToken(sIdentity)
     cache.enpid = token
     const res = this.setUserInfo({
@@ -106,6 +105,7 @@ export default class CommonStore {
       [userInfoKeys[1]]: loadingKey,
       [userInfoKeys[2]]: loginAddress,
       [userInfoKeys[5]]: token,
+      [userInfoKeys[7]]: chainId,
     });
 
     if (!res) {
@@ -145,8 +145,8 @@ export default class CommonStore {
         })(),
       ]);
       if (!alias) {
-        !window.location.href.includes("/setting") &&
-          bindNftDialog(() => (window.location.href = "/setting/account"));
+        !window.location.href.includes("/setting") && !window.location.href.includes("/presale") &&
+          bindNftDialog(() => (window.location.href = "/setting/account"), () => (window.location.href = "/presale"));
       }
       let _canisterId = canisterId;
       if (!canisterId && alias) {

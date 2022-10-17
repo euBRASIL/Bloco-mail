@@ -37,7 +37,7 @@ const Header = ({ location: { pathname }, store }) => {
     }
     const bindedNft = await store.common.detectGettingBindedNftEnded()
     if (!bindedNft) {
-      bindNftDialog(()=> history.push("/setting/account"))
+      bindNftDialog(()=> history.push("/setting/account"), ()=> history.push("/presale"))
     } else if (path) {
       if (path.includes('/inbox')) {
         store.common.triggerInboxRefresh()
@@ -86,7 +86,7 @@ const Header = ({ location: { pathname }, store }) => {
             <i style={{ width: `${usedVolume.usedVolumePercent}%` }}></i>
           </div>
           <FlexBetweenWrapper>
-            <div className="name">V1.2.5_beta</div>
+            <div className="name">V1.3.0_beta</div>
             <div className="limit"><span>{usedVolume.volume}{usedVolume.volumeUnit}</span>/{usedVolume.totalVolume}{usedVolume.totalVolumeUnit}</div>
           </FlexBetweenWrapper>
         </UseLimit>
