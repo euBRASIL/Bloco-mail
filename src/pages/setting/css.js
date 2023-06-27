@@ -12,6 +12,11 @@ import {
   FlexJustBetweenWrapper,
 } from "../../components/css.common";
 
+import Yes from "../../static/images/yeah.png";
+import No from "../../static/images/noop.png";
+import Empty from "../../static/images/empty2.png";
+// import Selected from "@/static/images/inbox/selected.png";
+
 export {
   Tabs,
   LoginLogo,
@@ -22,117 +27,136 @@ export {
 };
 
 export const Root = styled.div`
-  padding: 30px;
+  margin-top: 20px;
+`;
 
-  .chunk {
-    padding: 35px 0;
-    background: #ffffff;
-    border-bottom: 3px solid #eeeeee;
-    // box-shadow: 0px 0px 21px 1px rgba(0, 0, 0, 0.2);
-    // border-radius: 8px;
+export const Content = styled.div`
+  &.mobile {
+    font-size: 14px;
 
-    &:last-child {
-      border-bottom: none;
-    }
-  }
-
-  .account {
-    .content {
-      flex: 3;
-
-      & > div {
-        padding: 0 60px;
+    .name {
+      span {
+        font-size: 14px;
       }
     }
-  }
 
-  .name,
-  .content {
-    flex: 1;
+    .content {
+      margin-top: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.1);
+      font-size: 14px;
+    }
+
+    .address p {
+      margin-bottom: 12px;
+    }
+
+    .login {
+      .login-type {
+        strong {
+          font-size: 14px;
+        }
+
+        p {
+          margin-top: 5px;
+
+          .quick-title {
+
+          }
+        }
+
+        & > i, & > svg, & > img {
+          margin-right: 10px;
+        }
+
+        & > svg {
+          width: 40px;
+          height: 40px;
+        }
+      }
+    }
+
+    .usage {
+      li {
+        justify-content: space-between;
+        font-size: 14px;
+        line-height: 1;
+
+        .label {
+          width: auto;
+        }
+      }
+
+      .more {
+        a {
+          margin-left: 10px;
+        }
+      }
+    }
+
+    .nfts {
+      .name {
+        margin-bottom: 10px;
+      }
+    }
   }
 
   .name {
     ${flexAlign};
-    justify-content: center;
-
-    & > div {
-      width: 220px;
-    }
-    h2 {
-      font-size: 16px;
-      font-weight: 600;
+    color: #999;
+    font-size: 12px;
+    
+    span {
+      margin-right: 10px;
       color: #333333;
-      line-height: 20px;
-    }
-    p {
-      margin-top: 10px;
-      font-size: 14px;
-      font-weight: 400;
-      color: #999999;
-      line-height: 16px;
+      font-size: 16px;
     }
   }
 
   .content {
-    flex: 2;
-
-    & > div {
-      padding: 0 150px;
-    }
-
-    .nft-getting {
-      vertical-align: middle;
-      margin-right: 3px;
-
-      .MuiCircularProgress-root {
-        color: #666;
-        font-size: 14px;
-      }
-    }
+    margin-top: 20px;
+    margin-bottom: 30px;
+    padding: 15px;
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.15);
+    border-radius: 10px;
   }
 
   .usage {
+    color: #333333;
+    
     .content {
-      padding-bottom: 10px;
-      flex-direction: column;
-      position: relative;
-
-      &:before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 1px;
-        background-color: #f0f0f0;
-      }
+      padding: 20px 15px;
+      margin-bottom: 0;
     }
 
     h3 {
-      padding: 5px 0 10px;
-      font-size: 16px;
-      font-weight: 600;
-      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
       color: #333333;
-      line-height: 20px;
     }
 
     li {
-      ${flexBetween};
+      ${flexAlign};
       margin-top: 20px;
       font-size: 14px;
       line-height: 16px;
 
       .label {
-        color: #666666;
+        width: 35%;
       }
 
-      p {
-        color: #333;
-      }
+      .icon-enable {
+        width: 12px;
+        height: 8px;
+        background: url(${Yes});
+        background-size: 100%;
+        display: inline-block;
 
-      .red {
-        color: #e76350;
+        &.unsupport {
+          width: 10px;
+          height: 9px;
+          background-image: url(${No});
+        }
       }
 
       .gray {
@@ -143,87 +167,245 @@ export const Root = styled.div`
         font-size: 16px;
         transform: rotate(45deg);
         display: inline-block;
-        margin-right: 2px;
+        margin-right: 1px;
+        vertical-align: middle;
       }
     }
 
     .more {
-      margin-top: 25px;
+      margin-top: 18px;
+      padding-left: 15px;
 
       a {
-        line-height: 32px;
-        padding: 0 10px;
-        color: #e76350;
-        border: 1px solid #e76350;
-        border-radius: 5px;
-        display: inline-block;
-        margin-left: 15px;
-        transition: all 0.3s ease 0s;
-
-        &:hover {
-          background: #e9624b;
-          color: #fff;
-        }
-      }
-    }
-  }
-
-  .account {
-    .name {
-      & > div {
-        width: 180px;
-      }
-      h2 {
-        white-space: nowrap;
+        margin-left: 20px;
+        color: #55CADB;
+        text-decoration: underline;
+        cursor: pointer;
       }
     }
   }
 
   .address {
     p {
+      ${flexAlign};
       margin-bottom: 15px;
+      position: relative;
+      z-index: 0;
 
-      span {
-        font-size: 14px;
-        color: #666;
+      &:first-child {
+        z-index: 10;
+      }
+      &:nth-child(2) {
+        z-index: 9;
+      }
+      &:nth-child(3) {
+        z-index: 8;
+      }
+      &:nth-child(4) {
+        z-index: 7;
+      }
+      &:nth-child(5) {
+        z-index: 6;
       }
 
       &:last-child {
         margin-bottom: 0;
       }
-    }
-    .label {
-      margin-bottom: 10px;
+
+      span {
+        ${flexAlign};
+        margin-left: 8px;
+        cursor: pointer;
+      }
+
+      svg {
+        color: #FF563F;
+      }
+
+      .nft-getting {
+        svg {
+          margin-left: 0;
+        }
+      }
+
+      .none {
+        color: #999;
+        cursor: default;
+      }
     }
   }
 
   .login {
     .login-type {
       ${flexAlign};
-      margin-bottom: 15px;
 
-      i {
+      strong {
+        font-size: 16px;
+      }
+
+      p {
+        ${flexAlign};
+        margin-top: 8px;
+        cursor: pointer;
+
+        .quick-title {
+          margin-left: 8px;
+        }
+
+        svg {
+          color: #FF563F;
+          vertical-align: middle;
+        }
+      }
+
+      & > i, & > svg, & > img {
+        flex-shrink: 0;
         margin-right: 15px;
+      }
+
+      & > svg {
+        width: 50px;
+        height: 50px;
+      }
+
+      .logo-ok {
+        border-radius: 10px;
       }
     }
   }
 
   .nfts {
-    padding: 35px 0 5px;
+    .name {
+      margin-bottom: 20px;
+    }
 
-    .content {
-      min-height: 116px;
+    th, td {
+      &:last-child {
+        width: 100px;
+      }
+    }
+
+    .no-data-root {
+      min-height: 300px!important;
+    }
+
+    @media (min-height: 850px) {
+      .no-data-root {
+        min-height: 400px!important;
+      }
     }
   }
 `;
 
-export const Title = styled.div`
-  margin-bottom: 30px;
-  line-height: 24px;
-  font-size: 20px;
-  font-weight: bold;
-  color: #e76350;
-`;
+export const DidRoot = styled.div`
+  &.mobile {
+    .name, .title {
+      font-size: 14px;
+    }
+
+    .content {
+      margin-top: 10px;
+    }
+
+    .did-switch {
+      justify-content: space-between;
+    }
+
+    .first .content {
+      padding: 10px 15px;
+    }
+
+    .first .content, .dids {
+      box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.1);
+    }
+
+    .dids {
+      padding: 15px;
+    }
+  }
+
+  .chunk {
+    margin-bottom: 20px;
+  }
+  
+  .name {
+    ${flexAlign};
+    font-size: 16px;
+
+    strong {
+      font-weight: normal;
+      margin-left: 10px;
+    }
+
+    span {
+      font-size: 14px;
+      color: #999;
+      margin-left: 10px;
+    }
+  }
+
+  .first .content, .dids {
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.15);
+    border-radius: 10px;
+    padding: 15px 20px;
+  }
+
+  .title {
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  .dids {
+    padding: 20px;
+    .name {
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+  }
+
+  .content {
+    margin-top: 20px;
+  }
+
+  .list, .no-data {
+    min-height: 40px;
+  }
+
+  .did-list {
+    flex-wrap: wrap;
+
+    & > div {
+      flex: 0 0 25%;
+      padding: 0 15px 15px 15px;
+      box-sizing: border-box;
+
+      & > div {
+        width: auto;
+        flex: 1;
+      }
+    }
+
+    @media (min-width: 1660px) {
+      & > div {
+        flex: 0 0 20%;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      & > div {
+        flex: 0 0 33.33%;
+      }
+    }
+  }
+
+  .did-switch {
+    font-size: 15px;
+
+    strong {
+      margin-right: 15px;
+    }
+  }
+`
 
 export const Upload = styled.div`
   position: relative;

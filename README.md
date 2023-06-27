@@ -19,3 +19,18 @@ In the project directory, you can run:
 
 ### production
 `yarn build`
+
+
+### Cooperation
+* spaceID：https://space.id/
+* hashkeyDID：https://www.hashkey.id/
+* Unstoppable：https://unstoppabledomains.com/
+* .bit：https://www.did.id/
+* JazDID：https://www.jazdid.com/
+* humanode：https://humanode.io/
+* Polkadot Name System：https://www.pns.link/
+* Bonfida：https://bonfida.org/
+
+### difinity multi domains
+https://internetcomputer.org/docs/current/developer-docs/integrations/internet-identity/alternative-origins
+https://internetcomputer.org/docs/current/references/ii-spec/#alternative-frontend-origins

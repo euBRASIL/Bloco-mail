@@ -1,23 +1,26 @@
-import React, {
-  useEffect,
-  useState,
-  useCallback,
-  useRef,
-  Children,
-} from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { observer, inject } from "mobx-react";
 import styled, { keyframes } from "styled-components";
 
 import { flex, flexAlign, flexBetween } from "../css.common";
-
 import { Search, Redirect, GoPage, SearchChunk } from "./css";
 
 const Root = styled.div`
+  &.mobile {
+    background: #F5F5F5;
+    border-bottom: none;
+    padding: 0 7px 0 15px;
+  }
+
   ${flexBetween}
-  padding: 10px 10px 10px 20px;
-  border-bottom: 1px solid #f4f5f5;
+  padding: 4px 14px 4px 22px;
+  border-bottom: 1px solid #eee;
+  position: relative;
+  z-index: 10;
 `;
 
-const SearchBar = ({ children }) => {
+const SearchBar = ({ store, children }) => {
+  const { isMobile } = store.mobile;
   const [showRedirect, setShowRedirect] = useState(false);
 
   const closeRedirect = (ev) => {
@@ -41,37 +44,35 @@ const SearchBar = ({ children }) => {
 
  
   return (
-    <>
-      <Root>
-        {children}
-        {/* <SearchChunk> */}
-          {/* <Search>
-            <input type="text" placeholder="Search" />
-            <div className="search-btn" onClick={ SearchList }></div>
-          </Search> */}
+    <Root className={`${isMobile ? 'mobile' : ''}`}>
+      {children}
+      {/* <SearchChunk> */}
+        {/* <Search>
+          <input type="text" placeholder="Search" />
+          <div className="search-btn" onClick={ SearchList }></div>
+        </Search> */}
 
-          {/* <Redirect>
-            <div className="page">
-              <strong>1</strong>/9
-            </div>
-            <div
-              className="to _redirectPop"
-              onClick={() => setShowRedirect(true)}
-            >
-              <span>&gt;</span> redirect to
-            </div>
-            <GoPage
-              className={`${showRedirect ? "on _redirectPop" : "_redirectPop"}`}
-            >
-              <span>Redirect to</span>
-              <input type="number" />
-              <a rel="noopener noreferrer"  >Go</a>
-            </GoPage> */}
-          {/* </Redirect> */}
-        {/* </SearchChunk> */}
-      </Root>
-    </>
+        {/* <Redirect>
+          <div className="page">
+            <strong>1</strong>/9
+          </div>
+          <div
+            className="to _redirectPop"
+            onClick={() => setShowRedirect(true)}
+          >
+            <span>&gt;</span> redirect to
+          </div>
+          <GoPage
+            className={`${showRedirect ? "on _redirectPop" : "_redirectPop"}`}
+          >
+            <span>Redirect to</span>
+            <input type="number" />
+            <a rel="noopener noreferrer"  >Go</a>
+          </GoPage> */}
+        {/* </Redirect> */}
+      {/* </SearchChunk> */}
+    </Root>
   );
 };
 
-export default SearchBar;
+export default inject("store")(observer(SearchBar));

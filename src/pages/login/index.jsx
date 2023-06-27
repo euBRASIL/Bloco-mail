@@ -1,43 +1,36 @@
 import React, { useRef, useState, useEffect } from "react";
 import { observer, inject } from "mobx-react";
-import { useHistory, withRouter } from "react-router-dom";
-import { Web3Provider } from "@ethersproject/providers";
-import { Web3ReactProvider } from "@web3-react/core";
-import CircularProgress from "@mui/material/CircularProgress";
+import { useHistory, withRouter, useParams } from "react-router-dom";
+// import MetaMaskSDK from '@metamask/sdk';
 
+import { checkBlackAccount, loginRecord } from "@/api/web2/index";
 import Message from "@/components/Message/index";
-import { clearStorage } from "@/utils/storage";
-// import { Storage, userInfoStorage, userInfoKeys } from "@/utils/storage";
-// import axios from "axios";
-// import { cache, baseURL } from "@/utils/axios";
+import Circles from "@/components/Circles/index";
+import { host, getQueryString } from "@/utils/index";
+import { clearStorage, userInfoKeys } from "@/utils/storage";
 
-import { plugAuth, infinityswapAuth, loginTypes } from './utils'
-import { bnbAuth, bitkeepAuth } from './metamask/bsc'
+import { loginTypes, BtnLoading, Chains, LinkBtns, ChainNameMap } from './utils'
+import { plugAuth, infinityswapAuth } from './difinity'
+import { metamaskAuth, bnbAuth, bitkeepAuth, kucoinAuth, okAuth, trustAuth } from './metamask/bsc'
+import { walletConnect, signMessage } from './metamask/mobile'
+import { getLoginedPrincipalId, generateIdentityByHash } from './metamask/utils'
+import WorldLogin from "./metamask/worldCoin";
+import { phantomAuth } from './metamask/solana'
+import { keplrAuth } from './metamask/sei'
+import { mantaAuth } from './metamask/manta'
 import { authClient } from "./authClient";
-import MetaMask from './metamask/index'
-import { Root, Content, Links } from "./css";
+import MobileLogin from "./mobile.login";
+import { Root, FlexBetweenWrapper, Wrapper } from "./css";
 import Logo from "../../static/images/login-logo.svg";
-
-function getLibrary(provider) {
-  const library = new Web3Provider(provider);
-  library.pollingInterval = 12000;
-  return library;
-}
-
-const isPhone = /Android|webOS|iPhone|iPod|BlackBerry/i.test(
-  navigator.userAgent
-);
-
-const BtnLoading = (
-  <CircularProgress
-    size={ 22 }
-    thickness={4}
-    className="itemLoading"
-  />
-)
+import ChainsSvgs from "@/components/svgs/chains";
+import ChainsSubSvgs from "@/components/svgs/chainSubs";
+import ChainsWalletSvgs from "@/components/svgs/chainWallets";
 
 const Index = ({ store }) => {
+  const { isMobile } = store.mobile;
   const history = useHistory();
+  const toPathAfterLoginSuccess = getQueryString('path')
+
   const [loading, setLoading] = useState({
     // plug、ii、metamask、infinity
     ...loginTypes.reduce((res, key) => {
@@ -58,13 +51,43 @@ const Index = ({ store }) => {
     setLoading(newLoading)
   }
 
-
-  const afterGetIdentity = async (sIdentity, loadingKey, loginAddress, chainId = '') => {
-    if (!await store.common.getTokenAndStoreUserInfo(sIdentity, loadingKey, loginAddress, chainId, false)) {
+  const backLogin = () => {
+    clearStorage();
+    store.resetStores();
+    history.push('/login')
+  }
+  const checkValid = async (sIdentity, loadingKey, loginAddress, chainId) => {
+    store.common.setInitingStatus(true)
+    const fails = await Promise.all([
+      (async () => {
+        const fail = await checkBlackAccount(sIdentity, true)
+        fail && backLogin()
+        return fail
+      })(),
+      (async () => {
+        const fail = !await store.common.getTokenAndStoreUserInfo(isMobile, history, sIdentity, loadingKey, loginAddress, chainId, true)
+        fail && backLogin()
+        return fail
+      })()
+    ])
+    // console.log('fails', fails)
+    if (fails.filter((fail) => fail).length) {
       return
     }
+    store.common.initData(history, isMobile)
+    loginRecord(loginAddress, loadingKey, chainId)
     _setLoading(loadingKey, false)
-    history.push("/inbox");
+    store.common.queryFrequentData(isMobile)
+  }
+  const afterGetIdentity = async (sIdentity, loadingKey, loginAddress, chainId = '') => {
+    store.common.setUserInfo({
+      [userInfoKeys[0]]: sIdentity,
+      [userInfoKeys[1]]: loadingKey,
+      [userInfoKeys[2]]: loginAddress,
+      [userInfoKeys[7]]: chainId,
+    });
+    checkValid(sIdentity, loadingKey, loginAddress, chainId)
+    history.push(toPathAfterLoginSuccess || '/inbox');
   }
 
   const detectIsLoading = () => {
@@ -95,7 +118,7 @@ const Index = ({ store }) => {
     if (detectIsLoading()) {
       return;
     }
-    if (!isPhone) {
+    if (!isMobile) {
       _setLoading('plug', true);
       const res = await plugAuth();
       if (res === true) {
@@ -116,7 +139,7 @@ const Index = ({ store }) => {
     if (detectIsLoading()) {
       return;
     }
-    if (!isPhone) {
+    if (!isMobile) {
       _setLoading('infinity', true);
       const res = await infinityswapAuth();
       if (typeof res === 'string') {
@@ -130,151 +153,263 @@ const Index = ({ store }) => {
     }
   };
 
-  // https://docs.bnbchain.org/docs/wallet/wallet_api
-  const bnbConnect = async () => {
+  const ethConnectFn = (type, authFn) => async () => {
     if (detectIsLoading()) {
       return;
     }
-    if (!isPhone) {
-      _setLoading('binance', true);
-      const [principalId, account, chainId] = await bnbAuth(() => setLoading("binance", false));
-      if (typeof principalId === 'string' && principalId) {
-        await afterGetIdentity(principalId, 'binance', account, chainId)
+    let provider = null
+    if (isMobile) {
+      if (!window.ethereum) {
+        window.location.href = `https://metamask.app.link/dapp/${window.location.href || host}`
+        return
+      } else if (window.ethereum && window.ethereum.isTrust) {
+        // https://developer.trustwallet.com/developer/develop-for-trust/mobile#sign-multi-chain-transaction
+        // can not sign
+        console.log(window.ethereum)
       } else {
-        _setLoading('binance', false);
+        // const MMSDK = new MetaMaskSDK({ dappMetadata: {name: "Dmail", url: `https://${host}`} });
+        // provider = MMSDK.getProvider();
+        provider = window.ethereum
       }
+      
+      // console.log(window.ethereum, window.ethereum.isTrust)
+    }
+    _setLoading(type, true);
+    const [principalId, account, chainId] = await authFn(() => setLoading(type, false), provider, isMobile);
+    if (typeof principalId === 'string' && principalId) {
+      await afterGetIdentity(principalId, type, account, chainId)
+    } else {
+      _setLoading(type, false);
     }
   }
 
-  // http://docs.bitkeep.io/guide/connect-wallet-for-dapp.html#evm
-  const bitkeepConnect = async () => {
+  const walletConnectFn = async () => {
     if (detectIsLoading()) {
       return;
     }
-    if (!isPhone) {
-      _setLoading('bitkeep', true);
-      const [principalId, account, chainId] = await bitkeepAuth(() => setLoading("bitkeep", false));
+    const setLoadingFalse = () => _setLoading('wallet', false)
+    try {
+      const [connector, account, chainId] = await walletConnect(isMobile)
+      _setLoading('wallet', true)
+      const { signature, loginMessageHash, } = await signMessage(connector, account)
+      const principalId = await getLoginedPrincipalId(account, loginMessageHash, signature, setLoadingFalse)
       if (typeof principalId === 'string' && principalId) {
-        await afterGetIdentity(principalId, 'bitkeep', account, chainId)
-      } else {
-        _setLoading('bitkeep', false);
+        await afterGetIdentity(principalId, 'wallet', account, parseInt(chainId))
       }
+      _setLoading('wallet', false)
+    } catch (error) {
+      error && Message.error(error)
+      return
     }
   }
+
+  const worldCoinFn = async (principalId, account) => {
+    await afterGetIdentity(principalId, 'worldcoin', account)
+  }
+
+  const solConnectFn = (type) => async () => {
+    if (detectIsLoading()) {
+      return;
+    }
+    _setLoading(type, true);
+    const [principalId, account, chainId] = await phantomAuth(() => setLoading(type, false));
+    if (typeof principalId === 'string' && principalId) {
+      await afterGetIdentity(principalId, type, account, chainId)
+    } else {
+      _setLoading(type, false);
+    }
+  }
+
+  const seiFn = (type) => async () => {
+    if (detectIsLoading()) {
+      return;
+    }
+    _setLoading(type, true);
+    const account = await keplrAuth(type, isMobile);
+    if (account) {
+      const sPrincipalId = await generateIdentityByHash(account, 'Sei')
+      if (sPrincipalId) {
+        await afterGetIdentity(sPrincipalId, type, account, ChainNameMap[type])
+      } else {
+        _setLoading(type, false);
+        Message.error('Login failed')
+      }
+    } else {
+      _setLoading(type, false);
+      Message.error('Get wallet address failed')
+    }
+  }
+
+  const mantaFn = (type) => async () => {
+    if (detectIsLoading()) {
+      return;
+    }
+    _setLoading(type, true);
+    const account = await mantaAuth(type, isMobile, true);
+    if (account) {
+      const sPrincipalId = await generateIdentityByHash(account, 'Manta', true)
+      if (sPrincipalId) {
+        await afterGetIdentity(sPrincipalId, type, account, ChainNameMap[type])
+      } else {
+        _setLoading(type, false);
+        Message.error('Login failed')
+      }
+    } else {
+      _setLoading(type, false);
+      // Message.error('Get wallet address failed')
+    }
+  }
+
+  const loginAuth = (name) => {
+    switch (name) {
+      case 'metamask':
+        return ethConnectFn('metamask', metamaskAuth)
+      
+      case 'trust':
+        return ethConnectFn('trust', trustAuth)
+      
+      case 'bitkeep':
+        return ethConnectFn('bitkeep', bitkeepAuth)
+      
+      case 'ok':
+        return ethConnectFn('ok', okAuth)
+      
+      case 'kucoin':
+        return ethConnectFn('kucoin', kucoinAuth)
+      
+      case 'wallet':
+        return walletConnectFn
+      
+      case 'plug':
+        return plugConnect
+      
+      case 'infinity':
+        return infinityConnect
+      
+      case 'ii':
+        return iiConnect
+      
+      case 'keplr': 
+        return seiFn(loginTypes[11])
+      
+      case 'leap': 
+        return seiFn(loginTypes[12])
+      
+      case 'manta': 
+        return mantaFn(loginTypes[13])
+      
+      case 'phantom': 
+        return solConnectFn(loginTypes[14])
+    
+      default:
+        break;
+    }
+  }
+
+  const [currentChain, setCurrentChain] = useState(0)
+  const switchMainChain = (index) => {
+    if (detectIsLoading()) {
+      return;
+    }
+    setCurrentChain(index)
+  }
+
+  const [walletScollPos, setWalletPos] = useState('top')
+  useEffect(() => {
+    const scrollWallets = document.querySelector('#__wallets_ethMain')
+    if (scrollWallets) {
+      const scrollHeight = scrollWallets.scrollHeight
+      const clientHeight = scrollWallets.clientHeight
+      const distance = 5
+      const EventFn = () => {
+        const scrollTop = scrollWallets.scrollTop
+        if (scrollTop < distance) {
+          setWalletPos('top')
+        } else if (scrollTop > scrollHeight - clientHeight - distance) {
+          setWalletPos('bottom')
+        } else {
+          setWalletPos('center')
+        }
+      }
+      scrollWallets.addEventListener('scroll', EventFn)
+
+      return () => {
+        scrollWallets.removeEventListener('scroll', EventFn)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     clearStorage();
     store.resetStores();
   }, [])
 
-  const setMetamaskLoading = (status) => _setLoading("metamask", status)
-  
-  // useEffect(() => {
-  //   const data = userInfoStorage.get('all')
-  //   if (!data || !Object.keys(data).length) {
-  //     return
-  //   }
-  //   const principalId = data[userInfoKeys[0]]
-  //   const loginType = data[userInfoKeys[1]]
-  //   const enpid = data[userInfoKeys[5]]
-  //   if (!principalId || !loginType || !enpid) {
-  //     return;
-  //   }
-  //   const axiosInstance = axios.create({baseURL})
-  //   axiosInstance.interceptors.request.use(
-  //     (config) => {
-  //       if (config.headers) {
-  //         config.headers["dm-encstring"] = enpid;
-  //       }
-  //       return config;
-  //     },
-  //     (error) => Promise.reject(error)
-  //   );
-  //   axiosInstance({
-  //     url: `mails/getSize/${principalId}`,
-  //     method: "get",
-  //   }).then(async (res) => {
-  //     const { code, data } = res.data
-  //     if (code !== -1 && code !== -2 && data && 'limitSize' in data) { 
-  //       _setLoading(loginType, true)
-  //       const close = Message.loading('Accessing Dmail Network...')
-  //       await store.common.initData()
-  //       _setLoading(loginType, false)
-  //       close()
-  //       history.push("/inbox")
-  //     }
-  //   }).catch((res) => {
-  //     //
-  //   });
-  // }, [])
-
-  return (
-    <Root>
-      <div className="bubble red"></div>
-      <div className="bubble yellow"></div>
-      <div className="bubble blue"></div>
-      <Content>
-        <div className="logo">
-          <img src={ Logo } alt="" />
-          <p>Construct DID in Web 3.0, Not Just an Email.</p>
-        </div>
-        <div className="login">
-          <div className="btns">
-            <div
-              className="main-btn"
-            >
-              <Web3ReactProvider getLibrary={getLibrary}>
-                <MetaMask loading={loading.metamask} setLoading={setMetamaskLoading} afterGetIdentity={afterGetIdentity} detectIsLoading={detectIsLoading}>
-                  <i className="metamask"></i>
-                  { loading.metamask && <span className="loading">{BtnLoading}</span> }
-                  <strong>MetaMask</strong>
-                </MetaMask>
-              </Web3ReactProvider>
+  return isMobile ?
+    <MobileLogin
+      loading={loading}
+      detectIsLoading={detectIsLoading}
+      BtnLoading={BtnLoading}
+      afterGetIdentity={afterGetIdentity}
+      ethConnectFn={ethConnectFn}
+      metamaskAuth={metamaskAuth}
+      _setLoading={_setLoading}
+      iiConnect={iiConnect}
+    /> :
+    (
+      <Root>
+        <Circles />
+        <Wrapper>
+          <FlexBetweenWrapper className="top">
+            <div className="logo">
+              <img src={ Logo } alt="" />
             </div>
-            <div
-              className="main-btn"
-            >
-              <a rel="noopener noreferrer" onClick={bnbConnect}  className="login-btn login-btn-main">
-                <i className="bnb"></i>
-                { loading.binance && <span className="loading">{BtnLoading}</span> }
-                <strong>Binance Wallet</strong>
-              </a>
-            </div>
-            <div className="split-line">
-              <span>or</span>
-            </div>
-            <div className="other-btns">
-              <a rel="noopener noreferrer" onClick={ plugConnect }  className="login-btn">
-                { loading.plug && <span className="loading">{BtnLoading}</span> }
-                <i className="plug"></i>
-              </a>
-              <a rel="noopener noreferrer" onClick={ bitkeepConnect }  className="login-btn">
-                { loading.bitkeep && <span className="loading">{BtnLoading}</span> }
-                <i className="bitkeep"></i>
-              </a>
-              <a rel="noopener noreferrer" onClick={ infinityConnect }   className="login-btn">
-                { loading.infinity && <span className="loading">{BtnLoading}</span> }
-                <i className="infinityswap"></i>
-              </a>
-              <a rel="noopener noreferrer" onClick={ () => iiConnect() }  className="login-btn">
-                { loading.ii && <span className="loading">{BtnLoading}</span> }
-                <i className="identity"></i>
-              </a>
+            <LinkBtns className="pos-static" />
+          </FlexBetweenWrapper>
+          <div className="login">
+            <FlexBetweenWrapper className="title">
+              <div className="name"><strong>Login To Dmail</strong></div>
+              <div className="network">
+                <p>{Chains[currentChain].name}</p>
+                {Chains[currentChain].subChainSvgs.map((name, index) => (
+                  <span key={name} style={{ zIndex: 20 - index }}><ChainsSubSvgs type={name} /></span>
+                ))}
+              </div>
+            </FlexBetweenWrapper>
+            <div className="chunks">
+              <div className={`chains ${Chains.length > 3 ? 'chains-scroll' : ''}`}>
+                {Chains.map(({ name, svg }, index) => (
+                  <div className={`item ${svg} ${index === currentChain ? 'on' : ''}`} key={name} onClick={() => switchMainChain(index)}>
+                    <ChainsSvgs type={svg} isFocus={index === currentChain} />
+                    <span>{name}</span>
+                  </div>
+                ))}
+              </div>
+              {Chains.map(({ name, svg, wallets }, index) => (
+                <div className={`wallets ${index === currentChain ? 'show' : ''} ${svg === 'ethMain' ? 's-'+walletScollPos : ''}`} key={name}>
+                  {svg === 'worldcoin' ? <WorldLogin loginFn={worldCoinFn} /> : (
+                    <ul id={`__wallets_${svg}`}>
+                      {wallets.map((item, key) => (
+                        <li className={`item ${loading[item.svg] ? 'on' : ''}`} key={key} onClick={loginAuth(item.svg)}>
+                          <span>{item.name}</span>
+                          <p className={item.svg}><ChainsWalletSvgs type={item.svg} /></p>
+                          { loading[item.svg] && <span className="loading">{BtnLoading}</span> }
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-        <div className="help">
-          <a href="https://dmailofficial.gitbook.io/helpcenter/v/english/" target="_blank">Help Center</a>
-        </div>
-      </Content>
-      <Links>
-        <a href="https://twitter.com/dmailofficial" className="twitter" target="_blank"></a>
-        <a href="https://t.me/dmailofficial" className="telegram" target="_blank"></a>
-        <a href="https://medium.com/@dmail_official" className="m" target="_blank"></a>
-        <a href="https://discord.gg/QbvaeqwMFg" className="discord" target="_blank"></a>
-      </Links>
-    </Root>
-  );
+          <div className="bottom">
+            <div className="help">
+              <a href="https://dmailofficial.gitbook.io/helpcenter/v/english/" target="_blank">Help Center</a>
+            </div>
+            <p>@Dmail Network Foundation LTD.</p>
+          </div>
+        </Wrapper>
+      </Root>
+    );
 };
 
 export default withRouter(inject("store")(observer(Index)));

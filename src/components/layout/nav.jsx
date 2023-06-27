@@ -2,26 +2,61 @@ import React, { useEffect, useState, useCallback, useRef } from "react";
 import { withRouter, useHistory } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { observer, inject } from "mobx-react";
-// import Modal from "@/components/Modal/index";
-import { Dmail, bindNftDialog } from "@/utils/index";
+import { NoNavAndTopPaths } from "@/router";
 
-import { Logo, Nav, UseLimit, SplitLine, FlexBetweenWrapper } from "./css";
-import { NavList, NavLineBeforeItem } from "./utils";
-import NavLogo from "../../static/images/nav-logo.svg";
+import { levelNameMap } from '@/pages/events/utils'
+import { Dmail, bindNftDialog } from "@/utils/index";
+import PopInvites from '@/pages/events/popInvites'
+import { Logo, Nav, UseLimit, FlexBetweenWrapper, Invite } from "./css";
+import { NavList, NavMobileList } from "./utils";
+import Svgs from "@/components/svgs/navs";
+import NavLogo from "@/static/images/nav-logo.svg";
 
 const Root = styled.div`
-  width: 15vw;
-  max-width: 340px;
-  min-width: 245px;
-  background: #272524;
+  width: 260px;
+  /* padding: 32px 0 38px; */
+  background: #111111;
   height: 100vh;
-  position: relative;
-  //overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  /* box-sizing: border-box; */
+  overflow-y: auto;
+
+  &.mobile {
+    width: 74%;
+    max-width: 350px;
+    min-width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 111;
+    transform: translateX(-100%);
+    transition: transform .3s ease-out 0s;
+
+    &.expand {
+      transform: translateX(0)
+    }
+  }
+
+  & > div {
+    width: 100%;
+
+    &:first-child {
+      margin-bottom: 40px;
+      padding-top: 30px;
+    }
+  }
 `;
 
-const Header = ({ location: { pathname }, store }) => {
-  const { unReadList, usedVolume, initing, routerBlockFn } = store.common;
+const NavChunk = ({ location: { pathname }, store }) => {
   const history = useHistory();
+  const { myNftList, unReadList, usedVolume, bindedNft, initing, routerBlockFn } = store.common;
+  const { isMobile, navExpand } = store.mobile;
+  const bindedNftVolume = bindedNft in usedVolume ? usedVolume[bindedNft] : {}
+
   const toPath = (path) => async () => {
     const notInbox = !pathname.includes('/inbox') && path.includes(pathname)
     if (initing || notInbox) {
@@ -31,63 +66,92 @@ const Header = ({ location: { pathname }, store }) => {
       routerBlockFn(() => history.push(path))
       return
     }
-    if (path.includes('/setting')) {
+    if (path.includes('/setting') || path.includes('/presale')) {
       history.push(path);
       return
     }
     const bindedNft = await store.common.detectGettingBindedNftEnded()
     if (!bindedNft) {
-      bindNftDialog(()=> history.push("/setting/account"), ()=> history.push("/presale"))
+      bindNftDialog(!!myNftList.length, history)
     } else if (path) {
-      if (path.includes('/inbox')) {
-        store.common.triggerInboxRefresh()
-      }
+      // if (path.includes('/inbox')) {
+      //   store.common.triggerInboxRefresh()
+      // }
       history.push(path);
     }
   };
 
+  const toPoints = () => {
+    if (!bindedNft) {
+      bindNftDialog(!!myNftList.length, history)
+      return
+    }
+    if (routerBlockFn) {
+      routerBlockFn(() => history.push('/events/points'))
+      return
+    }
+    history.push('/events/points');
+  }
+
+  const onClick = () => {
+    if (import.meta.env.PROD) {
+      history.push('/inbox');
+    } else {
+      store.common.regetToken()
+      // store.common.sendEmail()
+    }
+  }
+
   useEffect(() => {
-    const filterNav = NavList.filter(({ path }) => path === pathname)
-    const currentNavName = filterNav.length ? filterNav[0].name : ''
-    const num = unReadList.Inbox > 0 ? `(${unReadList.Inbox}) ` : ''
-    document.title = currentNavName ? `${num}${currentNavName} | ${Dmail}` : `${num}${Dmail}`
-  }, [pathname, unReadList])
+    store.mobile.setNavExpand(false)
+  }, [pathname])
+
+  const noNavAndTop = !!NoNavAndTopPaths.filter((path) => path.indexOf(pathname) === 0).length
+  if (noNavAndTop) {
+    return null
+  }
 
   return (
     <>
-      <Root>
-        <Logo>
-          <img src={NavLogo} alt="" />
-        </Logo>
-        <Nav>
-          {NavList.map(({ key, name, path }) => (
-            <div key={name} className="menu">
-              {NavLineBeforeItem === name ? <SplitLine></SplitLine> : null}
-              <div
-                style={{ cursor: initing ? 'wait' : 'pointer' }}
-                className={pathname.includes(path) ? "on li" : "li"}
-                onClick={toPath(path)}
-              >
-                <span className={`icon-${key} nav-icon`}></span>
-                <span className="name">{name}</span>
-                <span className={unReadList[name] ? "unread show" : "unread"}>
-                  {unReadList[name]}
-                </span>
+      <Root className={`__nav ${isMobile ? 'mobile' : ''} ${navExpand ? 'expand' : ''}`}>
+        <div>
+          <Logo onClick={onClick} className={`${isMobile ? 'mobile' : ''}`}>
+            <img src={NavLogo} alt="" />
+          </Logo>
+          <Nav className={`${isMobile ? 'mobile' : ''}`}>
+            {(isMobile ? NavMobileList : NavList).map(({ key, name, path, splitLine, mobileSplitLine, id }, index) => (
+              <div key={name} className={`menu ${key} ${(isMobile ? mobileSplitLine : splitLine) ? 'split-line' : ''}`}>
+                <div
+                  style={{ cursor: initing ? 'wait' : 'pointer' }}
+                  className={pathname.includes(path) ? "on li" : "li"}
+                  onClick={toPath(path)}
+                  id={id || ''}
+                >
+                  { key !== 'compose' ? <span className="icons"><Svgs type={key} selected={pathname.includes(path)} /></span> : null}
+                  <span className="name">{name}</span>
+                  <span className={unReadList[name] ? "unread show" : "unread"}>
+                    {unReadList[name] > 99 ? `99+` : unReadList[name]}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
-        </Nav>
+            ))}
+          </Nav>
+        </div>
         <UseLimit>
-          <FlexBetweenWrapper>
-            <div className="name">Daily limit</div>
-            <div className="limit"><span>{usedVolume.page}</span>/{usedVolume.totalPage}</div>
-          </FlexBetweenWrapper>
+          <Invite>
+            <span>Plans: <strong>{ levelNameMap[bindedNftVolume.level] || '--' }</strong></span>
+            <a onClick={toPoints}>Free Upgrade</a>
+          </Invite>
           <div className="use-volume" title={`${usedVolume.volume}${usedVolume.volumeUnit} used`}>
-            <i style={{ width: `${usedVolume.usedVolumePercent}%` }}></i>
+            <i style={{ width: `${bindedNftVolume.usedVolumePercent || 0}%` }} className={bindedNftVolume.usedVolumePercent > 100 ? 'excceed' : ''}></i>
           </div>
-          <FlexBetweenWrapper>
-            <div className="name">V1.3.0_beta</div>
-            <div className="limit"><span>{usedVolume.volume}{usedVolume.volumeUnit}</span>/{usedVolume.totalVolume}{usedVolume.totalVolumeUnit}</div>
+          <FlexBetweenWrapper className="use-info">
+            <div>
+              Daily limit: <strong className={usedVolume.page > bindedNftVolume.totalPage ? "excceed" : ""}>{usedVolume.page}</strong>/{bindedNftVolume.totalPage || '-'}
+            </div>
+            <div>
+              <strong className={usedVolume.bVolume > bindedNftVolume.bTotalVolume ? "excceed" : ""}>{usedVolume.volume}{usedVolume.volumeUnit}</strong>/{bindedNftVolume.totalVolume || '-'}{bindedNftVolume.totalVolumeUnit || ''}
+            </div>
           </FlexBetweenWrapper>
         </UseLimit>
       </Root>
@@ -95,4 +159,4 @@ const Header = ({ location: { pathname }, store }) => {
   );
 };
 
-export default withRouter(inject("store")(observer(Header)));
+export default withRouter(inject("store")(observer(NavChunk)));

@@ -11,7 +11,7 @@ import {
   FlexJustBetweenWrapper,
 } from "@/components/css.common";
 
-import { Checked, collect } from "@/components/emails/css";
+import { collect } from "@/components/emails/css";
 
 import File from "@/static/images/icon-file.png";
 import Unread from "@/static/images/email.png";
@@ -33,58 +33,79 @@ export {
 
 export const Root = styled.div`
   ${flex}
-  height: calc(100vh - 166px);
+  height: 100%;
   overflow: hidden;
-
-  .right {
-    width: calc(100vw - 896px);
-  }
 `;
 
 export const Left = styled.div`
-  // padding-top: 30px;
-  width: 400px;
-  border-right: 2px solid #f4f5f5;
+  width: 35%;
+  min-width: 400px;
+  max-width: 475px;
+  border-right: 1px solid #eee;
 
-  // @media (max-width: 1800px) {
-  //     width: 400px;
-  // }
+  &.mobile {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    border-right: none;
 
-  // @media (max-width: 1600px) {
-  //     width: 300px;
-  // }
+    /* ul {
+      padding-bottom: 10px;
+    } */
+  }
 `;
 
 export const SearchActions = styled.div`
   ${flexAlign}
+  height: 45px;
+
+  &.mobile {
+    height: 40px;
+
+    .checkbox {
+      margin-right: 15px;
+      color: #ddd;
+      cursor: pointer;
+
+      svg {
+        vertical-align: middle;
+      }
+    }
+
+    .icons-actions {
+      width: 32px;
+      height: 40px;
+      margin-right: 10px;
+    }
+  }
 
   .chunk {
     ${flexAlign}
-    border-right: 2px solid #F4F5F5;
-    margin-right: 35px;
+  }
 
-    &:last-child {
-      border-right: none;
-      margin-right: 0;
-    }
+  .icons-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    margin-right: 15px;
+    border-radius: 10px;
+    cursor: pointer;
 
-    div {
-      margin-right: 35px;
-      //cursor: pointer;
+    &:hover {
+      background: #F6F6F6;
     }
   }
 
   .checkbox {
-    width: 16px;
-    height: 16px;
-    margin-right: 18px;
-    border: 2px solid #a59d9d;
-    border-radius: 5px;
+    margin-right: 27px;
+    color: #ddd;
     cursor: pointer;
-  }
 
-  .checked {
-    ${Checked}
+    svg {
+      vertical-align: middle;
+    }
   }
 
   .unread {
@@ -132,16 +153,6 @@ export const SearchActions = styled.div`
     background: url(${Report}) no-repeat;
     background-size: 100%;
   }
-
-  @media (max-width: 1800px) {
-    .chunk {
-      margin-right: 25px;
-
-      div {
-        margin-right: 25px;
-      }
-    }
-  }
 `;
 
 export const Menus = styled.div`
@@ -168,7 +179,7 @@ export const Menus = styled.div`
     cursor: pointer;
 
     &.on {
-      color: #e9624b;
+      color: #FF563F;
     }
   }
 
@@ -191,7 +202,7 @@ export const Menus = styled.div`
     top: 100%;
     left: 0;
     height: 3px;
-    background: #e9624b;
+    background: #FF563F;
     transition: all 0.3s ease-out;
   }
 
@@ -204,15 +215,15 @@ export const List = styled.div`
   overflow-y: auto;
   // height: calc(100vh - 409px);
   height: 100%;
-  margin-left: -30px;
+  /* margin-left: -30px; */
 
   li {
     &::after {
       content: "";
       display: block;
-      margin-left: 33px;
+      /* margin-left: 33px; */
       height: 1px;
-      background: #f4f5f5;
+      background: #eee;
     }
     &:last-child {
       &::after {
@@ -249,8 +260,10 @@ export const List = styled.div`
     }
     .date {
       margin-top: 0px;
+      white-space: nowrap;
       color: #a59d9d;
       font-size: 12px;
+      text-align: right;
     }
   }
 

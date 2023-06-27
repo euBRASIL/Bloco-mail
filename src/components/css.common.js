@@ -1,11 +1,13 @@
 import styled, { keyframes } from "styled-components";
 
-import Identity from "@/static/images/login-identity.png";
+import Identity from "@/static/images/login-identity2.png";
 import Plug from "@/static/images/login-plug2.png";
 import Metamask from "@/static/images/login-metamask.png";
 import Infinityswap from "@/static/images/infinityswap-logo.png";
 import Bnb from "@/static/images/bnb.png";
 import Bitkeep from "@/static/images/login-bitkeep.svg";
+import Kucoin from "@/static/images/kucoin.svg";
+import Ok from "@/static/images/ok.jpeg";
 
 export const flex = `display: flex;`;
 export const flexAlign = `${flex}; align-items: center;`;
@@ -39,7 +41,7 @@ export const Title = styled.div`
   line-height: 24px;
   font-size: 20px;
   font-weight: bold;
-  color: #e76350;
+  color: #FF563F;
 `;
 
 export const Tabs = styled.div`
@@ -47,35 +49,68 @@ export const Tabs = styled.div`
   border-bottom: 1px solid #eee;
   padding-bottom: 15px;
 
+  &.mobile {
+    padding-bottom: 8px;
+
+    .item {
+      padding: 0 15px;
+
+      &:first-child {
+        margin-left: 15px;
+      }
+
+      &:after {
+        transform: translateY(8px);
+      }
+    }
+  }
+
+  &.contacts {
+    margin-top: 18px;
+    padding-bottom: 5px;
+
+    .item {
+      padding: 0 15px;
+      font-size: 14px;
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &:after {
+        transform: translateY(5px);
+      }
+    }
+  }
+
   .item {
-    margin-right: 90px;
+    margin-left: 20px;
+    margin-right: 5px;
+    padding: 0 18px;
     position: relative;
     cursor: pointer;
-    font-weight: 600;
     font-size: 16px;
-    color: #999999;
+    color: #666;
 
     &:hover {
-      color :#333333;
+      color: #FF563F;
     }
 
     &:after {
-      opacity: 0;
       content: "";
+      opacity: 0;
       position: absolute;
-      left: 50%;
+      left: 0;
+      right: 0;
       top: 100%;
-      transform: translateX(-50%);
-      margin-top: 13.5px;
-      width: 40px;
-      height: 4px;
-      background: #e76350;
-      border-radius: 3px;
+      transform: translateY(15px);
+      height: 1px;
+      background: #FF563F;
       transition: opacity 0.3s ease-out 0s;
     }
   }
   .on {
-    color: #333333;
+    color: #FF563F;
 
     &:after {
       opacity: 1;
@@ -115,5 +150,16 @@ export const LoginLogo = styled.i`
 
   &.logo-bitkeep {
     background-image: url(${Bitkeep});
+  }
+
+  &.logo-kucoin {
+    background-position: 0 center;
+    background-size: 100%;
+    background-image: url(${Kucoin});
+  }
+
+  &.logo-ok {
+    background-size: 100%;
+    background-image: url(${Ok});
   }
 `;
