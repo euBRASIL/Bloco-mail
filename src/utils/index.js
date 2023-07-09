@@ -214,7 +214,7 @@ export const getFileSize = (num, returnArray) => {
 export const bindNftDialog = (hasNfts, history, channelId = 0) => {
   const fn = history && history.push ? (path) => history.push(path) : (path) => { window.location.href = path };
   const cb = hasNfts ? () => fn(channelId ? `/setting/account/${channelId}` : "/setting/account") : () => fn("/presale");
-  const content = hasNfts ? `Before sending emails,you should bind an NFT Domain Account with Dmail. <br />Detected that you have an existing NFT Domain Account,please complete the binding as soon as possible.` : `Before sending emails, please bind an NFT Domain Account with Dmail. You can purchase an NFT Doman Account in pre-sale and complete the binding.`
+  const content = hasNfts ? `Before sending emails,you should bind an NFT Domain Account with Dmail. <br />Detected that you have an existing NFT Domain Account,please complete the binding as soon as possible.` : `Before sending emails, please bind an NFT Domain Account with Dmail. You can purchase an NFT Domain Account in pre-sale and complete the binding.`
   const isMobile = isMobileFn()
   Modal({
     isMobile,
