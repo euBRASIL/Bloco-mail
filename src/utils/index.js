@@ -29,11 +29,12 @@ if (isFirefox && window.BigInt) {
 export const host = import.meta.env.VITE_PAGE_HOST
 export const Dmail = "Dmail";
 export const dmailAi = "@dmail.ai";
+export const currentMaxDmailNftLen = 11
 export const isPrincipalIdFn = (id) =>
   /^([a-z0-9]{5}\-){10}[a-z0-9]{3}$/g.test(id);
 export const isDmailFn = (str) => /^[^@]+@dmail.ai$/.test(str);
-export const isEmailFn = (str) =>
-  /^[0-9a-zA-Z_.\-/+]+[@][0-9a-zA-Z_.-]+([.][a-zA-Z]+){1,2}$/.test(str);
+export const isDefaultAlias = (str) => isDmailFn(str) && str.replace(dmailAi, '').length > currentMaxDmailNftLen
+export const isEmailFn = (str) => /^[0-9a-zA-Z_.\-/+]+[@][0-9a-zA-Z_.-]+([.][a-zA-Z]+){1,2}$/.test(str);
 export const getAliasFn = (alias) => {
   if (!alias) {
     return ''
@@ -211,24 +212,24 @@ export const getFileSize = (num, returnArray) => {
   return returnArray ? [result, unit] : `${result}${unit}`;
 };
 
-export const bindNftDialog = (hasNfts, history, channelId = 0) => {
-  const fn = history && history.push ? (path) => history.push(path) : (path) => { window.location.href = path };
-  const cb = hasNfts ? () => fn(channelId ? `/setting/account/${channelId}` : "/setting/account") : () => fn("/presale");
-  const content = hasNfts ? `Before sending emails,you should bind an NFT Domain Account with Dmail. <br />Detected that you have an existing NFT Domain Account,please complete the binding as soon as possible.` : `Before sending emails, please bind an NFT Domain Account with Dmail. You can purchase an NFT Domain Account in pre-sale and complete the binding.`
-  const isMobile = isMobileFn()
-  Modal({
-    isMobile,
-    type: "",
-    title: "Please bind an NFT Domain Account!",
-    content,
-    okText: hasNfts ? "Binding" : "Buy NFT",
-    noCancel: true,
-    onOk: async () => {
-      cb();
-      return true;
-    },
-  });
-};
+// export const bindNftDialog = (hasNfts, history, channelId = 0) => {
+//   const fn = history && history.push ? (path) => history.push(path) : (path) => { window.location.href = path };
+//   const cb = hasNfts ? () => fn(channelId ? `/setting/account/${channelId}` : "/setting/account") : () => fn("/presale");
+//   const content = hasNfts ? `Before sending emails,you should bind an NFT Domain Account with Dmail. <br />Detected that you have an existing NFT Domain Account,please complete the binding as soon as possible.` : `Before sending emails, please bind an NFT Domain Account with Dmail. You can purchase an NFT Doman Account in pre-sale and complete the binding.`
+//   const isMobile = isMobileFn()
+//   Modal({
+//     isMobile,
+//     type: "",
+//     title: "Please bind an NFT Domain Account!",
+//     content,
+//     okText: hasNfts ? "Binding" : "Buy NFT",
+//     noCancel: true,
+//     onOk: async () => {
+//       cb();
+//       return true;
+//     },
+//   });
+// };
 
 export const copyFromDomText = (dom) => {};
 

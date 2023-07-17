@@ -74,7 +74,7 @@ const Index = ({ store }) => {
     if (fails.filter((fail) => fail).length) {
       return
     }
-    store.common.initData(history, isMobile)
+    store.common.initData(isMobile)
     loginRecord(loginAddress, loadingKey, chainId)
     _setLoading(loadingKey, false)
     store.common.queryFrequentData(isMobile)

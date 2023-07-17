@@ -5,7 +5,7 @@ import { observer, inject } from "mobx-react";
 import { NoNavAndTopPaths } from "@/router";
 
 import { levelNameMap } from '@/pages/events/utils'
-import { Dmail, bindNftDialog } from "@/utils/index";
+// import { Dmail, bindNftDialog } from "@/utils/index";
 import PopInvites from '@/pages/events/popInvites'
 import { Logo, Nav, UseLimit, FlexBetweenWrapper, Invite } from "./css";
 import { NavList, NavMobileList } from "./utils";
@@ -53,9 +53,9 @@ const Root = styled.div`
 
 const NavChunk = ({ location: { pathname }, store }) => {
   const history = useHistory();
-  const { myNftList, unReadList, usedVolume, bindedNft, initing, routerBlockFn } = store.common;
+  const { myNftList, unReadList, usedVolume, bindedNft, defaultAlias, initing, routerBlockFn } = store.common;
   const { isMobile, navExpand } = store.mobile;
-  const bindedNftVolume = bindedNft in usedVolume ? usedVolume[bindedNft] : {}
+  const bindedNftVolume = usedVolume[bindedNft] || usedVolume[defaultAlias] || {}
 
   const toPath = (path) => async () => {
     const notInbox = !pathname.includes('/inbox') && path.includes(pathname)
@@ -70,35 +70,27 @@ const NavChunk = ({ location: { pathname }, store }) => {
       history.push(path);
       return
     }
-    const bindedNft = await store.common.detectGettingBindedNftEnded()
-    if (!bindedNft) {
-      bindNftDialog(!!myNftList.length, history)
-    } else if (path) {
-      // if (path.includes('/inbox')) {
-      //   store.common.triggerInboxRefresh()
-      // }
-      history.push(path);
-    }
+
+    history.push(path);
   };
 
-  const toPoints = () => {
-    if (!bindedNft) {
-      bindNftDialog(!!myNftList.length, history)
-      return
-    }
+  const toPoints = async () => {
+    // if (await store.common.bindOrBuyNftPop(isMobile, history, 'upgrade')) {
+    //   return
+    // }
     if (routerBlockFn) {
-      routerBlockFn(() => history.push('/events/points'))
+      routerBlockFn(() => history.push('/events/plans'))
       return
     }
-    history.push('/events/points');
+    history.push('/events/plans');
   }
 
   const onClick = () => {
     if (import.meta.env.PROD) {
       history.push('/inbox');
     } else {
-      store.common.regetToken()
-      // store.common.sendEmail()
+      // store.common.regetToken()
+      store.common.sendWelcomeEmail()
     }
   }
 

@@ -6,7 +6,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { NoNavAndTopPaths } from "@/router";
 
 import { GuidePages, inboxIds } from "@/components/Guide/index";
-import { Dmail, bindNftDialog } from '@/utils/index'
+import { Dmail } from '@/utils/index'
 import Svgs from "@/components/svgs/top";
 import { PageList, getParentPath } from "./utils";
 import { TopActions } from "./css";
@@ -33,11 +33,6 @@ const Top = ({ location: { pathname }, store }) => {
   }
 
   const toPoints = async () => {
-    const bindedNft = await store.common.detectGettingBindedNftEnded()
-    if (!bindedNft) {
-      bindNftDialog(!!myNftList.length, history)
-      return
-    }
     if (routerBlockFn) {
       routerBlockFn(() => history.push('/events/points'))
       return

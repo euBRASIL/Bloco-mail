@@ -3,6 +3,8 @@ import { Switch, Router, Route, Redirect, BrowserRouter, useLocation } from "rea
 
 import { Spin } from "@/components/Loading";
 
+// can not use 'React.lazy' because of guide
+import Compose from "@/pages/compose/index";
 import Inbox from "@/pages/inbox/index";
 import Setting from "@/pages/setting/index";
 import Events from "@/pages/events/index";
@@ -22,7 +24,7 @@ import Contact from "@/pages/contact/index";
 export const NoNavAndTopPaths = ['/login', '/dlogin', '/alogin', '/upgrades']
 export const NoTopPaths = ['/orders', '/referrals', '/compose']
 
-const Compose = React.lazy(() => import("@/pages/compose/index"));
+// const Compose = React.lazy(() => import("@/pages/compose/index"));
 const Presale = React.lazy(() => import("@/pages/presale/index"));
 const Referrals = React.lazy(() => import("@/pages/presale/referrals/index"));
 const Login = React.lazy(() => import("@/pages/login/index"));

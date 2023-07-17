@@ -2,9 +2,10 @@ import { makeAutoObservable, toJS } from "mobx";
 import { Storage, Channel_Id, userInfoStorage, userInfoKeys, Has_Switched_Did, Has_Enabled_Did, Binded_Did_List } from "@/utils/storage";
 import Message from "@/components/Message/index";
 import { getUserUsageInfo, getToken, bindDid, bindAlias, addUserInfo, aliasBindedQuery } from "@/api/web2/index";
+import { rigisterDefaultAlias, getDefaultAliasByPid } from "@/api/web2/common";
 import { sendWelcome, dmailPid } from '@/utils/send'
 import { cache, baseURL } from "@/utils/axios";
-import { bindNftDialog, isLoginPage, defaultAva } from "@/utils/index";
+import { isLoginPage, defaultAva, dmailAi, getQueryString } from "@/utils/index";
 import GetDids, { Chains } from "@/utils/did";
 import { CanisterIds, http, transformPrincipalId, getAlias } from "@/api/index";
 import { setBodyCid, getCanisterId, bindCanisterId, setCanisterId } from "@/api/canisterId";
@@ -52,6 +53,8 @@ export default class CommonStore {
   principalId = "";
   tokenGetted = false;
   enabledDid = '';
+  // for compose from
+  senderFrom = ''
 
   stopKeyDownSwitchEmail = false;
 
@@ -67,6 +70,8 @@ export default class CommonStore {
   initing = false;
   bindingDmailAlias = false;
   getBindedNftEnd = false;
+  // include '@dmail.ai'
+  defaultAlias = "";
   // exclude '@dmail.ai'
   bindedNft = '';
   bindedNftIndex = 0;
@@ -122,6 +127,11 @@ export default class CommonStore {
 
   setEnabledDid(value) {
     this.enabledDid = value
+    value && this.setSenderFrom(value)
+  }
+
+  setSenderFrom(value) {
+    this.senderFrom = value
   }
 
   async detectBindedDidValid(address, principalId) {
@@ -169,14 +179,6 @@ export default class CommonStore {
     this.gettingMyDids = false
   }
 
-  async detectGettingBindedNftEnded() {
-    if (this.getBindedNftEnd) {
-      return this.bindedNft;
-    }
-    await new Promise((resolve) => setTimeout(resolve, 400));
-    return await this.detectGettingBindedNftEnded();
-  }
-
   async updateBined(isMobile, alias, index) {
     this.setBindedNft(`${alias}`, Number(index), isMobile);
     const hasBindedInWeb2 = await aliasBindedQuery(alias)
@@ -185,6 +187,14 @@ export default class CommonStore {
       const loginAddress = this.userInfo[userInfoKeys[2]] || userInfoStorage.get(userInfoKeys[2])
       bindAlias(alias, this.principalId, loginAddress, '')
     }
+  }
+
+  async detectGettingBindedNftEnded() {
+    if (this.getBindedNftEnd) {
+      return this.bindedNft;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    return await this.detectGettingBindedNftEnded();
   }
 
   async getNftAlias(isMobile) {
@@ -233,6 +243,8 @@ export default class CommonStore {
     let token = ''
     this.tokenGetted = false;
 
+    const icode = getQueryString('icode')
+
     try {
       const res = await http(CanisterIds.jwt_cache, "update_create_jwt_by_pid", [
         transformPrincipalId(sIdentity),
@@ -262,32 +274,45 @@ export default class CommonStore {
       [userInfoKeys[7]]: chainId,
     });
 
+    rigisterDefaultAlias(sIdentity, loginAddress || sIdentity, loadingKey, icode || '')
+
     if (!res) {
       Message.error('Login error.');
       return false
     }
     
-    !notInitData && await this.initData(history, isMobile);
+    !notInitData && await this.initData(isMobile);
     return true
-  }
-
-  async sendEmail() {
-    // const bodyCid = userInfoStorage.get(userInfoKeys[3])
-    // const alias = await this.getNftAlias();
-    // const dmailCid = await getCanisterId(dmailPid, true)
-    // dmailCid && sendWelcome(dmailCid, bodyCid, this.principalId, alias)
   }
 
   async setInitingStatus(status) {
     this.initing = status
   }
 
-  async fixHistoryAddUser(isMobile, loginAddress, loginType) {
-    const alias = await this.getNftAlias(isMobile);
-    if (alias) {
-      // fix bind success but add not request bug
-      addUserInfo('', this.principalId, loginAddress, loginType)
+  async sendWelcomeEmail(_bodyCid) {
+    const bodyCid = _bodyCid || userInfoStorage.get(userInfoKeys[3])
+    const dmailCid = await getCanisterId(dmailPid, true)
+    dmailCid && sendWelcome(dmailCid, bodyCid, this.principalId, this.defaultAlias)
+  }
+
+  async bindAndGetCanisterId(principalId) {
+    const res = await http(CanisterIds.router, "queryCidByPid", [
+      transformPrincipalId(principalId),
+    ]);
+    if (Array.isArray(res.Ok)) {
+      if (res.Ok.length) {
+        const canisterId = res.Ok[0].toText();
+        setBodyCid(canisterId);
+        return canisterId;
+      } else {  // not binded yet
+        const cid = await bindCanisterId(principalId)
+        detectedIsMixed(cid, principalId).then((isMixedCanister) => this.isMixedCanister = isMixedCanister)
+        cid && this.sendWelcomeEmail(cid)
+        return cid
+      }
     }
+
+    return ''
   }
 
   // last Canister upgrade failed, the Canister mrvim-lqaaa-aaaap-abc7a-cai is invalid, so these user will rebuild Canister
@@ -308,8 +333,15 @@ export default class CommonStore {
 
   //   return true
   // }
+  
+  // async checkRigisterDefaultAlias(principalId, loginAddress, wallet_name) {
+  //   const defaultAlias = await getDefaultAliasByPid(principalId)
+  //   if (defaultAlias === '') {
+  //     await rigisterDefaultAlias(principalId, loginAddress || principalId, wallet_name)
+  //   }
+  // }
 
-  async initData(history, isMobile) {
+  async initData(isMobile) {
     this.tokenGetted = true;
     cache.tokenGetted = true;
     const bodyCid = userInfoStorage.get(userInfoKeys[3])
@@ -320,15 +352,11 @@ export default class CommonStore {
         return
       }
 
-      // TODO: fix data
-      // const principalId = this.getPrincipalId();
-      // await this.rebildProblematicMixedCid(principalId)
-      // hasFixedCid = true
-
       setBodyCid(bodyCid);
       
-      const isMixedCanister = await detectedIsMixed(bodyCid, this.principalId)
-      console.log('isMixedCanister', isMixedCanister)
+      detectedIsMixed(bodyCid, this.principalId).then((isMixedCanister) => {
+        console.log('isMixedCanister', isMixedCanister)
+      })
     }
     return new Promise(async (resolve) => {
       if (!this.principalId) {
@@ -337,57 +365,30 @@ export default class CommonStore {
       }
       this.getProfileInfo();
       const loginAddress = this.userInfo[userInfoKeys[2]] || userInfoStorage.get(userInfoKeys[2])
+      this.defaultAlias = `${loginAddress}${dmailAi}`
       const loginType = this.userInfo[userInfoKeys[1]] || userInfoStorage.get(userInfoKeys[1])
       this.detectBindedDidValid(loginAddress, this.principalId)
 
-      // TODO: fix data
-      // !hasFixedCid && await this.rebildProblematicMixedCid(this.principalId)
+      this.getNftAlias(isMobile);
+      this.getMyNftList(null, false, isMobile)
       
+      // this.checkRigisterDefaultAlias(this.principalId, loginAddress, loginType)
+
       if (bodyCid) {
-        this.fixHistoryAddUser(isMobile, loginAddress, loginType)
         resolve(true);
         return true;
       }
 
       this.setInitingStatus(true)
-      const [canisterId, alias] = await Promise.all([
-        (async () => await getCanisterId(this.principalId))(),
-        (async () => {
-          const alias = await this.getNftAlias(isMobile);
-          resolve(!!alias);
-          return alias;
-        })(),
-      ]);
-      // console.log('initdata alias', alias)
-      if (!alias) {
-        await this.getMyNftList(null, false, isMobile)
-        // console.log('get my nfts~~~', this.myNftList.length, !!this.myNftList.length)
-        const channelId = this.channelIdFromInvitedFriends
-        !window.location.href.includes("/setting") && !window.location.href.includes("/presale") &&
-          bindNftDialog(!!this.myNftList.length, history, channelId)
-      } else {
-        const loginAddress = this.userInfo[userInfoKeys[2]] || userInfoStorage.get(userInfoKeys[2])
-        // fix bind success but add not request bug
-        addUserInfo('', this.principalId, loginAddress, loginType)
-      }
-      let _canisterId = canisterId;
-      if (!canisterId && alias) {
-        if (alias.length > 7) {
-          const cid = await bindCanisterId(this.principalId)
-          await detectedIsMixed(cid, this.principalId)
-          _canisterId = cid
-          if (!await detectedIsMixed(cid, this.principalId)) {
-            console.error('Canister ID initialization exception', cid, _canisterId)
-            Message.error('Account initialization exception');
-          }
-        } else {
-          _canisterId = await setCanisterId(this.principalId);
-        }
-      }
-      if (_canisterId) {
-        this.setUserInfo({[userInfoKeys[3]]: _canisterId })
+      const canisterId = await this.bindAndGetCanisterId(this.principalId)
+      detectedIsMixed(canisterId, this.principalId).then((isMixedCanister) => {
+        console.log('isMixedCanister', isMixedCanister)
+      })
+      if (canisterId) {
+        this.setUserInfo({[userInfoKeys[3]]: canisterId })
       }
       this.setInitingStatus(false)
+      resolve(!!canisterId);
     });
   }
 
@@ -413,9 +414,6 @@ export default class CommonStore {
   }
 
   async getAndSetUserInfo(principalId, isMobile) {
-    if (!this.bindedNftIndex) {
-      return
-    }
     const data = await getUserUsageInfo(principalId || this.principalId, this.bindedNftIndex);
     if (data) {
       const { notReadSize, ...newData } = data;
@@ -688,6 +686,45 @@ export default class CommonStore {
     }
     typeof afterGettedCb === 'function' && await afterGettedCb(this)
     this.gettingAminoNftList = false
+  }
+
+  async bindOrBuyNftPop(isMobile, history, action = 'import points') {
+    await this.waitingforNftListQueryEnd()
+    let status = ''
+    if (this.myNftList.length) {
+      if (!await this.detectGettingBindedNftEnded()) {
+        status = 'bind'
+      } else {
+        return false
+      }
+    } else {
+      status = 'buy'
+    }
+
+    const channelId = this.channelIdFromInvitedFriends
+    const content = status === 'bind' ? `Before ${action},you should bind an NFT Domain Account with Dmail. <br />Detected that you have an existing NFT Domain Account,please complete the bind as soon as possible.` : `Before ${action}, please bind an NFT Domain Account with Dmail. You can purchase an NFT Doman Account in pre-sale and complete the bind.`
+
+    Modal({
+      isMobile,
+      type: "",
+      title: "Please bind an NFT Domain Account!",
+      content,
+      okText: status === 'bind' ? "Bind" : "Buy NFT",
+      noCancel: true,
+      onOk: async () => {
+        status === 'bind' ? history.push(`/setting/account${channelId ? '/' + channelId : ''}`) : history.push("/presale")
+        return true;
+      },
+    });
+    return true
+  }
+
+  async waitingforNftListQueryEnd() {
+    if (!this.gettingNftList) {
+      return
+    }
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    return await this.waitingforNftListQueryEnd();
   }
 
   // get dmail nft

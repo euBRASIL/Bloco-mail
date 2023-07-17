@@ -4,15 +4,15 @@ import Message from "@/components/Message/index";
 import { getLoginUrlWithReturnParams } from "@/utils/index";
 
 // repeat requery when offline or http error
-export const fixedQuery = (queryFn, needReQueryFn, times = 3, interval = 800) => {
-  if (typeof queryFn !== 'function' || typeof needReQueryFn !== 'function') {
+export const fixedQuery = (queryFn, isQueryCorrectFn, times = 3, interval = 800) => {
+  if (typeof queryFn !== 'function' || typeof isQueryCorrectFn !== 'function') {
     throw new Error('FixedQuery function args type error');
   }
 
   let index = 1
   const fn = async (...args) => {
     const res = await queryFn(...args)
-    if (!needReQueryFn(res) || index >= times) {
+    if (isQueryCorrectFn(res) || index >= times) {
       index = 1
       return res
     } else {

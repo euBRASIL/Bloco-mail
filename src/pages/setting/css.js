@@ -231,6 +231,20 @@ export const Content = styled.div`
       .none {
         color: #999;
         cursor: default;
+
+        a {
+          margin: 10px;
+          color: #55CADB;
+          text-decoration: underline;
+          cursor: pointer;
+
+          svg {
+            color: #55CADB;
+            margin-left: 3px;
+            position: relative;
+            top: 1px;
+          }
+        }
       }
     }
   }
@@ -342,6 +356,14 @@ export const DidRoot = styled.div`
       color: #999;
       margin-left: 10px;
     }
+
+    a {
+      margin-left: 20px;
+      color: #299DED;
+      font-size: 12px;
+      position: relative;
+      top: 2px;
+    }
   }
 
   .first .content, .dids {
@@ -357,9 +379,15 @@ export const DidRoot = styled.div`
 
   .dids {
     padding: 20px;
+
     .name {
       padding-bottom: 10px;
       border-bottom: 1px solid #eee;
+      white-space: nowrap;
+
+      svg {
+        flex-shrink: 0;
+      }
     }
   }
 
