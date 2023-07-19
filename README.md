@@ -30,3 +30,12 @@ In the project directory, you can run:
 * humanode：https://humanode.io/
 * Polkadot Name System：https://www.pns.link/
 * Bonfida：https://bonfida.org/
+
+### Beta Mainnet:
+https://mail.dmail.ai/
+ 
+### Introduction:
+Linktree: https://linktr.ee/dmail
+Website: https://dmail.ai
+Twitter: https://twitter.com/dmailofficial
+Github: https://github.com/dmailofficial/dmail
