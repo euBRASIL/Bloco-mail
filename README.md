@@ -30,7 +30,3 @@ In the project directory, you can run:
 * humanode：https://humanode.io/
 * Polkadot Name System：https://www.pns.link/
 * Bonfida：https://bonfida.org/
-
-### difinity multi domains
-https://internetcomputer.org/docs/current/developer-docs/integrations/internet-identity/alternative-origins
-https://internetcomputer.org/docs/current/references/ii-spec/#alternative-frontend-origins
